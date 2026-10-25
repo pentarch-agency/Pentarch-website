@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 
@@ -5,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
  * Client Dashboard Overview — real metrics from database queries.
  */
 export default async function DashboardOverview() {
+  await connection();
   const headersList = await headers();
   const orgSlug = headersList.get('x-pentarch-org-slug');
 

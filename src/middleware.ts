@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { resolveHostname, type ResolvedHost } from '@/lib/hostname-resolver';
+import { resolveHostname } from '@/lib/hostname-resolver';
+import { updateSession } from '@/lib/supabase/middleware';
 
 /**
  * Next.js Middleware — Host-based routing
@@ -71,9 +72,12 @@ export async function middleware(request: NextRequest) {
       break;
   }
 
-  return NextResponse.rewrite(url, {
+  const response = NextResponse.rewrite(url, {
     request: { headers: requestHeaders },
   });
+
+  // Refresh Supabase auth session cookies
+  return updateSession(request, response);
 }
 
 export const config = {

@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
 /**
@@ -5,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
  * All metrics are real database queries — no mock data.
  */
 export default async function AdminOverviewPage() {
+  await connection();
   const supabase = await createClient();
 
   // Fetch real counts

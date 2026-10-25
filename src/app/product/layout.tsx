@@ -1,17 +1,13 @@
+import { connection } from 'next/server';
 import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 
-/**
- * Product Application Layout
- *
- * Resolves the product from the hostname.
- * Each product defines its own auth model and UI — this is a minimal shell.
- */
 export default async function ProductLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await connection();
   const headersList = await headers();
   const productSlug = headersList.get('x-pentarch-product-slug');
 

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { connection } from 'next/server';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { requireAuth, getOrgMembership } from '@/lib/auth';
@@ -8,17 +9,12 @@ export const metadata: Metadata = {
   title: 'Client Dashboard — Pentarch',
 };
 
-/**
- * Client Dashboard Layout
- *
- * Resolves the organization from the hostname, verifies the user
- * is an authenticated member, and provides org context to children.
- */
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await connection();
   const headersList = await headers();
   const orgSlug = headersList.get('x-pentarch-org-slug');
 

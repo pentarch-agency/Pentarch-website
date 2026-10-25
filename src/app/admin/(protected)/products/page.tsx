@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
@@ -6,6 +7,7 @@ import Link from 'next/link';
  * Founders register products, validate slugs, manage lifecycle.
  */
 export default async function ProductsPage() {
+  await connection();
   const supabase = await createClient();
 
   const { data: products, error } = await supabase

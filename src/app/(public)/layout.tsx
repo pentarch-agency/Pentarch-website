@@ -28,7 +28,7 @@ export default function PublicLayout({
       <main className="flex-1">{children}</main>
       <footer className="border-t bg-gray-50">
         <div className="container mx-auto px-6 py-8 text-center text-gray-500 text-sm">
-          © {new Date().getFullYear()} Pentarch Agency. All rights reserved.
+          © 2026 Pentarch Agency. All rights reserved.
         </div>
       </footer>
     </div>

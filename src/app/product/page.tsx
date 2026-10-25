@@ -1,6 +1,8 @@
+import { connection } from 'next/server';
 import { headers } from 'next/headers';
 
 export default async function ProductPage() {
+  await connection();
   const headersList = await headers();
   const productSlug = headersList.get('x-pentarch-product-slug');
 

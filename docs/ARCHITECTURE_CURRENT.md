@@ -80,13 +80,14 @@ Slug uniqueness enforced by `hostname_registry` table — shared across organiza
 - [x] Admin overview with real DB queries
 - [x] Client dashboard with real DB queries
 - [x] Product registry page
+- [x] Auth flows (login pages, callback, sign-out routes)
+- [x] Supabase session refresh wired into middleware
+- [x] Organization CRUD (create, detail, status change, invite)
 
 ## What's Missing (next phases)
 
 - [ ] Supabase project connection (.env.local)
-- [ ] Auth flows (login/signup pages, OAuth config)
-- [ ] Invitation flow (issue → email → accept → activate)
-- [ ] Organization CRUD (create/edit/suspend)
+- [ ] Invitation flow (email delivery → accept → activate membership)
 - [ ] Project/task/milestone management
 - [ ] Discussion and messaging
 - [ ] File upload with signed URLs

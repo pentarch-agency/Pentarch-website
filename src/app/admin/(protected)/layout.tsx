@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { connection } from 'next/server';
 import { requireFounder } from '@/lib/auth';
 
 export const metadata: Metadata = {
@@ -11,7 +12,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Server-side authorization — only founders can see this layout
+  await connection();
   await requireFounder();
 
   return (
