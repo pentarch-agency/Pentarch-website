@@ -1,10 +1,10 @@
 import { connection } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
 export default async function ProductsPage() {
   await connection();
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data: products, error } = await supabase
     .from('products')

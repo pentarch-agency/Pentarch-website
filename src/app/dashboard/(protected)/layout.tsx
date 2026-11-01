@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { requireAuth } from '@/lib/auth';
-import { createAdminClient } from '@/lib/supabase/server';
+import { requireAuth, getUserProfile } from '@/lib/auth';
 
 export const metadata: Metadata = {
   title: 'Dashboard — Pentarch',
@@ -66,13 +65,7 @@ export default async function DashboardLayout({
 }) {
   await connection();
   const user = await requireAuth('/login');
-
-  const supabase = createAdminClient();
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('full_name, first_name, avatar_url, role')
-    .eq('id', user.id)
-    .single();
+  const profile = await getUserProfile(user.id);
 
   const fullName = profile?.full_name || null;
   const avatarUrl = profile?.avatar_url || null;

@@ -1,12 +1,12 @@
 import { connection } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { NewOrgButton } from './new-org-button';
 import OrgTable from './org-table';
 
 export default async function OrganizationsPage() {
   await connection();
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   const { data: orgs, error } = await supabase
     .from('organizations')

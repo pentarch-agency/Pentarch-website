@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { requireStaff } from '@/lib/auth';
-import { createAdminClient } from '@/lib/supabase/server';
+import { requireStaff, getUserProfile } from '@/lib/auth';
 import MobileSidebarToggle from './mobile-sidebar-toggle';
 import SidebarCollapseToggle, { SidebarWrapper, NavLabel, CollapsedOnly, NavTooltip, UserPopover } from './sidebar-collapse-toggle';
 
@@ -75,13 +74,7 @@ export default async function AdminLayout({
 }) {
   await connection();
   const { user, role: userRole } = await requireStaff();
-
-  const supabase = createAdminClient();
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('full_name, avatar_url')
-    .eq('id', user.id)
-    .single();
+  const profile = await getUserProfile(user.id);
 
   const fullName = profile?.full_name || null;
   const avatarUrl = profile?.avatar_url || null;

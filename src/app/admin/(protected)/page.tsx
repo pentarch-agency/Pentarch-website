@@ -1,6 +1,6 @@
 import { connection } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
-import { requireFounder } from '@/lib/auth';
+import { requireFounder, getUserProfile } from '@/lib/auth';
 import Link from 'next/link';
 import SearchCommand from './search-command';
 
@@ -28,7 +28,7 @@ export default async function AdminOverviewPage() {
   const user = await requireFounder();
   const supabase = createAdminClient();
 
-  const [orgsResult, projectsResult, activeTasksResult, allTasksResult, doneTasksResult, inquiriesResult, usersResult, financeResult] = await Promise.all([
+  const [orgsResult, projectsResult, activeTasksResult, allTasksResult, doneTasksResult, inquiriesResult, usersResult, financeResult, todoResult, eventsResult] = await Promise.all([
     supabase.from('organizations').select('id', { count: 'exact', head: true }),
     supabase.from('projects').select('id, name, status', { count: 'exact' }),
     supabase.from('tasks').select('id, title, status, priority, project_id', { count: 'exact' }).eq('status', 'in_progress'),
@@ -37,6 +37,8 @@ export default async function AdminOverviewPage() {
     supabase.from('contact_inquiries').select('id, name, email, status, created_at', { count: 'exact' }).eq('status', 'new').order('created_at', { ascending: false }).limit(5),
     supabase.from('user_profiles').select('id', { count: 'exact', head: true }),
     supabase.from('finance_records').select('id, type, amount, status').eq('status', 'completed'),
+    supabase.from('tasks').select('id, title, status, priority').in('status', ['todo', 'in_progress']).order('created_at', { ascending: false }).limit(8),
+    supabase.from('audit_events').select('id, action, target_type, created_at').order('created_at', { ascending: false }).limit(6),
   ]);
 
   const orgCount = orgsResult.count ?? 0;
@@ -54,18 +56,8 @@ export default async function AdminOverviewPage() {
   const netProfit = totalIncome - totalExpense;
   const fmtCurrency = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
-  const { data: todoTasks } = await supabase
-    .from('tasks')
-    .select('id, title, status, priority')
-    .in('status', ['todo', 'in_progress'])
-    .order('created_at', { ascending: false })
-    .limit(8);
-
-  const { data: recentEvents } = await supabase
-    .from('audit_events')
-    .select('id, action, target_type, created_at')
-    .order('created_at', { ascending: false })
-    .limit(6);
+  const todoTasks = todoResult.data;
+  const recentEvents = eventsResult.data;
 
   const completionPct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
 
@@ -73,13 +65,9 @@ export default async function AdminOverviewPage() {
   const hrs = now.getHours();
   const greeting = hrs < 12 ? 'Good Morning' : hrs < 18 ? 'Good Afternoon' : 'Good Evening';
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  const { data: founderProfile } = await supabase
-    .from('user_profiles')
-    .select('full_name, first_name')
-    .eq('id', user.id)
-    .single();
+  const founderProfile = await getUserProfile(user.id);
 
-  const firstName = founderProfile?.first_name ?? founderProfile?.full_name ?? user.email?.split('@')[0]?.split('.').map(s => s[0].toUpperCase() + s.slice(1)).join(' ') ?? 'Founder';
+  const firstName = founderProfile?.full_name?.split(' ')[0] ?? user.email?.split('@')[0]?.split('.').map(s => s[0].toUpperCase() + s.slice(1)).join(' ') ?? 'Founder';
 
   const cardStyle = {
     background: 'var(--surface-card)',
