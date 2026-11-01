@@ -55,12 +55,12 @@ export function SettingsForms({ fullName, avatarUrl, email, role, lastSignIn, or
                 src={avatarUrl}
                 alt=""
                 className="w-20 h-20 rounded-2xl object-cover ring-4"
-                style={{ ringColor: 'var(--surface-card)' }}
+                style={{ '--tw-ring-color': 'var(--surface-card)' } as React.CSSProperties}
               />
             ) : (
               <div
                 className="w-20 h-20 rounded-2xl flex items-center justify-center text-[24px] font-bold ring-4"
-                style={{ background: 'linear-gradient(135deg, #5478D9, #7E9FF5)', color: '#fff', ringColor: 'var(--surface-card)' }}
+                style={{ background: 'linear-gradient(135deg, #5478D9, #7E9FF5)', color: '#fff', '--tw-ring-color': 'var(--surface-card)' } as React.CSSProperties}
               >
                 {initials}
               </div>

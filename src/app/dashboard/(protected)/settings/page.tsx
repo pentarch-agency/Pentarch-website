@@ -21,7 +21,7 @@ export default async function SettingsPage() {
     .eq('user_id', user.id)
     .eq('status', 'active');
 
-  const orgs = (memberships ?? []) as Array<{
+  const orgs = (memberships ?? []) as unknown as Array<{
     role: string;
     organization_id: string;
     organizations: { name: string; slug: string } | null;

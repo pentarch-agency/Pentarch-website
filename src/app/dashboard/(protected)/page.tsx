@@ -30,7 +30,7 @@ export default async function DashboardOverviewPage() {
   ]);
 
   const profile = profileRes.data;
-  const memberships = (membershipsRes.data ?? []) as Array<{
+  const memberships = (membershipsRes.data ?? []) as unknown as Array<{
     role: string;
     organization_id: string;
     organizations: { id: string; name: string; slug: string; status: string } | null;

@@ -19,7 +19,7 @@ const ToastContext = createContext<ToastContextType>({ toast: () => {} });
 
 export const useToast = () => useContext(ToastContext);
 
-const ICONS: Record<ToastType, JSX.Element> = {
+const ICONS: Record<ToastType, React.ReactNode> = {
   success: (
     <svg className="w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" fill="var(--success-solid)" opacity="0.15" />
