@@ -1,17 +1,20 @@
-import { connection } from 'next/server';
+import { unstable_cache } from 'next/cache';
 import { createAdminClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { NewOrgButton } from './new-org-button';
 import OrgTable from './org-table';
 
-export default async function OrganizationsPage() {
-  await connection();
-  const supabase = createAdminClient();
+const getOrganizations = unstable_cache(
+  async () => {
+    const supabase = createAdminClient();
+    return supabase.from('organizations').select('id, name, slug, status, created_at').order('created_at', { ascending: false });
+  },
+  ['admin-organizations'],
+  { revalidate: 30 }
+);
 
-  const { data: orgs, error } = await supabase
-    .from('organizations')
-    .select('id, name, slug, status, created_at')
-    .order('created_at', { ascending: false });
+export default async function OrganizationsPage() {
+  const { data: orgs, error } = await getOrganizations();
 
   if (error) {
     return <div style={{ color: 'var(--danger-text)' }}>Failed to load organizations: {error.message}</div>;

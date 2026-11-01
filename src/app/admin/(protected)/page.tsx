@@ -1,8 +1,29 @@
-import { connection } from 'next/server';
+import { unstable_cache } from 'next/cache';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireFounder, getUserProfile } from '@/lib/auth';
 import Link from 'next/link';
 import SearchCommand from './search-command';
+
+const getOverviewData = unstable_cache(
+  async () => {
+    const supabase = createAdminClient();
+    const [orgsResult, projectsResult, activeTasksResult, allTasksResult, doneTasksResult, inquiriesResult, usersResult, financeResult, todoResult, eventsResult] = await Promise.all([
+      supabase.from('organizations').select('id', { count: 'exact', head: true }),
+      supabase.from('projects').select('id, name, status', { count: 'exact' }),
+      supabase.from('tasks').select('id, title, status, priority, project_id', { count: 'exact' }).eq('status', 'in_progress'),
+      supabase.from('tasks').select('id', { count: 'exact', head: true }),
+      supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'done'),
+      supabase.from('contact_inquiries').select('id, name, email, status, created_at', { count: 'exact' }).eq('status', 'new').order('created_at', { ascending: false }).limit(5),
+      supabase.from('user_profiles').select('id', { count: 'exact', head: true }),
+      supabase.from('finance_records').select('id, type, amount, status').eq('status', 'completed'),
+      supabase.from('tasks').select('id, title, status, priority').in('status', ['todo', 'in_progress']).order('created_at', { ascending: false }).limit(8),
+      supabase.from('audit_events').select('id, action, target_type, created_at').order('created_at', { ascending: false }).limit(6),
+    ]);
+    return { orgsResult, projectsResult, activeTasksResult, allTasksResult, doneTasksResult, inquiriesResult, usersResult, financeResult, todoResult, eventsResult };
+  },
+  ['admin-overview'],
+  { revalidate: 30 }
+);
 
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -24,21 +45,9 @@ const actionIcons: Record<string, string> = {
 };
 
 export default async function AdminOverviewPage() {
-  await connection();
-  const user = await requireFounder();
-  const supabase = createAdminClient();
-
-  const [orgsResult, projectsResult, activeTasksResult, allTasksResult, doneTasksResult, inquiriesResult, usersResult, financeResult, todoResult, eventsResult] = await Promise.all([
-    supabase.from('organizations').select('id', { count: 'exact', head: true }),
-    supabase.from('projects').select('id, name, status', { count: 'exact' }),
-    supabase.from('tasks').select('id, title, status, priority, project_id', { count: 'exact' }).eq('status', 'in_progress'),
-    supabase.from('tasks').select('id', { count: 'exact', head: true }),
-    supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('status', 'done'),
-    supabase.from('contact_inquiries').select('id, name, email, status, created_at', { count: 'exact' }).eq('status', 'new').order('created_at', { ascending: false }).limit(5),
-    supabase.from('user_profiles').select('id', { count: 'exact', head: true }),
-    supabase.from('finance_records').select('id, type, amount, status').eq('status', 'completed'),
-    supabase.from('tasks').select('id, title, status, priority').in('status', ['todo', 'in_progress']).order('created_at', { ascending: false }).limit(8),
-    supabase.from('audit_events').select('id, action, target_type, created_at').order('created_at', { ascending: false }).limit(6),
+  const [user, { orgsResult, projectsResult, activeTasksResult, allTasksResult, doneTasksResult, inquiriesResult, usersResult, financeResult, todoResult, eventsResult }] = await Promise.all([
+    requireFounder(),
+    getOverviewData(),
   ]);
 
   const orgCount = orgsResult.count ?? 0;

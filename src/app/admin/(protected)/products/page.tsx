@@ -1,15 +1,18 @@
-import { connection } from 'next/server';
+import { unstable_cache } from 'next/cache';
 import { createAdminClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
-export default async function ProductsPage() {
-  await connection();
-  const supabase = createAdminClient();
+const getProducts = unstable_cache(
+  async () => {
+    const supabase = createAdminClient();
+    return supabase.from('products').select('id, name, slug, status, hostname, created_at').order('created_at', { ascending: false });
+  },
+  ['admin-products'],
+  { revalidate: 30 }
+);
 
-  const { data: products, error } = await supabase
-    .from('products')
-    .select('id, name, slug, status, hostname, created_at')
-    .order('created_at', { ascending: false });
+export default async function ProductsPage() {
+  const { data: products, error } = await getProducts();
 
   if (error) {
     return (

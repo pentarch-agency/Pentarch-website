@@ -1,24 +1,30 @@
-import { connection } from 'next/server';
+import { unstable_cache } from 'next/cache';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireFounder } from '@/lib/auth';
 import Link from 'next/link';
+
+const getProjects = unstable_cache(
+  async (status?: string, org?: string) => {
+    const supabase = createAdminClient();
+    let query = supabase.from('projects').select('*, organizations(name)').order('created_at', { ascending: false });
+    if (status) query = query.eq('status', status);
+    if (org) query = query.eq('organization_id', org);
+    return query;
+  },
+  ['admin-projects'],
+  { revalidate: 30 }
+);
 
 export default async function ProjectsPage({
   searchParams,
 }: {
   searchParams: Promise<{ status?: string; org?: string }>;
 }) {
-  await connection();
-  await requireFounder();
-
   const params = await searchParams;
-  const supabase = createAdminClient();
-
-  let query = supabase.from('projects').select('*, organizations(name)').order('created_at', { ascending: false });
-  if (params.status) query = query.eq('status', params.status);
-  if (params.org) query = query.eq('organization_id', params.org);
-
-  const { data: projects } = await query;
+  const [, { data: projects }] = await Promise.all([
+    requireFounder(),
+    getProjects(params.status, params.org),
+  ]);
 
   const cardStyle = { background: 'var(--surface-card)', border: '1px solid var(--border-default)' };
   const inputStyle = {

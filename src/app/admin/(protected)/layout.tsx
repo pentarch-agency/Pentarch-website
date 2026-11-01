@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { connection } from 'next/server';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { requireStaff, getUserProfile } from '@/lib/auth';
@@ -72,7 +71,6 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  await connection();
   const { user, role: userRole } = await requireStaff();
   const profile = await getUserProfile(user.id);
 

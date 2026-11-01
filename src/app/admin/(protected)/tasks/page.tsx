@@ -1,24 +1,30 @@
-import { connection } from 'next/server';
+import { unstable_cache } from 'next/cache';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireFounder } from '@/lib/auth';
 import Link from 'next/link';
+
+const getTasks = unstable_cache(
+  async (status?: string, priority?: string) => {
+    const supabase = createAdminClient();
+    let query = supabase.from('tasks').select('*, projects(name)').order('created_at', { ascending: false });
+    if (status) query = query.eq('status', status);
+    if (priority) query = query.eq('priority', priority);
+    return query;
+  },
+  ['admin-tasks'],
+  { revalidate: 30 }
+);
 
 export default async function TasksPage({
   searchParams,
 }: {
   searchParams: Promise<{ status?: string; priority?: string }>;
 }) {
-  await connection();
-  await requireFounder();
-
   const params = await searchParams;
-  const supabase = createAdminClient();
-
-  let query = supabase.from('tasks').select('*, projects(name)').order('created_at', { ascending: false });
-  if (params.status) query = query.eq('status', params.status);
-  if (params.priority) query = query.eq('priority', params.priority);
-
-  const { data: tasks } = await query;
+  const [, { data: tasks }] = await Promise.all([
+    requireFounder(),
+    getTasks(params.status, params.priority),
+  ]);
 
   const thStyle = {
     color: 'var(--text-subtle)',
