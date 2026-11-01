@@ -1,1 +1,16 @@
-{"_tag":"Error","error":{"code":"ContainerRuntimeNotFoundError","message":"docker: command not found (podman also not found) — install Docker Desktop or Podman and ensure it is on PATH"}}
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
+
+export type Database = {
+  public: {
+    Tables: Record<string, never>;
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+  };
+};
