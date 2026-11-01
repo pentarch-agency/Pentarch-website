@@ -9,17 +9,18 @@ export default async function SettingsPage() {
   const user = await requireAuth('/login');
   const supabase = createAdminClient();
 
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('full_name, avatar_url, role')
-    .eq('id', user.id)
-    .single();
-
-  const { data: memberships } = await supabase
-    .from('organization_memberships')
-    .select('role, organization_id, organizations(name, slug)')
-    .eq('user_id', user.id)
-    .eq('status', 'active');
+  const [{ data: profile }, { data: memberships }] = await Promise.all([
+    supabase
+      .from('user_profiles')
+      .select('full_name, avatar_url, role')
+      .eq('id', user.id)
+      .single(),
+    supabase
+      .from('organization_memberships')
+      .select('role, organization_id, organizations(name, slug)')
+      .eq('user_id', user.id)
+      .eq('status', 'active'),
+  ]);
 
   const orgs = (memberships ?? []) as unknown as Array<{
     role: string;
