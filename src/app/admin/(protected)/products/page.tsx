@@ -2,10 +2,6 @@ import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 
-/**
- * Product Registry — Admin page.
- * Founders register products, validate slugs, manage lifecycle.
- */
 export default async function ProductsPage() {
   await connection();
   const supabase = await createClient();
@@ -16,60 +12,90 @@ export default async function ProductsPage() {
     .order('created_at', { ascending: false });
 
   if (error) {
-    return <div className="text-red-600">Failed to load products: {error.message}</div>;
+    return (
+      <div className="text-[13px]" style={{ color: 'var(--danger-text)' }}>
+        Failed to load products: {error.message}
+      </div>
+    );
   }
+
+  const cardStyle = { background: 'var(--surface-card)', border: '1px solid var(--border-default)' };
+  const thStyle = { color: 'var(--text-subtle)', background: 'var(--surface-muted)', height: '36px' };
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Products</h1>
-        <Link
-          href="/admin/products/new"
-          className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm"
-        >
-          Register product
-        </Link>
+      {/* Top Bar */}
+      <div
+        className="sticky top-0 z-20 -mx-6 -mt-6 px-6 mb-6"
+        style={{ background: 'var(--surface-canvas)', borderBottom: '1px solid var(--border-default)' }}
+      >
+        <div className="flex items-center justify-between py-4">
+          <div className="flex items-center gap-2.5 text-[13px] pl-10 lg:pl-0">
+            <Link href="/" className="transition-colors duration-150" style={{ color: 'var(--text-muted)' }}>Pentarch</Link>
+            <span style={{ color: 'var(--text-subtle)' }}>/</span>
+            <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>Products</span>
+          </div>
+          <Link
+            href="/products/new"
+            className="flex items-center gap-2 rounded-md px-4 py-2.5 text-[13px] font-semibold transition-colors duration-150"
+            style={{ background: 'var(--accent-solid)', color: 'var(--text-on-accent)' }}
+          >
+            Register product
+          </Link>
+        </div>
       </div>
 
       {!products || products.length === 0 ? (
-        <div className="bg-white rounded-xl border p-8 text-center text-gray-500">
-          No products registered yet.
+        <div className="rounded-lg p-8 text-center" style={cardStyle}>
+          <p className="text-[13px]" style={{ color: 'var(--text-subtle)' }}>No products registered yet.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border overflow-hidden">
+        <div className="rounded-lg overflow-hidden" style={cardStyle}>
           <table className="w-full">
-            <thead className="bg-gray-50 border-b">
+            <thead>
               <tr>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Slug</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Hostname</th>
+                <th className="text-left px-5 data-sm" style={thStyle}>Name</th>
+                <th className="text-left px-5 data-sm" style={thStyle}>Slug</th>
+                <th className="text-left px-5 data-sm" style={thStyle}>Status</th>
+                <th className="text-left px-5 data-sm" style={thStyle}>Hostname</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
-              {products.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <Link href={`/admin/products/${product.id}`} className="text-gray-900 font-medium hover:underline">
-                      {product.name}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 text-gray-500 font-mono text-sm">{product.slug}</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                      product.status === 'active' ? 'bg-green-100 text-green-800' :
-                      product.status === 'draft' ? 'bg-gray-100 text-gray-600' :
-                      product.status === 'suspended' ? 'bg-red-100 text-red-800' :
-                      'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {product.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-500 text-sm font-mono">
-                    {product.hostname || '—'}
-                  </td>
-                </tr>
-              ))}
+            <tbody>
+              {products.map((product) => {
+                const isDanger = product.status === 'suspended';
+                return (
+                  <tr
+                    key={product.id}
+                    className="onlee-row"
+                    style={{ borderBottom: '1px solid var(--border-default)' }}
+                  >
+                    <td className="px-5" style={{ height: '50px' }}>
+                      <Link
+                        href={`/products/${product.id}`}
+                        className="text-[13px] font-medium onlee-link-accent"
+                        style={{ color: 'var(--text-primary)' }}
+                      >
+                        {product.name}
+                      </Link>
+                    </td>
+                    <td className="px-5 font-mono text-[13px]" style={{ color: 'var(--text-muted)' }}>{product.slug}</td>
+                    <td className="px-5">
+                      <span
+                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium"
+                        style={{
+                          background: isDanger ? 'var(--danger-tint)' : 'var(--surface-muted)',
+                          color: isDanger ? 'var(--danger-text)' : 'var(--text-muted)',
+                        }}
+                      >
+                        {product.status}
+                      </span>
+                    </td>
+                    <td className="px-5 font-mono text-[13px]" style={{ color: 'var(--text-muted)' }}>
+                      {product.hostname || '—'}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

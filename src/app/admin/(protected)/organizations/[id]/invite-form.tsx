@@ -27,46 +27,80 @@ export function InviteForm({ orgId }: { orgId: string }) {
     setLoading(false);
   }
 
+  const inputStyle = {
+    background: 'var(--surface-input)',
+    border: '1px solid var(--border-default)',
+    color: 'var(--text-primary)',
+  };
+
   return (
-    <form action={handleSubmit} className="flex items-end gap-3">
-      <div className="flex-1">
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          Email address
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none text-sm"
-          placeholder="member@example.com"
-        />
-      </div>
+    <form action={handleSubmit} className="space-y-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-3">
+        <div className="flex-1">
+          <label htmlFor="email" className="block text-[13px] font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+            Email address
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            className="w-full rounded-md px-3 py-2 text-[14px] outline-none transition-colors duration-150"
+            style={inputStyle}
+            placeholder="member@example.com"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
-          Role
-        </label>
-        <select
-          id="role"
-          name="role"
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+        <div className="sm:w-32">
+          <label htmlFor="role" className="block text-[13px] font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+            Role
+          </label>
+          <select
+            id="role"
+            name="role"
+            className="w-full rounded-md px-3 py-2 text-[14px] outline-none transition-colors duration-150 cursor-pointer appearance-none"
+            style={inputStyle}
+          >
+            <option value="member" style={{ background: 'var(--surface-popover)', color: 'var(--text-primary)' }}>Member</option>
+            <option value="admin" style={{ background: 'var(--surface-popover)', color: 'var(--text-primary)' }}>Admin</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="rounded-md px-5 py-2.5 text-[13px] font-semibold transition-colors duration-150 disabled:opacity-50 flex items-center justify-center gap-2 shrink-0"
+          style={{ background: 'var(--accent-solid)', color: 'var(--text-on-accent)' }}
         >
-          <option value="client_member">Member</option>
-          <option value="client_admin">Admin</option>
-        </select>
+          {loading && (
+            <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+          )}
+          {loading ? 'Sending…' : 'Send invite'}
+        </button>
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm disabled:opacity-50"
-      >
-        {loading ? 'Sending...' : 'Send invite'}
-      </button>
-
-      {error && <p className="text-red-600 text-sm">{error}</p>}
-      {success && <p className="text-green-600 text-sm">Invitation sent!</p>}
+      {error && (
+        <div
+          className="flex items-center gap-2.5 p-3 rounded-md text-[13px]"
+          style={{ background: 'var(--danger-tint)', border: '1px solid var(--danger-border)', color: 'var(--danger-text)' }}
+        >
+          <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+          </svg>
+          {error}
+        </div>
+      )}
+      {success && (
+        <div
+          className="flex items-center gap-2.5 p-3 rounded-md text-[13px]"
+          style={{ background: 'var(--surface-muted)', border: '1px solid var(--border-default)', color: 'var(--text-muted)' }}
+        >
+          <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Invitation sent!
+        </div>
+      )}
     </form>
   );
 }

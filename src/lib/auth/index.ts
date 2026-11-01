@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 
 /**
@@ -28,7 +28,7 @@ export async function requireAuth(loginUrl = '/login') {
  * This is verified server-side against the database — never from client state.
  */
 export async function isFounder(userId: string): Promise<boolean> {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { data } = await supabase
     .from('user_profiles')
     .select('role')
@@ -42,12 +42,40 @@ export async function isFounder(userId: string): Promise<boolean> {
  * Require founder access. Redirects unauthorized users.
  */
 export async function requireFounder() {
-  const user = await requireAuth('/admin/login');
+  const user = await requireAuth('/login');
   const founder = await isFounder(user.id);
   if (!founder) {
-    redirect('/');
+    redirect('/login?error=unauthorized');
   }
   return user;
+}
+
+/**
+ * Check if the user is a Pentarch staff member (has at least one active org membership).
+ */
+export async function isStaff(userId: string): Promise<boolean> {
+  const supabase = createAdminClient();
+  const { count } = await supabase
+    .from('organization_memberships')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('status', 'active');
+
+  return (count ?? 0) > 0;
+}
+
+/**
+ * Require founder or staff access. Redirects unauthorized users.
+ */
+export async function requireStaff() {
+  const user = await requireAuth('/login');
+  const founder = await isFounder(user.id);
+  if (founder) return { user, role: 'founder' as const };
+
+  const staff = await isStaff(user.id);
+  if (staff) return { user, role: 'staff' as const };
+
+  redirect('/login?error=unauthorized');
 }
 
 /**

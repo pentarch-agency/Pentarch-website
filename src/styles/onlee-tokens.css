@@ -1,0 +1,554 @@
+/* ============================================================================
+   Pentarch Design System — tokens
+   Navy-based dark palette with Mist (#98A9C4) as the sole accent.
+   Fonts: Bricolage Grotesque (display), Sora (body), JetBrains Mono (data).
+   ============================================================================ */
+
+/* ---------------------------------------------------------------------------
+   1. SIZES, SPACE AND MOTION — identical in both themes
+   --------------------------------------------------------------------------- */
+:root {
+
+  /* Pentarch named palette */
+  --ink: #111522;
+  --navy: #1E263B;
+  --slate: #303D59;
+  --steel: #536684;
+  --mist: #98A9C4;
+  --frost: #DCE3EF;
+  --mist-12: rgba(152,169,196,0.12);
+  --mist-24: rgba(152,169,196,0.24);
+  --ink-70: rgba(17,21,34,0.70);
+  --ok: #6FAF8E;
+  --warn: #C9A24A;
+  --danger-color: #C96C6C;
+
+  /* Type families */
+  --font-family-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-family-sans: Sora, ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Spacing — a 2px ramp. ONLY these steps exist. */
+  --space-0   : 0px;  /* Zero, used where a token is required. */
+  --space-0-5 : 2px;  /* Hairline gaps between sidebar items. */
+  --space-1   : 4px;  /* Icon-to-label gaps. */
+  --space-1-5 : 6px;  /* Tight pill padding. */
+  --space-2   : 8px;  /* The default gap: toolbar items, button content, badge padding. */
+  --space-2-5 : 10px;  /* Sidebar child indent. */
+  --space-3   : 12px;  /* Card inner padding; list-page row gap. */
+  --space-3-5 : 14px;  /* Board page top padding. */
+  --space-4   : 16px;  /* Page-header gap; section padding; card grid gap. */
+  --space-5   : 20px;  /* Detail and dashboard page top padding. */
+  --space-6   : 24px;  /* Detail-page section gap; top-bar left padding; grid gutter. */
+  --space-8   : 32px;  /* Page bottom padding. */
+  --space-10  : 40px;  /* Large vertical breaks. */
+  --space-16  : 64px;  /* Empty-state vertical breathing room. */
+
+  /* Radius */
+  --radius-none   : 0px;  /* Flush edges — table cells, document sheets. */
+  --radius-2xs    : 2px;  /* Checkbox. */
+  --radius-xs     : 4px;  /* Small chips and dots. */
+  --radius-sm     : 6px;  /* Inputs, selects, small buttons. */
+  --radius-md     : 8px;  /* The default: buttons, menu items, the CA brand tile. */
+  --radius-lg     : 12px;  /* Cards and panels. */
+  --radius-xl     : 14px;  /* Drawers. */
+  --radius-2xl    : 16px;  /* Modals and large sheets. */
+  --radius-pill   : 999px;  /* Status pills, count badges, Due chips. */
+  --radius-circle : 50%;  /* Avatars and status dots. */
+
+  /* Control heights — a mixed row shares one token */
+  --size-control-2xs : 20px;  /* Count badge. */
+  --size-control-xs  : 22px;  /* Dot and micro chip. */
+  --size-control-sm  : 28px;  /* Small button, table-row action, tag. */
+  --size-control-md  : 32px;  /* The default: button, input, select, toolbar control. */
+  --size-control-lg  : 36px;  /* Sidebar item; the collapsed rail's hit area. */
+  --size-control-xl  : 40px;  /* Primary button on an empty state. */
+  --size-control-2xl : 44px;  /* Search field in the ⌘K palette. */
+
+  /* Icon sizes */
+  --size-icon-2xs : 10px;  /* Inside a count badge. */
+  --size-icon-xs  : 12px;  /* Beside caption text. */
+  --size-icon-sm  : 14px;  /* Beside body text — the common case. */
+  --size-icon-md  : 16px;  /* Buttons and nav items. */
+  --size-icon-lg  : 20px;  /* Page-header and empty-state icons. */
+  --size-icon-xl  : 28px;  /* Empty-state illustration mark. */
+
+  /* Aliases used in admin pages */
+  --control-h-m    : 42px;
+  --shell-sidebar  : 240px;
+  --shell-topbar   : 56px;
+  --shell-page-pad-x : 32px;
+  --shell-page-pad-y : 24px;
+
+  /* Shell geometry */
+  --layout-sidebar-width           : 240px;
+  --layout-sidebar-collapsed-width : 56px;
+  --layout-topbar-height           : 56px;
+  --layout-page-padding-x          : 32px;  /* Page side padding in v2 templates. */
+  --layout-page-padding-y          : 24px;  /* Page vertical padding. */
+  --layout-content-max             : 1600px;  /* Content max width. Board pages opt out — their columns scroll. */
+  --layout-rail-width              : 320px;  /* The detail page's right rail. */
+  --layout-table-header-height     : 36px;  /* Table header row. */
+  --layout-table-row-height        : 50px;  /* Table body row. */
+  --layout-row-height-comfortable  : 40px;  /* Comfortable list row. */
+  --layout-row-height-compact      : 32px;  /* Compact list row. */
+  --layout-drawer-width-lg         : 920px;  /* Large side drawer. */
+  --layout-modal-width-lg          : 720px;  /* Large modal. */
+  --layout-modal-width-md          : 560px;  /* Medium modal — the common form. */
+  --layout-modal-width-sm          : 440px;  /* Confirm dialog. */
+  --layout-filter-panel-width      : 340px;  /* The filter panel. */
+  --layout-kanban-column-width     : 300px;  /* A Kanban column. */
+  --layout-settings-nav-width      : 220px;  /* Settings left nav. */
+  --layout-bulkbar-height          : 48px;  /* The bulk-select action bar. */
+  --layout-toast-width             : 360px;  /* A toast. */
+  --layout-notice-panel-width      : 380px;  /* The bell's notice panel. */
+
+  /* Z-index ladder — never write a literal */
+  --z-base     : 0;  /* Page content. */
+  --z-raised   : 2;  /* Cards that lift on hover. */
+  --z-sticky   : 10;  /* Sticky toolbars and table headers. */
+  --z-header   : 20;  /* The top bar. */
+  --z-dropdown : 30;  /* Menus. */
+  --z-drawer   : 40;  /* Side drawers. */
+  --z-modal    : 50;  /* Modals. */
+  --z-popover  : 55;  /* Popovers above a modal. */
+  --z-toast    : 60;  /* Toasts. */
+  --z-tooltip  : 70;  /* Tooltips, above everything. */
+
+  /* Motion */
+  --duration-instant       : 0ms;  /* No transition, for reduced-motion and theme swaps. */
+  --duration-fast          : 120ms;  /* Hover and focus. */
+  --duration-base          : 150ms;  /* The default: menus, pills, tab underline. */
+  --duration-slow          : 180ms;  /* Drawers and modals. */
+  --duration-spin          : 900ms;  /* One rotation of a loading spinner. */
+  --duration-skeleton      : 1400ms;  /* One skeleton shimmer cycle. */
+  --duration-toast         : 5000ms;  /* How long a toast stays. */
+  --duration-tooltip-delay : 400ms;  /* Hover dwell before a tooltip opens. */
+
+  /* Opacity */
+  --opacity-disabled : 0.5;  /* Disabled controls. */
+  --opacity-loading  : 0.75;  /* A region awaiting data. */
+  --opacity-scrim    : 0.55;  /* The modal scrim over the page. */
+
+  /* Breakpoints the design was drawn on (code uses Tailwind defaults) */
+  --breakpoint-phone   : 0px;  /* Phone. */
+  --breakpoint-tablet  : 600px;  /* Tablet. Never used in code; the app uses 640 and 768. */
+  --breakpoint-laptop  : 1024px;  /* Laptop. The sidebar goes off-canvas below this. */
+  --breakpoint-desktop : 1440px;  /* The width the design frames were drawn at. */
+  --breakpoint-wide    : 1860px;  /* Wide monitor. */
+
+  /* Type scale */
+  /* Display & headings */
+  --type-display-size: 44px; --type-display-line: 50px; --type-display-weight: 600; /* Marketing and empty-state hero numerals. Rare in the app. */
+  --type-page-title-size: 22px; --type-page-title-line: 28px; --type-page-title-weight: 600; /* The h1 in Page Header, one per page. */
+  --type-section-title-size: 18px; --type-section-title-line: 26px; --type-section-title-weight: 600; /* Section Card headings. */
+  --type-card-title-size: 15px; --type-card-title-line: 22px; --type-card-title-weight: 600; /* Card and list-item titles. */
+  --type-stat-value-size: 24px; --type-stat-value-line: 30px; --type-stat-value-weight: 600; /* The number on a stat tile. */
+  /* Text */
+  --type-body-size: 13px; --type-body-line: 20px; --type-body-weight: 400; /* Default UI text and table cells. The app is deliberately dense. */
+  --type-body-strong-size: 13px; --type-body-strong-line: 20px; --type-body-strong-weight: 500; /* Emphasis inside body text; form labels. */
+  --type-body-sm-size: 12px; --type-body-sm-line: 18px; --type-body-sm-weight: 400; /* Secondary lines under a title. */
+  --type-caption-size: 12px; --type-caption-line: 16px; --type-caption-weight: 400; /* Helper text, timestamps, footnotes. */
+  --type-overline-size: 12px; --type-overline-line: 16px; --type-overline-weight: 600; /* Caps group labels in the sidebar and on document sheets. */
+  --type-micro-size: 10.5px; --type-micro-line: 12px; --type-micro-weight: 600; /* Count badges and the smallest pills. */
+  /* Numeric */
+  --type-money-size: 13px; --type-money-line: 20px; --type-money-weight: 500; /* Every currency amount. Right-aligned in tables, with tabular figures. */
+  --type-id-mono-size: 12px; --type-id-mono-line: 18px; --type-id-mono-weight: 500; /* Invoice numbers, UTRs, transaction refs, UUIDs. Monospace so a pasted reference can be compared character by character. */
+
+  /* Borders and focus ring */
+  --border-width-default : 1px;
+  --border-width-thick   : 2px;
+  --focus-ring-width     : 2px;
+  --focus-ring-offset    : 2px;
+
+  /* Letter spacing */
+  --letter-spacing-tight    : -0.025em;
+  --letter-spacing-caps     : 0.06em;
+  --letter-spacing-overline : 0.08em;
+  --letter-spacing-flag     : 0.05em;
+
+  /* Font weights */
+  --font-weight-regular  : 400;
+  --font-weight-medium   : 500;
+  --font-weight-semibold : 600;
+  --font-weight-bold     : 700;
+}
+
+/* ---------------------------------------------------------------------------
+   2. COLOUR · DARK — the product default
+   Onlee ERP ships dark. The CA portal ships light.
+   --------------------------------------------------------------------------- */
+:root[data-theme="dark"] {
+
+  /* Surfaces — Pentarch navy palette */
+  --surface-canvas  : #111522;
+  --surface-sidebar : #1E263B;
+  --surface-card    : #1E263B;
+  --surface-popover : #1E263B;
+  --surface-muted   : #1E263B;
+  --surface-hover   : rgba(152,169,196,0.12);
+  --surface-active  : rgba(152,169,196,0.24);
+  --surface-scrim   : rgba(17,21,34,0.70);
+
+  /* Text */
+  --text-primary   : #DCE3EF;
+  --text-muted     : #536684;
+  --text-subtle    : #303D59;
+  --text-on-accent : #111522;
+  --text-on-danger : #111522;
+
+  /* Borders */
+  --border-default : #303D59;
+  --border-strong  : #536684;
+  --border-popover : #303D59;
+  --border-control : #536684;
+
+  /* Accent — Mist is the only accent */
+  --accent-solid       : #98A9C4;
+  --accent-solid-hover : #8599B5;
+  --accent-text        : #98A9C4;
+  --accent-tint        : rgba(152,169,196,0.12);
+
+  /* Focus */
+  --focus-ring : rgba(152,169,196,0.24);
+
+  /* Status */
+  --success-solid : #6FAF8E;
+  --success-text  : #6FAF8E;
+  --success-tint  : rgba(111,175,142,0.12);
+  --danger-solid  : #C96C6C;
+  --danger-text   : #C96C6C;
+  --danger-tint   : rgba(201,108,108,0.12);
+  --warning-solid : #C9A24A;
+  --warning-text  : #C9A24A;
+  --warning-tint  : rgba(201,162,74,0.12);
+  --info-solid    : #98A9C4;
+  --info-text     : #98A9C4;
+  --info-tint     : rgba(152,169,196,0.12);
+
+  /* Interaction states */
+  --state-hover       : rgba(152,169,196,0.12);
+  --state-pressed     : rgba(152,169,196,0.24);
+  --state-selected-bg : rgba(152,169,196,0.24);
+  --state-selected-fg : #DCE3EF;
+  --state-invalid     : #C96C6C;
+
+  /* Neutral roles */
+  --count-bg   : #303D59;
+  --count-fg   : #DCE3EF;
+  --meter-fill : #98A9C4;
+  --marker-bg  : #1E263B;
+
+  /* Tone families — mapped to Pentarch status palette */
+  --tone-red-solid    : #C96C6C;
+  --tone-red-text     : #D98A8A;
+  --tone-red-tint     : rgba(201,108,108,0.12);
+  --tone-orange-solid : #C9A24A;
+  --tone-orange-text  : #D9B86A;
+  --tone-orange-tint  : rgba(201,162,74,0.12);
+  --tone-amber-solid  : #C9A24A;
+  --tone-amber-text   : #D9B86A;
+  --tone-amber-tint   : rgba(201,162,74,0.12);
+  --tone-yellow-solid : #C9A24A;
+  --tone-yellow-text  : #D9B86A;
+  --tone-yellow-tint  : rgba(201,162,74,0.12);
+  --tone-green-solid  : #6FAF8E;
+  --tone-green-text   : #8DC4A6;
+  --tone-green-tint   : rgba(111,175,142,0.12);
+  --tone-teal-solid   : #6FAF8E;
+  --tone-teal-text    : #8DC4A6;
+  --tone-teal-tint    : rgba(111,175,142,0.12);
+  --tone-cyan-solid   : #98A9C4;
+  --tone-cyan-text    : #B0BDD3;
+  --tone-cyan-tint    : rgba(152,169,196,0.12);
+  --tone-blue-solid   : #98A9C4;
+  --tone-blue-text    : #B0BDD3;
+  --tone-blue-tint    : rgba(152,169,196,0.12);
+  --tone-violet-solid : #98A9C4;
+  --tone-violet-text  : #B0BDD3;
+  --tone-violet-tint  : rgba(152,169,196,0.12);
+  --tone-pink-solid   : #C96C6C;
+  --tone-pink-text    : #D98A8A;
+  --tone-pink-tint    : rgba(201,108,108,0.12);
+
+  /* Charts */
+  --chart-1       : #98A9C4;
+  --chart-2       : #6FAF8E;
+  --chart-3       : #C9A24A;
+  --chart-4       : #7B8DA8;
+  --chart-5       : #C96C6C;
+  --chart-6       : #536684;
+  --chart-7       : #303D59;
+  --chart-axis-fg : #536684;
+
+  /* Project status */
+  --project-status-not-started-bg  : #1E263B;
+  --project-status-not-started-fg  : #536684;
+  --project-status-not-started-dot : #536684;
+  --project-status-in-progress-bg  : rgba(152,169,196,0.12);
+  --project-status-in-progress-fg  : #98A9C4;
+  --project-status-in-progress-dot : #98A9C4;
+  --project-status-review-bg       : rgba(201,162,74,0.12);
+  --project-status-review-fg       : #C9A24A;
+  --project-status-review-dot      : #C9A24A;
+  --project-status-on-hold-bg      : rgba(201,162,74,0.12);
+  --project-status-on-hold-fg      : #C9A24A;
+  --project-status-on-hold-dot     : #C9A24A;
+  --project-status-completed-bg    : rgba(111,175,142,0.12);
+  --project-status-completed-fg    : #6FAF8E;
+  --project-status-completed-dot   : #6FAF8E;
+
+  /* Document palette — PDFs only */
+  --color-doc-orange      : #98A9C4;
+  --color-doc-orange-dark : #536684;
+  --color-doc-amber       : #C9A24A;
+  --color-doc-ink         : #111522;
+  --color-doc-slate       : #536684;
+  --color-doc-stripe      : #1E263B;
+  --color-doc-inv-blue    : #98A9C4;
+  --color-doc-inv-grey    : #536684;
+  --color-chart-gray      : #303D59;
+
+  /* Shadows */
+  --surface-input : #111522;
+
+  --danger-border : rgba(201,108,108,0.24);
+
+  --shadow-popover: 0 8px 24px rgba(17,21,34,.55);
+  --shadow-knob: 0 1px 2px rgba(17,21,34,.35);
+  --shadow-switch-knob: 0 1px 3px rgba(17,21,34,.4);
+}
+
+/* ---------------------------------------------------------------------------
+   3. COLOUR · LIGHT
+   Passes contrast; per the designer, not yet reviewed on screen.
+   --------------------------------------------------------------------------- */
+/* Light theme — same Pentarch palette, inverted for light backgrounds */
+:root[data-theme="light"] {
+
+  --surface-canvas  : #F0F2F7;
+  --surface-sidebar : #DCE3EF;
+  --surface-card    : #ffffff;
+  --surface-popover : #ffffff;
+  --surface-muted   : #E8ECF3;
+  --surface-hover   : rgba(48,61,89,0.06);
+  --surface-active  : rgba(48,61,89,0.12);
+  --surface-scrim   : rgba(17,21,34,0.55);
+
+  --text-primary   : #111522;
+  --text-muted     : #536684;
+  --text-subtle    : #7B8DA8;
+  --text-on-accent : #DCE3EF;
+  --text-on-danger : #ffffff;
+
+  --border-default : #DCE3EF;
+  --border-strong  : #B0BDD3;
+  --border-popover : #DCE3EF;
+  --border-control : #536684;
+
+  --accent-solid       : #303D59;
+  --accent-solid-hover : #98A9C4;
+  --accent-text        : #303D59;
+  --accent-tint        : rgba(48,61,89,0.08);
+
+  --focus-ring : rgba(48,61,89,0.24);
+
+  --success-solid : #4A9068;
+  --success-text  : #2D7048;
+  --success-tint  : rgba(111,175,142,0.10);
+  --danger-solid  : #A14545;
+  --danger-text   : #8A3535;
+  --danger-tint   : rgba(201,108,108,0.10);
+  --warning-solid : #9A7A2E;
+  --warning-text  : #7D6322;
+  --warning-tint  : rgba(201,162,74,0.10);
+  --info-solid    : #536684;
+  --info-text     : #303D59;
+  --info-tint     : rgba(83,102,132,0.10);
+
+  --state-hover       : rgba(48,61,89,0.06);
+  --state-pressed     : rgba(48,61,89,0.12);
+  --state-selected-bg : rgba(48,61,89,0.12);
+  --state-selected-fg : #111522;
+  --state-invalid     : #A14545;
+
+  --count-bg   : #B0BDD3;
+  --count-fg   : #111522;
+  --meter-fill : #536684;
+  --marker-bg  : #E8ECF3;
+
+  --tone-red-solid    : #A14545;
+  --tone-red-text     : #8A3535;
+  --tone-red-tint     : rgba(161,69,69,0.10);
+  --tone-orange-solid : #9A7A2E;
+  --tone-orange-text  : #7D6322;
+  --tone-orange-tint  : rgba(154,122,46,0.10);
+  --tone-amber-solid  : #9A7A2E;
+  --tone-amber-text   : #7D6322;
+  --tone-amber-tint   : rgba(154,122,46,0.10);
+  --tone-yellow-solid : #9A7A2E;
+  --tone-yellow-text  : #7D6322;
+  --tone-yellow-tint  : rgba(154,122,46,0.10);
+  --tone-green-solid  : #4A9068;
+  --tone-green-text   : #2D7048;
+  --tone-green-tint   : rgba(74,144,104,0.10);
+  --tone-teal-solid   : #4A9068;
+  --tone-teal-text    : #2D7048;
+  --tone-teal-tint    : rgba(74,144,104,0.10);
+  --tone-cyan-solid   : #536684;
+  --tone-cyan-text    : #303D59;
+  --tone-cyan-tint    : rgba(83,102,132,0.10);
+  --tone-blue-solid   : #536684;
+  --tone-blue-text    : #303D59;
+  --tone-blue-tint    : rgba(83,102,132,0.10);
+  --tone-violet-solid : #536684;
+  --tone-violet-text  : #303D59;
+  --tone-violet-tint  : rgba(83,102,132,0.10);
+  --tone-pink-solid   : #A14545;
+  --tone-pink-text    : #8A3535;
+  --tone-pink-tint    : rgba(161,69,69,0.10);
+
+  --chart-1       : #536684;
+  --chart-2       : #4A9068;
+  --chart-3       : #9A7A2E;
+  --chart-4       : #7B8DA8;
+  --chart-5       : #A14545;
+  --chart-6       : #303D59;
+  --chart-7       : #B0BDD3;
+  --chart-axis-fg : #536684;
+
+  --project-status-not-started-bg  : #E8ECF3;
+  --project-status-not-started-fg  : #536684;
+  --project-status-not-started-dot : #536684;
+  --project-status-in-progress-bg  : rgba(83,102,132,0.10);
+  --project-status-in-progress-fg  : #303D59;
+  --project-status-in-progress-dot : #536684;
+  --project-status-review-bg       : rgba(154,122,46,0.10);
+  --project-status-review-fg       : #7D6322;
+  --project-status-review-dot      : #9A7A2E;
+  --project-status-on-hold-bg      : rgba(154,122,46,0.10);
+  --project-status-on-hold-fg      : #7D6322;
+  --project-status-on-hold-dot     : #9A7A2E;
+  --project-status-completed-bg    : rgba(74,144,104,0.10);
+  --project-status-completed-fg    : #2D7048;
+  --project-status-completed-dot   : #4A9068;
+
+  --color-doc-orange      : #536684;
+  --color-doc-orange-dark : #303D59;
+  --color-doc-amber       : #9A7A2E;
+  --color-doc-ink         : #111522;
+  --color-doc-slate       : #536684;
+  --color-doc-stripe      : #F0F2F7;
+  --color-doc-inv-blue    : #536684;
+  --color-doc-inv-grey    : #7B8DA8;
+  --color-chart-gray      : #B0BDD3;
+
+  --surface-input : #ffffff;
+
+  --danger-border : rgba(161,69,69,0.24);
+
+  --shadow-popover: 0 8px 24px rgba(17,21,34,.12);
+  --shadow-knob: 0 1px 2px rgba(17,21,34,.20);
+  --shadow-switch-knob: 0 1px 3px rgba(17,21,34,.15);
+}
+
+/* ---------------------------------------------------------------------------
+   4. TYPE ROLE UTILITIES — use these instead of composing a size and weight
+   --------------------------------------------------------------------------- */
+.type-display {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-display-size);
+  line-height: var(--type-display-line);
+  font-weight: var(--type-display-weight);
+  letter-spacing: -0.025em;
+}
+.type-page-title {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-page-title-size);
+  line-height: var(--type-page-title-line);
+  font-weight: var(--type-page-title-weight);
+  letter-spacing: -0.015em;
+}
+.type-section-title {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-section-title-size);
+  line-height: var(--type-section-title-line);
+  font-weight: var(--type-section-title-weight);
+}
+.type-card-title {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-card-title-size);
+  line-height: var(--type-card-title-line);
+  font-weight: var(--type-card-title-weight);
+}
+.type-stat-value {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-stat-value-size);
+  line-height: var(--type-stat-value-line);
+  font-weight: var(--type-stat-value-weight);
+}
+.type-body {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+}
+.type-body-strong {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-body-strong-size);
+  line-height: var(--type-body-strong-line);
+  font-weight: var(--type-body-strong-weight);
+}
+.type-body-sm {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-body-sm-size);
+  line-height: var(--type-body-sm-line);
+  font-weight: var(--type-body-sm-weight);
+}
+.type-caption {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  font-weight: var(--type-caption-weight);
+}
+.type-overline {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-overline-size);
+  line-height: var(--type-overline-line);
+  font-weight: var(--type-overline-weight);
+  letter-spacing: 0.06em;
+}
+.type-micro {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-micro-size);
+  line-height: var(--type-micro-line);
+  font-weight: var(--type-micro-weight);
+}
+.type-money {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-money-size);
+  line-height: var(--type-money-line);
+  font-weight: var(--type-money-weight);
+}
+.type-id-mono {
+  font-family: var(--font-family-mono);
+  font-size: var(--type-id-mono-size);
+  line-height: var(--type-id-mono-line);
+  font-weight: var(--type-id-mono-weight);
+}
+
+/* Money and IDs always get lining figures. */
+.type-money, .type-id-mono { font-variant-numeric: tabular-nums; }
+
+/* Keyboard focus. */
+.focus-ring:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Respect the system setting — the token exists for exactly this. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --duration-fast: var(--duration-instant);
+          --duration-base: var(--duration-instant);
+          --duration-slow: var(--duration-instant); }
+}

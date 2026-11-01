@@ -17,16 +17,27 @@ export function StatusActions({ orgId, currentStatus }: { orgId: string; current
     setLoading(false);
   }
 
-  const statusConfig: Record<string, string> = {
-    active: 'bg-green-100 text-green-800',
-    pending_setup: 'bg-yellow-100 text-yellow-800',
-    suspended: 'bg-red-100 text-red-800',
-    archived: 'bg-gray-100 text-gray-600',
-  };
+  const isDanger = currentStatus === 'suspended' || currentStatus === 'archived';
 
   return (
     <div className="flex items-center gap-3">
-      <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${statusConfig[currentStatus] || 'bg-gray-100'}`}>
+      <span
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold"
+        style={{
+          background: isDanger ? 'var(--danger-tint)' : 'var(--surface-muted)',
+          color: isDanger ? 'var(--danger-text)' : 'var(--text-muted)',
+        }}
+      >
+        <span
+          className="w-1.5 h-1.5 rounded-full"
+          style={{
+            background: isDanger
+              ? 'var(--danger-solid)'
+              : currentStatus === 'active'
+                ? 'var(--success-solid)'
+                : 'var(--text-subtle)',
+          }}
+        />
         {currentStatus.replace('_', ' ')}
       </span>
       <select
@@ -35,13 +46,18 @@ export function StatusActions({ orgId, currentStatus }: { orgId: string; current
         onChange={(e) => {
           if (e.target.value) handleStatusChange(e.target.value);
         }}
-        className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 text-gray-600"
+        className="text-[12px] rounded-md px-2.5 py-2 outline-none transition-colors duration-150 cursor-pointer appearance-none"
+        style={{
+          background: 'var(--surface-input)',
+          border: '1px solid var(--border-default)',
+          color: 'var(--text-muted)',
+        }}
       >
-        <option value="">Change status...</option>
+        <option value="" style={{ background: 'var(--surface-popover)', color: 'var(--text-subtle)' }}>Change status…</option>
         {['active', 'pending_setup', 'suspended', 'archived']
           .filter((s) => s !== currentStatus)
           .map((s) => (
-            <option key={s} value={s}>{s.replace('_', ' ')}</option>
+            <option key={s} value={s} style={{ background: 'var(--surface-popover)', color: 'var(--text-primary)' }}>{s.replace('_', ' ')}</option>
           ))}
       </select>
     </div>

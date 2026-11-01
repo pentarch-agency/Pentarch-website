@@ -38,8 +38,8 @@ export async function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(HEADER_HOST_CATEGORY, resolved.category);
 
-  if (resolved.organizationSlug) {
-    requestHeaders.set(HEADER_ORG_SLUG, resolved.organizationSlug);
+  if (resolved.organizationSlug || resolved.subdomain) {
+    requestHeaders.set(HEADER_ORG_SLUG, resolved.organizationSlug || resolved.subdomain!);
   }
   if (resolved.organizationId) {
     requestHeaders.set(HEADER_ORG_ID, resolved.organizationId);
@@ -54,14 +54,21 @@ export async function middleware(request: NextRequest) {
   // Rewrite to the correct route group based on host category
   const url = request.nextUrl.clone();
 
+  // Shared paths — served from the public route group regardless of subdomain
+  const sharedPaths = ['/invite/accept', '/api/invite/', '/api/auth/'];
+  const isSharedPath = sharedPaths.some((p) => url.pathname.startsWith(p));
+
   switch (resolved.category) {
     case 'admin':
-      url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`;
+      if (!isSharedPath) {
+        url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`;
+      }
       break;
     case 'client':
     case 'unknown':
-      // Unknown subdomains route to dashboard — the layout will handle 404
-      url.pathname = `/dashboard${url.pathname === '/' ? '' : url.pathname}`;
+      if (!isSharedPath) {
+        url.pathname = `/dashboard${url.pathname === '/' ? '' : url.pathname}`;
+      }
       break;
     case 'product':
       url.pathname = `/product${url.pathname === '/' ? '' : url.pathname}`;

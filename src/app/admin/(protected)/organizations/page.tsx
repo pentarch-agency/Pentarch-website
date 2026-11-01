@@ -1,6 +1,8 @@
 import { connection } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import { NewOrgButton } from './new-org-button';
+import OrgTable from './org-table';
 
 export default async function OrganizationsPage() {
   await connection();
@@ -12,71 +14,37 @@ export default async function OrganizationsPage() {
     .order('created_at', { ascending: false });
 
   if (error) {
-    return <div className="text-red-600">Failed to load organizations: {error.message}</div>;
+    return <div style={{ color: 'var(--danger-text)' }}>Failed to load organizations: {error.message}</div>;
   }
+
+  const all = orgs ?? [];
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Organizations</h1>
-        <Link
-          href="/admin/organizations/new"
-          className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm"
-        >
-          Create organization
-        </Link>
+      {/* Top Bar */}
+      <div
+        className="sticky top-0 z-20 -mx-6 -mt-6 px-6 mb-6"
+        style={{ background: 'var(--surface-canvas)', borderBottom: '1px solid var(--border-default)' }}
+      >
+        <div className="flex items-center justify-between py-4">
+          <div className="flex items-center gap-2.5 text-[13px] pl-10 lg:pl-0">
+            <Link href="/" className="transition-colors duration-150" style={{ color: 'var(--text-muted)' }}>Pentarch</Link>
+            <span style={{ color: 'var(--text-subtle)' }}>/</span>
+            <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>Organizations</span>
+            <span
+              className="ml-1 px-1.5 py-0.5 rounded text-[11px] font-mono font-medium"
+              style={{ background: 'var(--surface-muted)', color: 'var(--text-subtle)' }}
+            >
+              {all.length}
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <NewOrgButton />
+          </div>
+        </div>
       </div>
 
-      {!orgs || orgs.length === 0 ? (
-        <div className="bg-white rounded-xl border p-8 text-center text-gray-500">
-          No organizations yet. Create one to get started.
-        </div>
-      ) : (
-        <div className="bg-white rounded-xl border overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Slug</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Created</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {orgs.map((org) => (
-                <tr key={org.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <Link href={`/admin/organizations/${org.id}`} className="text-gray-900 font-medium hover:underline">
-                      {org.name}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 text-gray-500 font-mono text-sm">{org.slug}</td>
-                  <td className="px-6 py-4">
-                    <StatusBadge status={org.status} />
-                  </td>
-                  <td className="px-6 py-4 text-gray-500 text-sm">
-                    {new Date(org.created_at).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <OrgTable orgs={all} />
     </div>
-  );
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    active: 'bg-green-100 text-green-800',
-    pending_setup: 'bg-yellow-100 text-yellow-800',
-    suspended: 'bg-red-100 text-red-800',
-    archived: 'bg-gray-100 text-gray-600',
-  };
-  return (
-    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${styles[status] || 'bg-gray-100 text-gray-600'}`}>
-      {status.replace('_', ' ')}
-    </span>
   );
 }

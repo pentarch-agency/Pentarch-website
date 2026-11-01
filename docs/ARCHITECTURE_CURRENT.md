@@ -22,8 +22,13 @@ src/
     product/           — Product apps ({product-slug}.pentarch.agency)
       layout.tsx       — Product resolution, status check
       page.tsx         — Product shell
+    (public)/
+      invite/accept/page.tsx — Accept invitation + set password
     api/
       contact/route.ts — Public contact form submission
+      invite/
+        validate/route.ts — Token validation endpoint
+        accept/route.ts   — Account creation + membership activation
     layout.tsx         — Root layout (fonts, global CSS)
     globals.css        — Tailwind base
   lib/
@@ -31,6 +36,7 @@ src/
     hostname-resolver.test.ts — Tests for all host categories
     slug-lookup.ts        — DB-backed slug resolution
     auth/index.ts         — Auth utilities (getCurrentUser, requireAuth, requireFounder, getOrgMembership)
+    email.ts              — Resend email utility (invitation emails)
     supabase/
       server.ts           — Server-side Supabase client + admin client
       client.ts           — Browser-side Supabase client
@@ -86,8 +92,8 @@ Slug uniqueness enforced by `hostname_registry` table — shared across organiza
 
 ## What's Missing (next phases)
 
-- [ ] Supabase project connection (.env.local)
-- [ ] Invitation flow (email delivery → accept → activate membership)
+- [x] Supabase project connection (.env.local)
+- [x] Invitation flow (email delivery → accept → activate membership)
 - [ ] Project/task/milestone management
 - [ ] Discussion and messaging
 - [ ] File upload with signed URLs
