@@ -2802,7 +2802,8 @@ let cx = 0; let cy = 0; let x = 0; let y = 0; let raf2 = 0; let on = false; let 
 const loop = () => {
 const vy = cy - y;
 x += (cx - x) * 0.08; y += vy * 0.14;
-pv.style.transform = 'translate3d(' + (bx + (x - bx) * 0.06).toFixed(1) + 'px,' + (y - 200).toFixed(1) + 'px,0) rotate(' + Math.max(-7, Math.min(7, vy * 0.05)).toFixed(2) + 'deg)';
+const ty2 = Math.max(84, Math.min(window.innerHeight - pv.offsetHeight - 24, y - pv.offsetHeight * 0.5));
+pv.style.transform = 'translate3d(' + (bx + (x - bx) * 0.06).toFixed(1) + 'px,' + ty2.toFixed(1) + 'px,0) rotate(' + Math.max(-7, Math.min(7, vy * 0.05)).toFixed(2) + 'deg)';
 if (on || Math.abs(cy - y) > 0.4 || Math.abs(cy - y) > 0.4) { raf2 = requestAnimationFrame(loop); } else { raf2 = 0; }
 };
 rows.forEach((r) => {
@@ -2819,7 +2820,16 @@ const lv = () => { on = false; pv.classList.remove('on'); };
 b.addEventListener('pointerenter', en); b.addEventListener('pointermove', mv, { passive: true }); b.addEventListener('pointerleave', lv);
 offs.push(() => { b.removeEventListener('pointerenter', en); b.removeEventListener('pointermove', mv); b.removeEventListener('pointerleave', lv); });
 });
-offs.push(() => cancelAnimationFrame(raf2));
+const hide = () => { on = false; pv.classList.remove('on'); };
+const chk = () => {
+if (!on) { return; }
+const el = document.elementFromPoint(cx, cy);
+if (!el || !el.closest || !el.closest('.pj-hd')) { hide(); }
+};
+window.addEventListener('scroll', chk, { passive: true });
+window.addEventListener('blur', hide);
+document.addEventListener('pointerleave', hide);
+offs.push(() => { cancelAnimationFrame(raf2); hide(); window.removeEventListener('scroll', chk); window.removeEventListener('blur', hide); document.removeEventListener('pointerleave', hide); });
 }
 /* hud + progress */
 const rvs = Array.from(root.querySelectorAll('.pj-rv'));
