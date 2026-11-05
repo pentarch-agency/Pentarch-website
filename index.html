@@ -1786,7 +1786,6 @@ const calm = (el) => { el.style.transform = ''; el.style.clipPath = ''; el.style
 const stopG = (el) => { if (el._gt) { clearInterval(el._gt); el._gt = null; } };
 ldWords.forEach((el) => { el.setAttribute('data-orig', el.textContent); });
 const glitchIn = (el) => {
-try { window.__sfx && window.__sfx('glitch'); } catch (e) {}
 stopG(el);
 const orig = el.getAttribute('data-orig');
 const n = orig.length; let f = 0; const F = 8;
@@ -1795,6 +1794,7 @@ el._gt = setInterval(() => {
 f++;
 const p = f / F;
 const keep = 0;
+try { if (window.__sfx) { window.__sfx(f >= F ? 'gl_lock' : 'gl_tick', 0, { p: p, i: ldWords.indexOf(el) }); } } catch (e) {}
 el.textContent = Array.from(orig).map((c, i) => (c === ' ' || c === '&' || Math.random() > (1 - p) * 0.55) ? c : GL[Math.floor(Math.random() * GL.length)]).join('');
 if (f >= F) { stopG(el); el.textContent = orig; calm(el); return; }
 const amp = (1 - p) * 30 + 3;
@@ -1805,12 +1805,12 @@ if (Math.random() < 0.7 - p * 0.4) { const t = rnd(0, 60), b = rnd(0, 60); el.st
 }, 36);
 };
 const glitchOut = (el) => {
-try { window.__sfx && window.__sfx('glitch'); } catch (e) {}
 stopG(el);
 const orig = el.getAttribute('data-orig');
 let f = 0; const F = 3;
 el._gt = setInterval(() => {
 f++;
+try { if (window.__sfx && f < F) { window.__sfx('gl_out', 0, { p: f / F, i: ldWords.indexOf(el) }); } } catch (e) {}
 if (f >= F) { stopG(el); el.style.opacity = '0'; el.textContent = orig; calm(el); return; }
 const dx = rnd(-26, 26);
 el.textContent = Array.from(orig).map((c) => (c === ' ' || c === '&' || Math.random() < 0.55) ? c : GL[Math.floor(Math.random() * GL.length)]).join('');
@@ -3763,7 +3763,7 @@ if (this._sfxOff) { this._sfxOff(); }
 const AC = window.AudioContext || window.webkitAudioContext;
 let ctx = null; let master = null; let noiseBuf = null; let crush = null;
 let on = false;
-try { on = localStorage.getItem('pa-sfx') === '1'; } catch (e) {}
+on = true; try { on = localStorage.getItem('pa-sfx') !== '0'; } catch (e) {}
 const lastAt = {};
 const ensure = () => {
 if (!AC) { return null; }
@@ -3794,6 +3794,13 @@ f.frequency.setValueAtTime(f0, t0); if (f1 && f1 !== f0) { f.frequency.exponenti
 const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + Math.min(0.02, dur / 3)); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
 s.connect(f); f.connect(g); g.connect(dest || master); s.start(t0, Math.random() * 0.5); s.stop(t0 + dur + 0.02);
 };
+const SC = [196, 233.1, 261.6, 311.1, 349.2];
+const blip = (t0, f, dur, vol) => {
+const o = ctx.createOscillator(); const g = ctx.createGain(); const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3200;
+o.type = 'triangle'; o.frequency.setValueAtTime(f, t0);
+g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+o.connect(lp); lp.connect(g); g.connect(master); o.start(t0); o.stop(t0 + dur + 0.02);
+};
 const S = {
 hover(t) { tone('sine', 2200, 2900, t, 0.035, 0.03); },
 click(t) { tone('triangle', 950, 320, t, 0.07, 0.16); noise(t, 0.02, 0.1, 3500, 3500, 1, 'highpass'); },
@@ -3809,23 +3816,33 @@ chime(t) { [880, 1320, 1760].forEach((f, i) => tone('sine', f, f, t + i * 0.012,
 swish(t) { noise(t, 0.2, 0.1, 900, 2200, 1.1); },
 shimmer(t) { [1046, 1318, 1568, 2093, 2637].forEach((f, i) => tone('sine', f, f, t + i * 0.07, 0.7, 0.05)); },
 glitch(t) {
-const n = 7 + Math.floor(Math.random() * 4); let at = t;
-for (let i = 0; i < n; i++) {
-const d = R(0.012, 0.04);
-noise(at, d, R(0.14, 0.3), R(700, 7000), R(300, 7000), R(4, 12), 'bandpass', crush);
-if (Math.random() < 0.65) { tone('square', R(70, 1400), R(40, 2400), at, d, R(0.05, 0.11), crush); }
-at += d + R(0.004, 0.032);
-}
-tone('sawtooth', 190, 38, at, 0.1, 0.08, crush);
+for (let k = 0; k < 5; k++) { blip(t + k * 0.04, SC[Math.floor(Math.random() * SC.length)] * (Math.random() < 0.5 ? 2 : 3), 0.035, 0.05); }
+noise(t, 0.2, 0.012, 7000, 7000, 1, 'highpass'); blip(t + 0.22, SC[2] * 4, 0.12, 0.04);
+},
+gl_tick(t, a) {
+a = a || {}; const p = a.p || 0; const i = a.i >= 0 ? a.i : 0; const base = SC[i % SC.length] * (i >= SC.length ? 2 : 1);
+const steps = [1, 1.25, 1.5, 2, 2.5, 3]; const f = Math.random() < (1 - p) * 0.85 ? base * 2 * steps[Math.floor(Math.random() * steps.length)] : base * 2;
+blip(t, f, 0.03, 0.045 + 0.03 * p); noise(t, 0.008, 0.02, 6500, 6500, 1, 'highpass');
+},
+gl_lock(t, a) {
+a = a || {}; const i = a.i >= 0 ? a.i : 0; const base = SC[i % SC.length] * (i >= SC.length ? 2 : 1) * 2;
+tone('sine', base, base, t, 0.32, 0.11); tone('sine', base * 1.5, base * 1.5, t + 0.012, 0.26, 0.05); tone('triangle', base * 3, base * 3, t, 0.12, 0.035); noise(t, 0.012, 0.03, 5000, 5000, 1, 'highpass');
+},
+gl_out(t, a) {
+a = a || {}; const p = a.p || 0; const i = a.i >= 0 ? a.i : 0; const base = SC[i % SC.length] * (i >= SC.length ? 2 : 1) * 2;
+blip(t, base * (1.6 - p * 0.9), 0.05, 0.05);
 },
 };
-const play = (name, delay) => {
+const play = (name, delay, arg) => {
 if (!on) { return; }
-const gap = name === 'hover' ? 55 : name === 'glitch' ? 140 : name === 'deal' ? 30 : 25;
+const gap = name === 'hover' ? 55 : name === 'glitch' ? 140 : name === 'deal' ? 30 : name.indexOf('gl_') === 0 ? 0 : 25;
 const now = performance.now(); if (lastAt[name] && now - lastAt[name] < gap) { return; } lastAt[name] = now;
-try { if (!ensure() || !S[name]) { return; } S[name](ctx.currentTime + (delay || 0) + 0.005); } catch (e) {}
+try { if (!ensure() || !S[name]) { return; } S[name](ctx.currentTime + (delay || 0) + 0.005, arg); } catch (e) {}
 };
 window.__sfx = play;
+if (on) { try { ensure(); } catch (e) {} }
+const unlock = () => { if (on) { try { ensure(); } catch (e) {} } ['pointerdown', 'keydown', 'touchstart'].forEach((ev) => document.removeEventListener(ev, unlock, true)); };
+['pointerdown', 'keydown', 'touchstart'].forEach((ev) => document.addEventListener(ev, unlock, true));
 /* toggle button */
 let btn = document.getElementById('pa-sfx');
 if (!btn) {
@@ -3873,7 +3890,7 @@ if (t.closest('.st-cd')) { return; }
 if (t.closest('a[href],button,.navcta,.btn,.pj-hd,.drow')) { play('click'); }
 };
 document.addEventListener('click', clk, true);
-this._sfxOff = () => { document.removeEventListener('mouseover', over); document.removeEventListener('click', clk, true); window.removeEventListener('resize', place); if (btn) { btn.removeEventListener('click', onBtn); } window.__sfx = function () {}; };
+this._sfxOff = () => { ['pointerdown', 'keydown', 'touchstart'].forEach((ev) => document.removeEventListener(ev, unlock, true)); document.removeEventListener('mouseover', over); document.removeEventListener('click', clk, true); window.removeEventListener('resize', place); if (btn) { btn.removeEventListener('click', onBtn); } window.__sfx = function () {}; };
 }
 paRouter() {
 const doc = document;
