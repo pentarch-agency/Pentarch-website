@@ -1615,8 +1615,8 @@ if (wbg) { gsap.to(wbg, { x: () => -dist() * 0.45, ease: 'none', scrollTrigger: 
 plates.forEach((p) => {
 gsap.to(qa('.wd', p), { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut', stagger: 0.03, scrollTrigger: { trigger: p, containerAnimation: tween, start: 'left 85%', toggleActions: 'play none none none' } });
 /* depth: plates swing in on a 3D hinge, then peel away */
-gsap.fromTo(p, { rotateY: 28, scale: 0.86, opacity: 0.35, transformPerspective: 1400, transformOrigin: '50% 50%' }, { rotateY: 0, scale: 1, opacity: 1, ease: 'none', scrollTrigger: { trigger: p, containerAnimation: tween, start: 'left 98%', end: 'left 48%', scrub: true } });
-gsap.fromTo(p, { rotateY: 0, scale: 1, opacity: 1 }, { rotateY: -22, scale: 0.9, opacity: 0.4, ease: 'none', immediateRender: false, scrollTrigger: { trigger: p, containerAnimation: tween, start: 'right 28%', end: 'right 0%', scrub: true } });
+gsap.fromTo(p, { rotateY: 28, scale: 0.86, opacity: 0.35, transformPerspective: 1400, transformOrigin: '50% 50%' }, { rotateY: 0, scale: 1, opacity: 1, ease: 'none', scrollTrigger: { trigger: p, containerAnimation: tween, start: 'left 98%', end: 'right 97%', scrub: true } });
+if (p !== plates[plates.length - 1]) gsap.fromTo(p, { rotateY: 0, scale: 1, opacity: 1 }, { rotateY: -22, scale: 0.9, opacity: 0.4, ease: 'none', immediateRender: false, scrollTrigger: { trigger: p, containerAnimation: tween, start: 'right 28%', end: 'right 0%', scrub: true } });
 const gn = q('.gn', p);
 if (gn) { gsap.fromTo(gn, { x: 90 }, { x: -90, ease: 'none', scrollTrigger: { trigger: p, containerAnimation: tween, start: 'left 100%', end: 'right 0%', scrub: true } }); }
 });
