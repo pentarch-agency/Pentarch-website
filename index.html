@@ -2328,7 +2328,7 @@ dpr = Math.min(2, window.devicePixelRatio || 1);
 cw = Math.round(cv.clientWidth * dpr); chh = Math.round(cv.clientHeight * dpr);
 if (cv.width !== cw) { cv.width = cw; } if (cv.height !== chh) { cv.height = chh; }
 };
-const mk = (init) => ({ t: init ? Math.random() : 0, life: 5 + Math.random() * 5, a0: Math.random() * 6.283, sp: (1.4 + Math.random() * 1.6) * (Math.random() < 0.5 ? 1 : -1), z: 0.7 + Math.random() * 1.3, px: 0, py: 0 });
+const mk = (init) => ({ t: init ? Math.random() : 0, life: 2.8 + Math.random() * 3, a0: Math.random() * 6.283, sp: (1.4 + Math.random() * 1.6) * (Math.random() < 0.5 ? 1 : -1), z: 0.7 + Math.random() * 1.3, px: 0, py: 0 });
 const draw = (now) => {
 pr = 0;
 if (!live) { return; }
@@ -3721,7 +3721,7 @@ const g = cv.getContext('2d'); if (!g) { return; }
 const fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
 let W = 0; let H = 0; let dpr = 1; let ps = []; let raf = 0; let last = 0; let sy0 = window.scrollY || 0;
 let mx = -9999; let my = -9999;
-const mk = (anywhere) => { const z = 0.25 + Math.random() * 0.75; return { x: Math.random() * W, y: anywhere ? Math.random() * H : H + 10 + Math.random() * 40, z: z, vx: 0, vy: 0, ph: Math.random() * 6.283, sw: 6 + Math.random() * 14 }; };
+const mk = (anywhere) => { const z = 0.25 + Math.random() * 0.75; return { x: Math.random() * W, y: anywhere ? Math.random() * H : H + 10 + Math.random() * 40, z: z, vx: 0, vy: 0, ph: Math.random() * 6.283, sw: 10 + Math.random() * 20 }; };
 const fit = () => {
 dpr = Math.min(1.5, window.devicePixelRatio || 1);
 W = window.innerWidth; H = window.innerHeight;
@@ -3737,8 +3737,8 @@ const sy = window.scrollY || 0; const ds = sy - sy0; sy0 = sy;
 g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
 for (let i = 0; i < ps.length; i++) {
 const p = ps[i];
-p.y -= ds * p.z * 0.3 + (5 + 15 * p.z) * dt;
-p.ph += dt * 0.5;
+p.y -= ds * p.z * 0.45 + (16 + 44 * p.z) * dt;
+p.ph += dt * 0.95;
 let tx = Math.sin(p.ph) * p.sw * 0.6; let ty = 0;
 if (fine) { const dx = p.x - mx; const dy = p.y - my; const d2 = dx * dx + dy * dy; if (d2 < 16900 && d2 > 1) { const d = Math.sqrt(d2); const f = (130 - d) / 130; tx += dx / d * f * 70; ty += dy / d * f * 70; } }
 p.vx += (tx - p.vx) * Math.min(1, dt * 3); p.vy += (ty - p.vy) * Math.min(1, dt * 3);
