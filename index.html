@@ -538,6 +538,7 @@ SHEET 3/3" style="flex:1; display:flex; align-items:center; justify-content:cent
 <a href="#/services" class="lnk">Services</a>
 <a href="#/projects" class="lnk">Projects</a>
 <a href="#/approach" class="lnk">Approach</a>
+<a href="#/contact" class="lnk">Contact</a>
 </div>
 <div style="display:flex; flex-wrap:wrap; gap:12px 32px">
 <a href="#contact" class="lnk">[INSTAGRAM]</a>
@@ -3513,6 +3514,26 @@ const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: 
 const ov = doc.getElementById('pa-pt');
 if (ov) { ov.classList.remove('boot'); ov.className = ''; }
 const ctx = this._ctx;
+const fitWm = () => {
+doc.querySelectorAll('[data-wm]').forEach((el) => {
+const host = el.closest('[data-route]');
+if (host && !host.classList.contains('act')) { return; }
+const inner = el.querySelector('.shimxl') || el;
+const node = inner.firstChild;
+if (!node || !el.clientWidth) { return; }
+const fs = parseFloat(getComputedStyle(el).fontSize) || 16;
+if (inner !== el && inner.style.display !== 'inline-block') { inner.style.display = 'inline-block'; }
+const tw = inner.getBoundingClientRect().width;
+if (!tw) { return; }
+const target = el.clientWidth * 0.975;
+const nf = Math.max(40, Math.min(fs * target / tw, el.clientWidth * 0.26));
+if (Math.abs(nf - fs) > 0.5) { el.style.fontSize = nf.toFixed(2) + 'px'; }
+});
+};
+this._fitWm = fitWm;
+window.addEventListener('resize', () => { requestAnimationFrame(fitWm); });
+if (doc.fonts && doc.fonts.ready) { doc.fonts.ready.then(() => { fitWm(); }); }
+setTimeout(fitWm, 400); setTimeout(fitWm, 1500);
 const box = (k) => doc.querySelector('[data-route="' + k + '"]');
 let cur = 'home';
 let busy = false;
@@ -3578,6 +3599,7 @@ try { window.scrollTo(0, 0); } catch (e) {}
 try { doc.documentElement.scrollTop = 0; doc.body.scrollTop = 0; } catch (e) {}
 try { doc.title = PAGES[key][2]; } catch (e) {}
 syncTheme();
+setTimeout(fitWm, 60);
 const init = () => {
 setTimeout(() => watch(key), 50);
 if (key === 'studio') { try { ctx.studio.paStudio(); } catch (e) { console.warn('[pentarch] studio', e); } }
