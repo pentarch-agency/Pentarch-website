@@ -3112,7 +3112,7 @@ const capn = cvw.querySelector('[data-ap-capn]'); const capt = cvw.querySelector
 const names = ['Decide', 'Structure', 'Style', 'Fill', 'Measure'];
 const caps = ['Write down the goal, the audience and how we will measure it.', 'Lay out the pages and the parts they are made from.', 'Add type, colour and the rules that hold them together.', 'Bring in the words, images and film that say it.', 'Launch, read the numbers and keep improving.'];
 let cur = -1; let prog = 0; let hov = false; let vis = true; let last = 0; let raf = 0;
-const DUR = 4200;
+const DUR = 2200;
 const show = (k) => {
 if (k === cur) { return; }
 cur = k; prog = 0;
@@ -3145,7 +3145,7 @@ if (prog >= 1) { if (cur === 4) { show(0); } else { show(cur + 1); } }
 }
 const c = chips[cur]; if (c) { c.style.setProperty('--p', Math.min(1, prog).toFixed(3)); }
 };
-const t0 = setTimeout(() => { last = performance.now(); raf = requestAnimationFrame(tick); }, 2600);
+const t0 = setTimeout(() => { last = performance.now(); raf = requestAnimationFrame(tick); }, 1800);
 offs.push(() => { clearTimeout(t0); cancelAnimationFrame(raf); });
 } else { show(4); }
 /* gentle tilt toward the pointer */
