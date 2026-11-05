@@ -3707,6 +3707,58 @@ frame();
 offs.push(() => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); });
 this._ctOff = () => { offs.forEach((fn) => { try { fn(); } catch (e) {} }); };
 }
+paDust() {
+if (this._dustOff) { this._dustOff(); }
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+if (reduce) { return; }
+let cv = document.getElementById('pa-dust');
+if (!cv) {
+cv = document.createElement('canvas'); cv.id = 'pa-dust'; cv.setAttribute('aria-hidden', 'true');
+cv.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:3;contain:strict';
+document.body.appendChild(cv);
+}
+const g = cv.getContext('2d'); if (!g) { return; }
+const fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+let W = 0; let H = 0; let dpr = 1; let ps = []; let raf = 0; let last = 0; let sy0 = window.scrollY || 0;
+let mx = -9999; let my = -9999;
+const mk = (anywhere) => { const z = 0.25 + Math.random() * 0.75; return { x: Math.random() * W, y: anywhere ? Math.random() * H : H + 10 + Math.random() * 40, z: z, vx: 0, vy: 0, ph: Math.random() * 6.283, sw: 6 + Math.random() * 14 }; };
+const fit = () => {
+dpr = Math.min(1.5, window.devicePixelRatio || 1);
+W = window.innerWidth; H = window.innerHeight;
+cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+const n = W < 700 ? 34 : Math.max(46, Math.min(90, Math.round(W * H / 20000)));
+while (ps.length < n) { ps.push(mk(true)); }
+ps.length = n;
+};
+const frame = (now) => {
+raf = requestAnimationFrame(frame);
+const dt = Math.min(0.05, (now - last) / 1000); last = now;
+const sy = window.scrollY || 0; const ds = sy - sy0; sy0 = sy;
+g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+for (let i = 0; i < ps.length; i++) {
+const p = ps[i];
+p.y -= ds * p.z * 0.3 + (5 + 15 * p.z) * dt;
+p.ph += dt * 0.5;
+let tx = Math.sin(p.ph) * p.sw * 0.6; let ty = 0;
+if (fine) { const dx = p.x - mx; const dy = p.y - my; const d2 = dx * dx + dy * dy; if (d2 < 16900 && d2 > 1) { const d = Math.sqrt(d2); const f = (130 - d) / 130; tx += dx / d * f * 70; ty += dy / d * f * 70; } }
+p.vx += (tx - p.vx) * Math.min(1, dt * 3); p.vy += (ty - p.vy) * Math.min(1, dt * 3);
+const x = p.x + p.vx; const y = p.y + p.vy;
+if (p.y < -12) { ps[i] = mk(false); ps[i].x = Math.random() * W; continue; }
+if (p.y > H + 60) { p.y = -8; p.x = Math.random() * W; }
+g.fillStyle = 'rgba(170,200,255,' + (0.16 + p.z * 0.42).toFixed(2) + ')';
+g.beginPath(); g.arc(x, y, 0.7 + p.z * 1.5, 0, 6.283); g.fill();
+}
+};
+const start = () => { if (!raf && !document.hidden) { last = performance.now(); sy0 = window.scrollY || 0; raf = requestAnimationFrame(frame); } };
+const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
+const vis = () => { if (document.hidden) { stop(); } else { start(); } };
+const mv = (e) => { mx = e.clientX; my = e.clientY; };
+const lv = () => { mx = -9999; my = -9999; };
+fit(); start();
+window.addEventListener('resize', fit); document.addEventListener('visibilitychange', vis);
+if (fine) { window.addEventListener('pointermove', mv, { passive: true }); document.addEventListener('mouseleave', lv); }
+this._dustOff = () => { stop(); window.removeEventListener('resize', fit); document.removeEventListener('visibilitychange', vis); window.removeEventListener('pointermove', mv); document.removeEventListener('mouseleave', lv); if (cv && cv.parentNode) { cv.parentNode.removeChild(cv); } };
+}
 paRouter() {
 const doc = document;
 const PAGES = { home: ['Pentarch', '01', 'Pentarch'], studio: ['Studio', '02', 'Pentarch — Studio'], services: ['Services', '03', 'Pentarch — Services'], projects: ['Projects', '04', 'Pentarch — Projects'], approach: ['Approach', '05', 'Pentarch — Approach'], contact: ['Contact', '06', 'Pentarch — Contact'] };
@@ -3866,6 +3918,7 @@ try { c.paTheme(); } catch (e) { console.warn('[pentarch] theme', e); }
 try { c.paMenu(); } catch (e) { console.warn('[pentarch] menu', e); }
 if (p[0] !== 'services') { try { c.paHdr(); } catch (e) { console.warn('[pentarch] hdr', e); } }
 });
+try { this.paDust(); } catch (e) { console.warn('[pentarch] dust', e); }
 try { this.paCta(); } catch (e) { console.warn('[pentarch] cta', e); }
 try { this.paRouter(); } catch (e) { console.warn('[pentarch] route', e); }
 const go = () => {
@@ -3884,6 +3937,7 @@ const all = this._ctx ? [this._ctx.home, this._ctx.studio, this._ctx.services, t
 all.forEach((c) => {
 ['_paThemeOff', '_paMenuOff', '_hdrOff', '_stOff', '_svOff', '_pjOff', '_apOff', '_ctOff'].forEach((k) => { if (c && c[k]) { try { c[k](); } catch (e) {} } });
 });
+if (this._dustOff) { try { this._dustOff(); } catch (e) {} }
 if (this._ctaOff) { try { this._ctaOff(); } catch (e) {} }
 if (this._routerOff) { this._routerOff(); }
 clearInterval(this._paPoll);
