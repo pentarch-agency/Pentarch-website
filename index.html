@@ -3748,7 +3748,13 @@ const gy = window.__gyro; const x = p.x + p.vx + (gy ? gy.x * p.z * 130 : 0); co
 if (p.y < -12) { ps[i] = mk(false); ps[i].x = Math.random() * W; continue; }
 if (p.y > H + 60) { p.y = -8; p.x = Math.random() * W; }
 g.fillStyle = 'rgba(170,200,255,' + (0.16 + p.z * 0.42).toFixed(2) + ')';
-g.beginPath(); g.arc(x, y, 0.7 + p.z * 1.5, 0, 6.283); g.fill();
+const r = 0.7 + p.z * 1.5; const sv = gy ? Math.hypot(gy.vx || 0, gy.vy || 0) : 0;
+if (sv > 0.0035) {
+const k = Math.min(44, sv * 1700) * p.z; const a = Math.atan2(gy.vy, gy.vx);
+g.strokeStyle = g.fillStyle; g.lineWidth = r * 1.05; g.lineCap = 'round';
+g.beginPath(); g.moveTo(x, y); g.lineTo(x - Math.cos(a) * k, y - Math.sin(a) * k); g.stroke();
+}
+g.beginPath(); g.arc(x, y, r, 0, 6.283); g.fill();
 }
 };
 const start = () => { if (!raf && !document.hidden) { last = performance.now(); sy0 = window.scrollY || 0; raf = requestAnimationFrame(frame); } };
@@ -3909,6 +3915,13 @@ if (!coarse || reduce || typeof window.DeviceOrientationEvent === 'undefined') {
 let want = true; try { want = localStorage.getItem('pa-gyro') !== '0'; } catch (e) {}
 const needPerm = typeof window.DeviceOrientationEvent.requestPermission === 'function';
 let oriReal = false; let fbT = 0; let listening = false; let granted = !needPerm; let base = null; let tx = 0; let ty = 0; let cx = 0; let cy = 0; let raf = 0; let tgt = []; let tgtAt = 0; let gotData = false;
+/* tilt lamp: a soft pool of light that slides across the page like a torch held over glass */
+let lamp = document.getElementById('pa-lamp');
+if (!lamp) {
+lamp = document.createElement('div'); lamp.id = 'pa-lamp'; lamp.setAttribute('aria-hidden', 'true');
+lamp.style.cssText = 'position:fixed;left:50%;top:50%;width:120vmax;height:120vmax;margin:-60vmax 0 0 -60vmax;pointer-events:none;z-index:2;opacity:0;transition:opacity 1.2s ease;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,rgba(143,180,255,.20) 0,rgba(143,180,255,.08) 14%,rgba(143,180,255,0) 34%);will-change:translate,opacity;contain:strict';
+document.body.appendChild(lamp);
+}
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const targets = (now) => {
 if (now - tgtAt < 700 && tgt.length) { return tgt; }
@@ -3929,6 +3942,7 @@ if (b.width > 150 && b.height > 120) { tgt.push({ el: c, k: 'v' }); hit = true; 
 if (hit) { break; }
 }
 });
+document.querySelectorAll('[data-hero-art] .slab').forEach((el) => tgt.push({ el: el, k: 's', i: parseInt(el.getAttribute('data-i'), 10) || 3 }));
 document.querySelectorAll('[data-glow]').forEach((el) => tgt.push({ el: el, k: 'g' }));
 document.querySelectorAll('.hh-p').forEach((el) => { if (el.offsetParent) { tgt.push({ el: el, k: 'q' }); } });
 document.querySelectorAll('.st-cd .st-tilt').forEach((el) => tgt.push({ el: el, k: 't' }));
@@ -3939,7 +3953,8 @@ const L = targets(now); const x = cx; const y = cy;
 for (let i = 0; i < L.length; i++) {
 const o = L[i]; const s = o.el.style;
 if (o.k === 'p') { s.translate = (x * 44).toFixed(1) + 'px ' + (y * 34).toFixed(1) + 'px'; }
-else if (o.k === 'v') { s.translate = (x * 42).toFixed(1) + 'px ' + (y * 30).toFixed(1) + 'px'; }
+else if (o.k === 's') { const d = o.i - 3; s.translate = (d * x * 34).toFixed(1) + 'px ' + (d * y * 12).toFixed(1) + 'px'; }
+else if (o.k === 'v') { s.translate = (x * 16).toFixed(1) + 'px ' + (y * 12).toFixed(1) + 'px'; }
 else if (o.k === 'g') { s.translate = (x * 90).toFixed(1) + 'px ' + (y * 60).toFixed(1) + 'px'; }
 else if (o.k === 'q') { s.translate = (-x * 7).toFixed(1) + 'px ' + (-y * 4).toFixed(1) + 'px'; }
 else if (o.k === 'h') { s.translate = (-x * 16).toFixed(1) + 'px ' + (-y * 10).toFixed(1) + 'px'; }
@@ -3950,14 +3965,17 @@ s.setProperty('--rx', (-y * 12).toFixed(2) + 'deg'); s.setProperty('--ry', (x * 
 }
 };
 const clear = () => {
+lamp.style.opacity = '0'; lamp.style.translate = '';
 tgtAt = 0; targets(performance.now()).forEach((o) => { if (o.k === 't') { o.el.style.removeProperty('--rx'); o.el.style.removeProperty('--ry'); } else { o.el.style.translate = ''; } });
 };
 const frame = (now) => {
 raf = 0;
 cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
+G.vx = cx - (G.x || 0); G.vy = cy - (G.y || 0);
 G.x = cx; G.y = cy; apply(now);
+lamp.style.translate = (cx * window.innerWidth * 0.42).toFixed(0) + 'px ' + (cy * window.innerHeight * 0.34).toFixed(0) + 'px'; lamp.style.opacity = '1';
 if (ico) { ico.style.transform = 'rotate(' + (cx * 38).toFixed(1) + 'deg)'; }
-if (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002) { raf = requestAnimationFrame(frame); }
+if (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002) { raf = requestAnimationFrame(frame); } else { G.vx = 0; G.vy = 0; }
 };
 const kick = () => { if (!raf && !document.hidden) { raf = requestAnimationFrame(frame); } };
 const onOri = (e) => {
@@ -4066,7 +4084,7 @@ const rot = () => { base = null; };
 const hc = () => { [300, 900, 1800].forEach((d) => setTimeout(() => { tgtAt = 0; if (G.on) { apply(performance.now()); } }, d)); };
 window.addEventListener('hashchange', hc);
 window.addEventListener('orientationchange', rot);
-this._gyroOff = () => { clearTimeout(fbT); hideChip(); unlisten(); if (raf) { cancelAnimationFrame(raf); } TAP.forEach((t) => document.removeEventListener(t, firstTap, true)); document.removeEventListener('visibilitychange', vis); window.removeEventListener('orientationchange', rot); window.removeEventListener('hashchange', hc); window.removeEventListener('resize', place); btn.removeEventListener('click', onBtn); clear(); window.__gyro = { x: 0, y: 0, on: false }; };
+this._gyroOff = () => { if (lamp && lamp.parentNode) { lamp.parentNode.removeChild(lamp); } clearTimeout(fbT); hideChip(); unlisten(); if (raf) { cancelAnimationFrame(raf); } TAP.forEach((t) => document.removeEventListener(t, firstTap, true)); document.removeEventListener('visibilitychange', vis); window.removeEventListener('orientationchange', rot); window.removeEventListener('hashchange', hc); window.removeEventListener('resize', place); btn.removeEventListener('click', onBtn); clear(); window.__gyro = { x: 0, y: 0, on: false }; };
 }
 paRouter() {
 const doc = document;
