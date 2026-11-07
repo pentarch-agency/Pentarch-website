@@ -3741,7 +3741,7 @@ p.ph += dt * 0.95;
 let tx = Math.sin(p.ph) * p.sw * 0.6; let ty = 0;
 if (fine) { const dx = p.x - mx; const dy = p.y - my; const d2 = dx * dx + dy * dy; if (d2 < 16900 && d2 > 1) { const d = Math.sqrt(d2); const f = (130 - d) / 130; tx += dx / d * f * 70; ty += dy / d * f * 70; } }
 p.vx += (tx - p.vx) * Math.min(1, dt * 3); p.vy += (ty - p.vy) * Math.min(1, dt * 3);
-const x = p.x + p.vx; const y = p.y + p.vy;
+const gy = window.__gyro; const x = p.x + p.vx + (gy ? gy.x * p.z * 46 : 0); const y = p.y + p.vy + (gy ? gy.y * p.z * 30 : 0);
 if (p.y < -12) { ps[i] = mk(false); ps[i].x = Math.random() * W; continue; }
 if (p.y > H + 60) { p.y = -8; p.x = Math.random() * W; }
 g.fillStyle = 'rgba(170,200,255,' + (0.16 + p.z * 0.42).toFixed(2) + ')';
@@ -3896,6 +3896,100 @@ if (t.closest('a[href],button,.navcta,.btn,.pj-hd,.drow')) { play('click'); }
 };
 document.addEventListener('click', clk, true);
 this._sfxOff = () => { ['pointerdown', 'keydown', 'touchstart'].forEach((ev) => document.removeEventListener(ev, unlock, true)); document.removeEventListener('mouseover', over); document.removeEventListener('click', clk, true); window.removeEventListener('resize', place); if (btn) { btn.removeEventListener('click', onBtn); } window.__sfx = function () {}; };
+}
+paGyro() {
+if (this._gyroOff) { this._gyroOff(); }
+const coarse = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+const G = window.__gyro = { x: 0, y: 0, on: false };
+if (!coarse || reduce || typeof window.DeviceOrientationEvent === 'undefined') { return; }
+let want = true; try { want = localStorage.getItem('pa-gyro') !== '0'; } catch (e) {}
+const needPerm = typeof window.DeviceOrientationEvent.requestPermission === 'function';
+let listening = false; let granted = !needPerm; let base = null; let tx = 0; let ty = 0; let cx = 0; let cy = 0; let raf = 0; let tgt = []; let tgtAt = 0; let gotData = false;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const targets = (now) => {
+if (now - tgtAt < 700 && tgt.length) { return tgt; }
+tgtAt = now; tgt = [];
+document.querySelectorAll('.hx-pent').forEach((el) => tgt.push({ el: el, k: 'p' }));
+document.querySelectorAll('.hx-mq').forEach((el) => tgt.push({ el: el, k: 'm' }));
+document.querySelectorAll('.st-cd .st-tilt').forEach((el) => tgt.push({ el: el, k: 't' }));
+return tgt;
+};
+const apply = (now) => {
+const L = targets(now); const x = cx; const y = cy;
+for (let i = 0; i < L.length; i++) {
+const o = L[i]; const s = o.el.style;
+if (o.k === 'p') { s.translate = (x * 26).toFixed(1) + 'px ' + (y * 20).toFixed(1) + 'px'; }
+else if (o.k === 'm') { s.translate = (-x * 34).toFixed(1) + 'px ' + (-y * 14).toFixed(1) + 'px'; }
+else if (!o.el.parentNode.classList.contains('lift') && !o.el.parentNode.classList.contains('spin')) {
+s.setProperty('--rx', (-y * 9).toFixed(2) + 'deg'); s.setProperty('--ry', (x * 11).toFixed(2) + 'deg');
+}
+}
+};
+const clear = () => {
+tgtAt = 0; targets(performance.now()).forEach((o) => { if (o.k === 't') { o.el.style.removeProperty('--rx'); o.el.style.removeProperty('--ry'); } else { o.el.style.translate = ''; } });
+};
+const frame = (now) => {
+raf = 0;
+cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
+G.x = cx; G.y = cy; apply(now);
+if (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002) { raf = requestAnimationFrame(frame); }
+};
+const kick = () => { if (!raf && !document.hidden) { raf = requestAnimationFrame(frame); } };
+const onOri = (e) => {
+if (!want || e.gamma == null || e.beta == null) { return; }
+gotData = true;
+const a = (screen.orientation && typeof screen.orientation.angle === 'number') ? screen.orientation.angle : (window.orientation || 0);
+let rx = e.gamma; let ry = e.beta;
+if (a === 90) { rx = e.beta; ry = -e.gamma; } else if (a === 270 || a === -90) { rx = -e.beta; ry = e.gamma; } else if (a === 180) { rx = -e.gamma; ry = -e.beta; }
+if (!base) { base = { x: rx, y: ry }; }
+base.x += (rx - base.x) * 0.012; base.y += (ry - base.y) * 0.012;
+tx = clamp((rx - base.x) / 22, -1, 1); ty = clamp((ry - base.y) / 22, -1, 1);
+if (!granted) { granted = true; paint(true); }
+G.on = true; kick();
+};
+const listen = () => { if (listening) { return; } listening = true; window.addEventListener('deviceorientation', onOri, { passive: true }); };
+const unlisten = () => { if (!listening) { return; } listening = false; window.removeEventListener('deviceorientation', onOri); };
+const ask = () => {
+if (!needPerm) { granted = true; return Promise.resolve(true); }
+if (granted) { return Promise.resolve(true); }
+return window.DeviceOrientationEvent.requestPermission().then((r) => { granted = r === 'granted'; return granted; }).catch(() => { granted = true; return true; });
+};
+const enable = () => { want = true; base = null; return ask().then((ok) => { if (ok) { listen(); } paint(ok); return ok; }); };
+const disable = () => { want = false; unlisten(); tx = ty = 0; cx = cy = 0; G.on = false; G.x = G.y = 0; clear(); paint(false); };
+/* toggle button */
+let btn = document.getElementById('pa-gyro');
+if (!btn) {
+const st = document.createElement('style'); st.id = 'pa-gyro-css';
+st.textContent = '#pa-gyro{position:fixed;z-index:170;width:46px;height:46px;border-radius:50%;border:1px solid rgba(152,169,196,.35);background:rgba(17,21,34,.78);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#DCE3EF;display:grid;place-items:center;cursor:pointer;padding:0;bottom:clamp(16px,2vw,28px);transition:border-color .3s,color .3s;-webkit-tap-highlight-color:transparent}#pa-gyro svg{width:21px;height:21px;overflow:visible}#pa-gyro .o{opacity:.45;transition:opacity .3s}#pa-gyro[aria-pressed="true"]{color:#8FB4FF;border-color:rgba(143,180,255,.6)}#pa-gyro[aria-pressed="true"] .o{opacity:1}';
+document.head.appendChild(st);
+btn = document.createElement('button'); btn.id = 'pa-gyro'; btn.type = 'button'; btn.setAttribute('aria-label', 'Motion tilt');
+btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="6" width="8" height="12" rx="1.8" transform="rotate(-14 12 12)" fill="currentColor" fill-opacity=".15"/><path class="o" d="M3.5 9.5a9 9 0 0 1 3-4M20.5 14.5a9 9 0 0 1-3 4"/></svg>';
+document.body.appendChild(btn);
+}
+function paint(ok) { const v = want && ok !== false && (granted || !needPerm); btn.setAttribute('aria-pressed', v ? 'true' : 'false'); btn.title = v ? 'Tilt on' : 'Tilt off'; }
+const place = () => {
+const s = document.getElementById('pa-sfx'); const t = document.querySelector('[data-themebtn]'); const r = s && s.getBoundingClientRect().width ? s.getBoundingClientRect() : (t && t.getBoundingClientRect());
+if (!r || !r.width) { return; }
+if (window.innerWidth >= 900) { btn.style.left = Math.round(r.right + 10) + 'px'; btn.style.right = 'auto'; }
+else { btn.style.left = 'auto'; btn.style.right = Math.round(window.innerWidth - r.left + 10) + 'px'; }
+};
+const onBtn = (e) => { e.stopPropagation(); const v = btn.getAttribute('aria-pressed') === 'true'; if (v) { try { localStorage.setItem('pa-gyro', '0'); } catch (er) {} disable(); } else { try { localStorage.setItem('pa-gyro', '1'); } catch (er) {} enable(); } };
+btn.addEventListener('click', onBtn);
+place(); setTimeout(place, 800); setTimeout(place, 2000); window.addEventListener('resize', place);
+paint(!needPerm);
+/* start: Android needs no permission; iOS asks on the first tap */
+const firstTap = (e) => {
+if (e && e.target && e.target.closest && e.target.closest('#pa-gyro')) { return; }
+document.removeEventListener('pointerup', firstTap, true);
+if (want) { enable(); }
+};
+if (want) { listen(); if (!needPerm) { enable(); } else { document.addEventListener('pointerup', firstTap, true); } } else { paint(false); }
+const vis = () => { if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0; } } else { kick(); } };
+document.addEventListener('visibilitychange', vis);
+const rot = () => { base = null; };
+window.addEventListener('orientationchange', rot);
+this._gyroOff = () => { unlisten(); if (raf) { cancelAnimationFrame(raf); } document.removeEventListener('pointerup', firstTap, true); document.removeEventListener('visibilitychange', vis); window.removeEventListener('orientationchange', rot); window.removeEventListener('resize', place); btn.removeEventListener('click', onBtn); clear(); window.__gyro = { x: 0, y: 0, on: false }; };
 }
 paRouter() {
 const doc = document;
@@ -4058,6 +4152,7 @@ if (p[0] !== 'services') { try { c.paHdr(); } catch (e) { console.warn('[pentarc
 });
 try { this.paSfx(); } catch (e) { console.warn('[pentarch] sfx', e); }
 try { this.paDust(); } catch (e) { console.warn('[pentarch] dust', e); }
+try { this.paGyro(); } catch (e) { console.warn('[pentarch] gyro', e); }
 try { this.paCta(); } catch (e) { console.warn('[pentarch] cta', e); }
 try { this.paRouter(); } catch (e) { console.warn('[pentarch] route', e); }
 const go = () => {
@@ -4078,6 +4173,7 @@ all.forEach((c) => {
 });
 if (this._sfxOff) { try { this._sfxOff(); } catch (e) {} }
 if (this._dustOff) { try { this._dustOff(); } catch (e) {} }
+if (this._gyroOff) { try { this._gyroOff(); } catch (e) {} }
 if (this._ctaOff) { try { this._ctaOff(); } catch (e) {} }
 if (this._routerOff) { this._routerOff(); }
 clearInterval(this._paPoll);
