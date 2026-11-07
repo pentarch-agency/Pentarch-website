@@ -3902,7 +3902,7 @@ this._sfxOff = () => { ['pointerdown', 'keydown', 'touchstart'].forEach((ev) => 
 }
 paGyro() {
 if (this._gyroOff) { this._gyroOff(); }
-const coarse = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
+const coarse = (window.matchMedia && window.matchMedia('(pointer:coarse)').matches) || (navigator.maxTouchPoints || 0) > 0;
 const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 const G = window.__gyro = { x: 0, y: 0, on: false };
 if (!coarse || reduce || typeof window.DeviceOrientationEvent === 'undefined') { return; }
@@ -3963,7 +3963,7 @@ const kick = () => { if (!raf && !document.hidden) { raf = requestAnimationFrame
 const onOri = (e) => {
 if (!want || e.gamma == null || e.beta == null) { return; }
 if (!e.fromMotion) { oriReal = true; }
-gotData = true; if (touchMode) { stopTouch(); tHold = false; }
+gotData = true; hideChip();
 const a = (screen.orientation && typeof screen.orientation.angle === 'number') ? screen.orientation.angle : (window.orientation || 0);
 let rx = e.gamma; let ry = e.beta;
 if (a === 90) { rx = e.beta; ry = -e.gamma; } else if (a === 270 || a === -90) { rx = -e.beta; ry = e.gamma; } else if (a === 180) { rx = -e.gamma; ry = -e.beta; }
@@ -3982,32 +3982,38 @@ onOri({ gamma: sgn * Math.asin(Math.max(-1, Math.min(1, a.x / g))) * 57.2958, be
 };
 const listen = () => { if (listening) { return; } listening = true; window.addEventListener('deviceorientation', onOri, { passive: true }); window.addEventListener('deviceorientationabsolute', onOri, { passive: true }); window.addEventListener('devicemotion', onMot, { passive: true }); };
 const unlisten = () => { if (!listening) { return; } listening = false; window.removeEventListener('deviceorientation', onOri); window.removeEventListener('deviceorientationabsolute', onOri); window.removeEventListener('devicemotion', onMot); };
-/* touch fallback: when no motion sensor reaches the page (blocked in embedded views, desktop, denied), the finger steers the tilt */
-let touchMode = false; let tHold = false;
-const tMove = (e) => {
+/* status chip: tells the visitor exactly what to do when no motion data arrives */
+let inFrame = false; try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+let permAsked = false; let chip = null;
+const SITE = 'https://pentarch-site-pentarch.vercel.app';
+const hideChip = () => { if (chip && chip.parentNode) { chip.parentNode.removeChild(chip); } chip = null; };
+const showChip = (kind) => {
+hideChip();
+if (!document.getElementById('pa-gyro-chip-css')) {
+const st = document.createElement('style'); st.id = 'pa-gyro-chip-css';
+st.textContent = '#pa-gyro-chip{position:fixed;z-index:171;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom,0px));max-width:min(92vw,420px);display:flex;align-items:center;gap:12px;padding:10px 10px 10px 16px;border-radius:999px;border:1px solid rgba(143,180,255,.5);background:rgba(17,21,34,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#DCE3EF;font:500 12px/1.35 "JetBrains Mono",ui-monospace,monospace;letter-spacing:.04em;box-shadow:0 10px 30px rgba(0,0,0,.4)}#pa-gyro-chip a,#pa-gyro-chip button{flex:none;border:0;border-radius:999px;background:#DCE3EF;color:#111522;padding:9px 14px;font:600 12px/1 "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;text-decoration:none;cursor:pointer}#pa-gyro-chip .x{background:transparent;color:#98A9C4;padding:6px 8px;font-size:16px}';
+document.head.appendChild(st);
+}
+chip = document.createElement('div'); chip.id = 'pa-gyro-chip'; chip.setAttribute('role', 'status');
+const t = document.createElement('span');
+let act = null;
+if (kind === 'perm') { t.textContent = 'Tilt your phone to move the page'; act = document.createElement('button'); act.type = 'button'; act.textContent = 'Enable'; act.addEventListener('click', (e) => { e.stopPropagation(); enable(); }); }
+else if (kind === 'frame') { t.textContent = 'This preview blocks motion sensors'; act = document.createElement('a'); act.href = SITE; act.target = '_blank'; act.rel = 'noopener'; act.textContent = 'Open site'; }
+else { t.textContent = 'No motion data. Allow motion sensors for this site in your browser settings'; }
+const x = document.createElement('button'); x.type = 'button'; x.className = 'x'; x.setAttribute('aria-label', 'Dismiss'); x.textContent = '\u00d7'; x.addEventListener('click', (e) => { e.stopPropagation(); hideChip(); });
+chip.appendChild(t); if (act) { chip.appendChild(act); } chip.appendChild(x); document.body.appendChild(chip);
+};
+const check = () => {
 if (!want || gotData) { return; }
-const t = (e.touches && e.touches[0]) || e; if (t.clientX == null) { return; }
-tHold = true; tx = clamp((t.clientX / window.innerWidth - 0.5) * 2, -1, 1); ty = clamp((t.clientY / window.innerHeight - 0.5) * 2, -1, 1); G.on = true; kick();
-};
-const tEnd = () => { if (!touchMode) { return; } tHold = false; tx = 0; ty = 0; kick(); };
-const startTouch = () => {
-if (touchMode || gotData || !want) { return; }
-touchMode = true; G.mode = 'touch';
-window.addEventListener('touchmove', tMove, { passive: true }); window.addEventListener('touchstart', tMove, { passive: true });
-window.addEventListener('touchend', tEnd, { passive: true }); window.addEventListener('touchcancel', tEnd, { passive: true });
-btn.setAttribute('aria-pressed', 'true'); btn.title = 'Tilt follows your finger (motion sensors are not available in this view)';
-};
-const stopTouch = () => {
-if (!touchMode) { return; } touchMode = false; G.mode = '';
-['touchmove', 'touchstart'].forEach((n) => window.removeEventListener(n, tMove)); ['touchend', 'touchcancel'].forEach((n) => window.removeEventListener(n, tEnd));
+if (needPerm && !permAsked) { showChip('perm'); } else if (inFrame) { showChip('frame'); } else { showChip('blocked'); }
 };
 const ask = () => {
 if (!needPerm) { granted = true; return Promise.resolve(true); }
 if (granted) { return Promise.resolve(true); }
-return window.DeviceOrientationEvent.requestPermission().then(() => { granted = true; return true; }).catch(() => { granted = true; return true; });
+permAsked = true; return window.DeviceOrientationEvent.requestPermission().then(() => { granted = true; return true; }).catch(() => { granted = true; return true; });
 };
-const enable = () => { want = true; base = null; gotData = false; oriReal = false; return ask().then((ok) => { if (ok) { listen(); } else { want = false; } paint(ok); if (ok) { clearTimeout(fbT); fbT = setTimeout(() => { if (want && !gotData) { startTouch(); } }, 2200); } return ok; }); };
-const disable = () => { want = false; clearTimeout(fbT); stopTouch(); unlisten(); tx = ty = 0; cx = cy = 0; G.on = false; G.x = G.y = 0; clear(); paint(false); };
+const enable = () => { want = true; base = null; gotData = false; oriReal = false; return ask().then((ok) => { if (ok) { listen(); } else { want = false; } paint(ok); if (ok) { clearTimeout(fbT); fbT = setTimeout(check, 2400); } return ok; }); };
+const disable = () => { want = false; clearTimeout(fbT); hideChip(); unlisten(); tx = ty = 0; cx = cy = 0; G.on = false; G.x = G.y = 0; clear(); paint(false); };
 /* toggle button */
 let btn = document.getElementById('pa-gyro');
 if (!btn) {
@@ -4026,7 +4032,7 @@ if (!r || !r.width) { return; }
 if (window.innerWidth >= 900) { btn.style.left = Math.round(r.right + 10) + 'px'; btn.style.right = 'auto'; }
 else { btn.style.left = 'auto'; btn.style.right = Math.round(window.innerWidth - r.left + 10) + 'px'; }
 };
-const onBtn = (e) => { e.stopPropagation(); const v = btn.getAttribute('aria-pressed') === 'true'; if (v && !gotData && !touchMode) { enable(); return; } if (v) { try { localStorage.setItem('pa-gyro', '0'); } catch (er) {} disable(); } else { try { localStorage.setItem('pa-gyro', '1'); } catch (er) {} enable(); } };
+const onBtn = (e) => { e.stopPropagation(); const v = btn.getAttribute('aria-pressed') === 'true'; if (v && !gotData) { enable(); return; } if (v) { try { localStorage.setItem('pa-gyro', '0'); } catch (er) {} disable(); } else { try { localStorage.setItem('pa-gyro', '1'); } catch (er) {} enable(); } };
 btn.addEventListener('click', onBtn);
 place(); setTimeout(place, 800); setTimeout(place, 2000); window.addEventListener('resize', place);
 paint(true);
@@ -4037,14 +4043,14 @@ if (e && e.target && e.target.closest && e.target.closest('#pa-gyro')) { return;
 TAP.forEach((t) => document.removeEventListener(t, firstTap, true));
 if (want) { enable(); }
 };
-if (want) { fbT = setTimeout(() => { if (want && !gotData) { startTouch(); } }, 2600); listen(); if (!needPerm) { enable(); } else { TAP.forEach((t) => document.addEventListener(t, firstTap, true)); } } else { paint(false); }
+if (want) { fbT = setTimeout(check, 1800); listen(); if (!needPerm) { enable(); } else { TAP.forEach((t) => document.addEventListener(t, firstTap, true)); } } else { paint(false); }
 const vis = () => { if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0; } } else { kick(); } };
 document.addEventListener('visibilitychange', vis);
 const rot = () => { base = null; };
 const hc = () => { [300, 900, 1800].forEach((d) => setTimeout(() => { tgtAt = 0; if (G.on) { apply(performance.now()); } }, d)); };
 window.addEventListener('hashchange', hc);
 window.addEventListener('orientationchange', rot);
-this._gyroOff = () => { clearTimeout(fbT); stopTouch(); unlisten(); if (raf) { cancelAnimationFrame(raf); } TAP.forEach((t) => document.removeEventListener(t, firstTap, true)); document.removeEventListener('visibilitychange', vis); window.removeEventListener('orientationchange', rot); window.removeEventListener('hashchange', hc); window.removeEventListener('resize', place); btn.removeEventListener('click', onBtn); clear(); window.__gyro = { x: 0, y: 0, on: false }; };
+this._gyroOff = () => { clearTimeout(fbT); hideChip(); unlisten(); if (raf) { cancelAnimationFrame(raf); } TAP.forEach((t) => document.removeEventListener(t, firstTap, true)); document.removeEventListener('visibilitychange', vis); window.removeEventListener('orientationchange', rot); window.removeEventListener('hashchange', hc); window.removeEventListener('resize', place); btn.removeEventListener('click', onBtn); clear(); window.__gyro = { x: 0, y: 0, on: false }; };
 }
 paRouter() {
 const doc = document;
