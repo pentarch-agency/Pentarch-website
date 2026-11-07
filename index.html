@@ -1852,8 +1852,9 @@ const status = q('[data-ld="status"]');
 const bar = q('[data-ld="bar"]');
 const prog = { v: 0 };
 const stages = ['01 — Research', '02 — Design', '03 — Develop', '04 — Test', '05 — Launch', 'Ready'];
-const unlock = () => { try { document.documentElement.style.overflow = ''; } catch (e) {} ST.refresh(); };
+const unlock = () => { try { document.documentElement.style.overflow = ''; } catch (e) {} setTimeout(() => { window.__paBusy = false; }, 250); setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 2400); };
 if (ldEl && !window.__paSkipLd) {
+window.__paBusy = true; setTimeout(() => { window.__paBusy = false; }, 16000);
 const loadTl = gsap.timeline({ paused: true });
 loadTl.to(prog, {
 v: 100, duration: 5, ease: 'none',
@@ -1892,7 +1893,7 @@ const VH = Math.round(ldEl.getBoundingClientRect().height || window.innerHeight)
 const mkHalf = (top) => {
 const h = document.createElement('div');
 h.setAttribute('aria-hidden', 'true');
-h.style.cssText = 'position:fixed;left:0;right:0;height:' + HH + 'px;overflow:hidden;z-index:203;pointer-events:none;visibility:hidden;background:' + bgc2 + ';' + (top ? 'top:0' : 'bottom:0');
+h.style.cssText = 'position:fixed;left:0;right:0;height:' + HH + 'px;overflow:hidden;will-change:transform;z-index:203;pointer-events:none;visibility:hidden;background:' + bgc2 + ';' + (top ? 'top:0' : 'bottom:0');
 const inner = document.createElement('div');
 inner.style.cssText = 'position:absolute;left:0;right:0;height:' + (HH * 2) + 'px;' + (top ? 'top:0' : 'top:-' + HH + 'px');
 h.appendChild(inner); document.body.appendChild(h); return h;
@@ -1905,7 +1906,7 @@ document.body.appendChild(seam);
 gsap.set(seam, { scaleX: Math.min(260, window.innerWidth * 0.46) / Math.max(1, window.innerWidth) });
 loadTl.add(() => {
 [hT, hB].forEach((h) => {
-const c = card.cloneNode(true); const cl = c.querySelector('[data-tc="l"]'); if (cl) { cl.style.visibility = 'hidden'; } c.style.opacity = '1'; c.style.inset = '0'; c.style.position = 'absolute';
+const c = card.cloneNode(true); const cl = c.querySelector('[data-tc="l"]'); if (cl) { cl.style.visibility = 'hidden'; } const ct = c.querySelector('[data-tc="t"]'); if (ct) { ct.style.filter = 'none'; } c.style.opacity = '1'; c.style.inset = '0'; c.style.position = 'absolute';
 h.firstChild.appendChild(c); h.style.visibility = 'visible';
 });
 seam.style.visibility = 'visible';
@@ -1913,7 +1914,7 @@ ldEl.style.display = 'none'; card.style.display = 'none';
 }, 'lift+=1.55');
 loadTl.addLabel('split', 'lift+=1.6');
 loadTl.to(seam, { scaleX: 1, duration: 0.55, ease: 'power3.out' }, 'split');
-loadTl.fromTo(q('#top'), { scale: 1.12, transformOrigin: '50% 50%' }, { scale: 1, duration: 1.7, ease: 'power3.out', clearProps: 'transform' }, 'split');
+loadTl.fromTo(q('#top'), { scale: 1.06, transformOrigin: '50% 50%' }, { scale: 1, duration: 1.7, ease: 'power3.out', clearProps: 'transform' }, 'split');
 loadTl.to(hT, { yPercent: -100, duration: 0.95, ease: 'power4.inOut' }, 'split+=0.12');
 loadTl.to(hB, { yPercent: 100, duration: 0.95, ease: 'power4.inOut' }, 'split+=0.12');
 loadTl.to(seam, { opacity: 0, duration: 0.4, ease: 'power1.out' }, 'split+=0.45');
@@ -2275,7 +2276,7 @@ const wm = q('[data-wm]');
 if (wm) { wm.style.opacity = '1'; wm.style.transform = 'none'; }
 });
 /* ---------- refresh once fonts are in ---------- */
-if (document.fonts && document.fonts.ready) { document.fonts.ready.then(() => ST.refresh()); }
+if (document.fonts && document.fonts.ready) { document.fonts.ready.then(() => { setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 2600); }); }
 /* safety net: a reveal that is on screen but never fired gets played, so nothing stays hidden */
 const wd = setInterval(() => {
 try {
@@ -3736,6 +3737,7 @@ const frame = (now) => {
 raf = requestAnimationFrame(frame);
 const dt = Math.min(0.05, (now - last) / 1000); last = now;
 const sy = window.scrollY || 0; const ds = sy - sy0; sy0 = sy;
+if (window.__paBusy) { return; }
 g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
 for (let i = 0; i < ps.length; i++) {
 const p = ps[i];
