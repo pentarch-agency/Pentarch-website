@@ -4074,6 +4074,13 @@ this._gyroOff = () => {  clearTimeout(fbT); hideChip(); unlisten(); if (raf) { c
 }
 paRouter() {
 const doc = document;
+/* every reload starts clean: Home, top of the hero, no stray hash or restored scroll */
+try { if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; } } catch (e) {}
+try { if (location.hash) { history.replaceState(null, '', location.pathname + location.search); } } catch (e) {}
+try { window.scrollTo(0, 0); doc.documentElement.scrollTop = 0; doc.body.scrollTop = 0; } catch (e) {}
+const toTop = () => { try { window.scrollTo(0, 0); } catch (e) {} };
+const onShow = (e) => { if (e && e.persisted) { try { location.reload(); } catch (er) { toTop(); } } };
+window.addEventListener('beforeunload', toTop); window.addEventListener('pagehide', toTop); window.addEventListener('pageshow', onShow);
 const PAGES = { home: ['Pentarch', '01', 'Pentarch'], studio: ['Studio', '02', 'Pentarch — Studio'], services: ['Services', '03', 'Pentarch — Services'], projects: ['Projects', '04', 'Pentarch — Projects'], approach: ['Approach', '05', 'Pentarch — Approach'], contact: ['Contact', '06', 'Pentarch — Contact'] };
 const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ov = doc.getElementById('pa-pt');
@@ -4211,7 +4218,7 @@ go(m[1]);
 };
 setTimeout(() => watch('home'), 400);
 doc.addEventListener('click', onClick, true);
-this._routerOff = () => { if (wio) { try { wio.disconnect(); } catch (e) {} } doc.removeEventListener('click', onClick, true); clearTimeout(this._rt1); clearTimeout(this._rt2); clearTimeout(this._rt3); };
+this._routerOff = () => { window.removeEventListener('beforeunload', toTop); window.removeEventListener('pagehide', toTop); window.removeEventListener('pageshow', onShow); if (wio) { try { wio.disconnect(); } catch (e) {} } doc.removeEventListener('click', onClick, true); clearTimeout(this._rt1); clearTimeout(this._rt2); clearTimeout(this._rt3); };
 this._go = go;
 }
 componentDidMount() {
