@@ -1876,28 +1876,31 @@ loadTl.to(qa('.ld-fade'), { opacity: 0, y: -18, duration: 0.35, ease: 'power2.in
 const card = document.createElement('div');
 card.setAttribute('aria-hidden', 'true');
 card.style.cssText = 'position:fixed;inset:0;z-index:201;pointer-events:none;display:grid;grid-template-rows:1fr auto 1fr;justify-items:center;opacity:0';
-card.innerHTML = '<div data-tc="t" style="font-family:\'Space Grotesk\',system-ui,sans-serif;font-weight:500;text-transform:uppercase;font-size:clamp(26px,5.2vw,76px);color:#DCE3EF;letter-spacing:.9em;padding-left:.9em;white-space:nowrap;line-height:1;align-self:end;margin-bottom:clamp(16px,2.6vw,30px)">Pentarch</div><div data-tc="l" style="height:1px;width:min(260px,46vw);background:linear-gradient(90deg,transparent,#8FB4FF,transparent)"></div><div data-tc="s" style="align-self:start;margin-top:clamp(16px,2.6vw,30px);font-family:\'JetBrains Mono\',ui-monospace,monospace;font-size:clamp(10px,1.1vw,13px);letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:#98A9C4;opacity:0">Action is our Dharma</div>';
+card.innerHTML = '<div data-tc="t" style="font-family:\'Space Grotesk\',system-ui,sans-serif;font-weight:500;text-transform:uppercase;font-size:clamp(36px,9.4vw,76px);color:#DCE3EF;letter-spacing:.9em;padding-left:.9em;white-space:nowrap;line-height:1;align-self:end;margin-bottom:clamp(16px,2.6vw,30px)">Pentarch</div><div data-tc="l" style="height:1px;width:min(260px,46vw);background:linear-gradient(90deg,transparent,#8FB4FF,transparent)"></div><div data-tc="s" style="align-self:start;margin-top:clamp(16px,2.6vw,30px);font-family:\'JetBrains Mono\',ui-monospace,monospace;font-size:clamp(11px,2.9vw,13px);letter-spacing:.34em;padding-left:.34em;text-transform:uppercase;color:#98A9C4;opacity:0">Action is our Dharma</div>';
 document.body.appendChild(card);
 const tcT = card.querySelector('[data-tc="t"]'); const tcL = card.querySelector('[data-tc="l"]'); const tcS = card.querySelector('[data-tc="s"]');
 loadTl.addLabel('lift', '<+=0.45');
 loadTl.set(card, { opacity: 1 }, 'lift');
-loadTl.fromTo(tcT, { opacity: 0, letterSpacing: '0.9em', paddingLeft: '0.9em', filter: 'blur(10px)' }, { opacity: 1, letterSpacing: '0.26em', paddingLeft: '0.26em', filter: 'blur(0px)', duration: 1.0, ease: 'expo.out' }, 'lift');
+const tcN = window.innerWidth < 600; const tcA = tcN ? '0.5em' : '0.9em'; const tcB = tcN ? '0.2em' : '0.26em';
+tcT.style.letterSpacing = tcA; tcT.style.paddingLeft = tcA;
+loadTl.fromTo(tcT, { opacity: 0, letterSpacing: tcA, paddingLeft: tcA, filter: 'blur(10px)' }, { opacity: 1, letterSpacing: tcB, paddingLeft: tcB, filter: 'blur(0px)', duration: 1.0, ease: 'expo.out' }, 'lift');
 loadTl.fromTo(tcL, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power1.out' }, 'lift');
 loadTl.to(tcS, { opacity: 1, duration: 0.5, ease: 'power1.out' }, 'lift+=0.4');
 const bgc = (() => { try { return getComputedStyle(ldEl).backgroundColor || '#0C101B'; } catch (e) { return '#0C101B'; } })();
 const bgc2 = (bgc === 'rgba(0, 0, 0, 0)' || !bgc) ? '#0C101B' : bgc;
+const VH = Math.round(ldEl.getBoundingClientRect().height || window.innerHeight); const HH = Math.round(VH / 2);
 const mkHalf = (top) => {
 const h = document.createElement('div');
 h.setAttribute('aria-hidden', 'true');
-h.style.cssText = 'position:fixed;left:0;right:0;height:50vh;overflow:hidden;z-index:203;pointer-events:none;visibility:hidden;background:' + bgc2 + ';' + (top ? 'top:0' : 'bottom:0');
+h.style.cssText = 'position:fixed;left:0;right:0;height:' + HH + 'px;overflow:hidden;z-index:203;pointer-events:none;visibility:hidden;background:' + bgc2 + ';' + (top ? 'top:0' : 'bottom:0');
 const inner = document.createElement('div');
-inner.style.cssText = 'position:absolute;left:0;right:0;height:100vh;' + (top ? 'top:0' : 'top:-50vh');
+inner.style.cssText = 'position:absolute;left:0;right:0;height:' + (HH * 2) + 'px;' + (top ? 'top:0' : 'top:-' + HH + 'px');
 h.appendChild(inner); document.body.appendChild(h); return h;
 };
 const hT = mkHalf(true); const hB = mkHalf(false);
 const seam = document.createElement('div');
 seam.setAttribute('aria-hidden', 'true');
-seam.style.cssText = 'position:fixed;left:0;right:0;top:50%;height:2px;margin-top:-1px;z-index:204;pointer-events:none;visibility:hidden;background:linear-gradient(90deg,transparent,#8FB4FF 20%,#fff 50%,#8FB4FF 80%,transparent);box-shadow:0 0 24px 5px rgba(143,180,255,.7)';
+seam.style.cssText = 'position:fixed;left:0;right:0;top:' + HH + 'px;height:2px;margin-top:-1px;z-index:204;pointer-events:none;visibility:hidden;background:linear-gradient(90deg,transparent,#8FB4FF 20%,#fff 50%,#8FB4FF 80%,transparent);box-shadow:0 0 24px 5px rgba(143,180,255,.7)';
 document.body.appendChild(seam);
 gsap.set(seam, { scaleX: Math.min(260, window.innerWidth * 0.46) / Math.max(1, window.innerWidth) });
 loadTl.add(() => {
@@ -3741,7 +3744,7 @@ p.ph += dt * 0.95;
 let tx = Math.sin(p.ph) * p.sw * 0.6; let ty = 0;
 if (fine) { const dx = p.x - mx; const dy = p.y - my; const d2 = dx * dx + dy * dy; if (d2 < 16900 && d2 > 1) { const d = Math.sqrt(d2); const f = (130 - d) / 130; tx += dx / d * f * 70; ty += dy / d * f * 70; } }
 p.vx += (tx - p.vx) * Math.min(1, dt * 3); p.vy += (ty - p.vy) * Math.min(1, dt * 3);
-const gy = window.__gyro; const x = p.x + p.vx + (gy ? gy.x * p.z * 90 : 0); const y = p.y + p.vy + (gy ? gy.y * p.z * 60 : 0);
+const gy = window.__gyro; const x = p.x + p.vx + (gy ? gy.x * p.z * 130 : 0); const y = p.y + p.vy + (gy ? gy.y * p.z * 90 : 0);
 if (p.y < -12) { ps[i] = mk(false); ps[i].x = Math.random() * W; continue; }
 if (p.y > H + 60) { p.y = -8; p.x = Math.random() * W; }
 g.fillStyle = 'rgba(170,200,255,' + (0.16 + p.z * 0.42).toFixed(2) + ')';
@@ -3926,6 +3929,8 @@ if (b.width > 150 && b.height > 120) { tgt.push({ el: c, k: 'v' }); hit = true; 
 if (hit) { break; }
 }
 });
+document.querySelectorAll('[data-glow]').forEach((el) => tgt.push({ el: el, k: 'g' }));
+document.querySelectorAll('.hh-p').forEach((el) => { if (el.offsetParent) { tgt.push({ el: el, k: 'q' }); } });
 document.querySelectorAll('.st-cd .st-tilt').forEach((el) => tgt.push({ el: el, k: 't' }));
 return tgt;
 };
@@ -3933,12 +3938,14 @@ const apply = (now) => {
 const L = targets(now); const x = cx; const y = cy;
 for (let i = 0; i < L.length; i++) {
 const o = L[i]; const s = o.el.style;
-if (o.k === 'p') { s.translate = (x * 26).toFixed(1) + 'px ' + (y * 20).toFixed(1) + 'px'; }
-else if (o.k === 'v') { s.translate = (x * 24).toFixed(1) + 'px ' + (y * 18).toFixed(1) + 'px'; }
-else if (o.k === 'h') { s.translate = (-x * 10).toFixed(1) + 'px ' + (-y * 6).toFixed(1) + 'px'; }
-else if (o.k === 'm') { s.translate = (-x * 34).toFixed(1) + 'px ' + (-y * 14).toFixed(1) + 'px'; }
+if (o.k === 'p') { s.translate = (x * 44).toFixed(1) + 'px ' + (y * 34).toFixed(1) + 'px'; }
+else if (o.k === 'v') { s.translate = (x * 42).toFixed(1) + 'px ' + (y * 30).toFixed(1) + 'px'; }
+else if (o.k === 'g') { s.translate = (x * 90).toFixed(1) + 'px ' + (y * 60).toFixed(1) + 'px'; }
+else if (o.k === 'q') { s.translate = (-x * 7).toFixed(1) + 'px ' + (-y * 4).toFixed(1) + 'px'; }
+else if (o.k === 'h') { s.translate = (-x * 16).toFixed(1) + 'px ' + (-y * 10).toFixed(1) + 'px'; }
+else if (o.k === 'm') { s.translate = (-x * 56).toFixed(1) + 'px ' + (-y * 20).toFixed(1) + 'px'; }
 else if (!o.el.parentNode.classList.contains('lift') && !o.el.parentNode.classList.contains('spin')) {
-s.setProperty('--rx', (-y * 9).toFixed(2) + 'deg'); s.setProperty('--ry', (x * 11).toFixed(2) + 'deg');
+s.setProperty('--rx', (-y * 12).toFixed(2) + 'deg'); s.setProperty('--ry', (x * 15).toFixed(2) + 'deg');
 }
 }
 };
@@ -3949,6 +3956,7 @@ const frame = (now) => {
 raf = 0;
 cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
 G.x = cx; G.y = cy; apply(now);
+if (ico) { ico.style.transform = 'rotate(' + (cx * 38).toFixed(1) + 'deg)'; }
 if (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002) { raf = requestAnimationFrame(frame); }
 };
 const kick = () => { if (!raf && !document.hidden) { raf = requestAnimationFrame(frame); } };
@@ -3960,7 +3968,7 @@ let rx = e.gamma; let ry = e.beta;
 if (a === 90) { rx = e.beta; ry = -e.gamma; } else if (a === 270 || a === -90) { rx = -e.beta; ry = e.gamma; } else if (a === 180) { rx = -e.gamma; ry = -e.beta; }
 if (!base) { base = { x: rx, y: ry }; }
 base.x += (rx - base.x) * 0.012; base.y += (ry - base.y) * 0.012;
-tx = clamp((rx - base.x) / 22, -1, 1); ty = clamp((ry - base.y) / 22, -1, 1);
+tx = clamp((rx - base.x) / 13, -1, 1); ty = clamp((ry - base.y) / 13, -1, 1);
 if (!granted) { granted = true; paint(true); }
 G.on = true; kick();
 };
@@ -3983,6 +3991,7 @@ btn = document.createElement('button'); btn.id = 'pa-gyro'; btn.type = 'button';
 btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="6" width="8" height="12" rx="1.8" transform="rotate(-14 12 12)" fill="currentColor" fill-opacity=".15"/><path class="o" d="M3.5 9.5a9 9 0 0 1 3-4M20.5 14.5a9 9 0 0 1-3 4"/></svg>';
 document.body.appendChild(btn);
 }
+const ico = btn.querySelector('svg');
 function paint(ok) { const v = want && ok !== false; btn.setAttribute('aria-pressed', v ? 'true' : 'false'); btn.title = v ? 'Tilt on' : 'Tilt off'; }
 const place = () => {
 const s = document.getElementById('pa-sfx'); const t = document.querySelector('[data-themebtn]'); const r = s && s.getBoundingClientRect().width ? s.getBoundingClientRect() : (t && t.getBoundingClientRect());
