@@ -1724,7 +1724,7 @@ paRescue() {
 const root = this.$q('[data-pa-root]');
 const ld = root && root.querySelector('[data-ld="root"]');
 if (ld) { ld.style.display = 'none'; }
-try { document.documentElement.style.overflow = ''; } catch (e) {}
+try { document.documentElement.style.overflow = ''; document.documentElement.style.paddingRight = ''; } catch (e) {}
 try { if (window.gsap && root) { window.gsap.set(root.querySelectorAll('[data-up],[data-in],[data-lines] .mk>span,[data-stagger]>*,[data-card],[data-tblock]>*,[data-wm],.w,.drow,.plate'), { clearProps: 'all' }); } } catch (e) {}
 }
 paInit() {
@@ -1751,7 +1751,7 @@ el.__L = L || 1;
 gsap.set(el, { strokeDasharray: el.__L, strokeDashoffset: el.__L });
 });
 const pad = (n, w) => String(n).padStart(w, '0');
-try { document.documentElement.style.overflow = 'hidden'; } catch (e) {}
+try { const de = document.documentElement; const pr = document.createElement('div'); pr.style.cssText = 'position:absolute;top:-99px;width:60px;height:60px;overflow:scroll;visibility:hidden'; document.body.appendChild(pr); const sbw = pr.offsetWidth - pr.clientWidth; pr.remove(); if (sbw > 0) de.style.paddingRight = sbw + 'px'; de.style.overflow = 'hidden'; } catch (e) {}
 this._paCtx = gsap.context(() => {
 /* ---------- initial hidden states (all under the loader) ---------- */
 const navIn = qa('[data-in="nav"]');
@@ -1851,7 +1851,7 @@ const status = q('[data-ld="status"]');
 const bar = q('[data-ld="bar"]');
 const prog = { v: 0 };
 const stages = ['01 — Research', '02 — Design', '03 — Develop', '04 — Test', '05 — Launch', 'Ready'];
-const unlock = () => { try { document.documentElement.style.overflow = ''; } catch (e) {} setTimeout(() => { window.__paBusy = false; }, 250); setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 2400); };
+const unlock = () => { try { document.documentElement.style.overflow = ''; document.documentElement.style.paddingRight = ''; } catch (e) {} setTimeout(() => { window.__paBusy = false; }, 250); setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 2400); };
 if (ldEl && !window.__paSkipLd) {
 window.__paBusy = true; setTimeout(() => { window.__paBusy = false; }, 16000);
 const loadTl = gsap.timeline({ paused: true });
