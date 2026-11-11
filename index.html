@@ -1786,33 +1786,33 @@ ldWords.forEach((el) => { el.setAttribute('data-orig', el.textContent); });
 const glitchIn = (el) => {
 stopG(el);
 const orig = el.getAttribute('data-orig');
-const n = orig.length; let f = 0; const F = 8;
+const n = orig.length; let f = 0; const F = 4;
 el.style.opacity = '1';
 el._gt = setInterval(() => {
 f++;
 const p = f / F;
 const keep = 0;
-el.textContent = Array.from(orig).map((c, i) => (c === ' ' || c === '&' || Math.random() > (1 - p) * 0.55) ? c : GL[Math.floor(Math.random() * GL.length)]).join('');
+el.textContent = Array.from(orig).map((c, i) => (c === ' ' || c === '&' || Math.random() > (1 - p) * 0.3) ? c : GL[Math.floor(Math.random() * GL.length)]).join('');
 if (f >= F) { stopG(el); el.textContent = orig; calm(el); return; }
-const amp = (1 - p) * 30 + 3;
+const amp = (1 - p) * 12 + 2;
 const dx = rnd(-amp, amp);
-el.style.transform = 'translateX(' + dx.toFixed(1) + 'px) skewX(' + (Math.random() < 0.4 ? rnd(-14, 14) * (1 - p) : 0).toFixed(1) + 'deg)';
-el.style.textShadow = (-dx * 0.9).toFixed(1) + 'px 0 rgba(255,50,110,.95),' + (dx * 0.9).toFixed(1) + 'px 0 rgba(50,230,255,.95)'; el.style.filter = Math.random() < 0.35 ? 'hue-rotate(' + Math.floor(rnd(-70, 70)) + 'deg) contrast(1.4)' : '';
-if (Math.random() < 0.7 - p * 0.4) { const t = rnd(0, 60), b = rnd(0, 60); el.style.clipPath = 'inset(' + t.toFixed(0) + '% 0 ' + b.toFixed(0) + '% 0)'; } else { el.style.clipPath = ''; }
+el.style.transform = 'translateX(' + dx.toFixed(1) + 'px) skewX(' + (Math.random() < 0.3 ? rnd(-6, 6) * (1 - p) : 0).toFixed(1) + 'deg)';
+el.style.textShadow = (-dx * 0.5).toFixed(1) + 'px 0 rgba(255,50,110,.6),' + (dx * 0.5).toFixed(1) + 'px 0 rgba(50,230,255,.6)'; el.style.filter = Math.random() < 0.35 ? 'hue-rotate(' + Math.floor(rnd(-70, 70)) + 'deg) contrast(1.4)' : '';
+if (Math.random() < 0.3 - p * 0.2) { const t = rnd(0, 60), b = rnd(0, 60); el.style.clipPath = 'inset(' + t.toFixed(0) + '% 0 ' + b.toFixed(0) + '% 0)'; } else { el.style.clipPath = ''; }
 }, 36);
 };
 const glitchOut = (el) => {
 stopG(el);
 const orig = el.getAttribute('data-orig');
-let f = 0; const F = 3;
+let f = 0; const F = 2;
 el._gt = setInterval(() => {
 f++;
 if (f >= F) { stopG(el); el.style.opacity = '0'; el.textContent = orig; calm(el); return; }
-const dx = rnd(-26, 26);
+const dx = rnd(-12, 12);
 el.textContent = Array.from(orig).map((c) => (c === ' ' || c === '&' || Math.random() < 0.55) ? c : GL[Math.floor(Math.random() * GL.length)]).join('');
 el.style.transform = 'translateX(' + dx.toFixed(1) + 'px) skewX(' + rnd(-18, 18).toFixed(1) + 'deg)';
-el.style.textShadow = (-dx * 0.6).toFixed(1) + 'px 0 rgba(255,50,110,.9),' + (dx * 0.6).toFixed(1) + 'px 0 rgba(50,230,255,.9)';
-const t = rnd(0, 70); el.style.clipPath = 'inset(' + t.toFixed(0) + '% 0 ' + rnd(0, 100 - t).toFixed(0) + '% 0)';
+el.style.textShadow = (-dx * 0.4).toFixed(1) + 'px 0 rgba(255,50,110,.6),' + (dx * 0.4).toFixed(1) + 'px 0 rgba(50,230,255,.6)';
+el.style.clipPath = '';
 el.style.opacity = String(1 - f / F);
 }, 36);
 };
@@ -1855,7 +1855,7 @@ window.__paBusy = true; setTimeout(() => { window.__paBusy = false; }, 6000);
 const loadTl = gsap.timeline({ paused: true });
 this._loadTl = loadTl;
 loadTl.to(prog, {
-v: 100, duration: 2, ease: 'none',
+v: 100, duration: 3, ease: 'none',
 onUpdate: () => {
 const v = prog.v;
 if (counter) { counter.textContent = pad(Math.round(v), 3); }
