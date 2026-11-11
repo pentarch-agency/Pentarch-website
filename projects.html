@@ -1855,7 +1855,7 @@ window.__paBusy = true; setTimeout(() => { window.__paBusy = false; }, 12000);
 const loadTl = gsap.timeline({ paused: true });
 this._loadTl = loadTl;
 loadTl.to(prog, {
-v: 100, duration: 3.5, ease: 'power1.in',
+v: 100, duration: 3.5, ease: 'none',
 onUpdate: () => {
 const v = prog.v;
 if (counter) { counter.textContent = pad(Math.round(v), 3); }
@@ -1864,12 +1864,12 @@ const idx = Math.min(ldWords.length - 1, Math.floor(v / (100 / ldWords.length)))
 if (idx !== ldIdx) {
 if (ldIdx >= 0) { glitchOut(ldWords[ldIdx]); }
 const nx = ldWords[idx];
-if (reduceMotion) { nx.style.opacity = '1'; } else { setTimeout(() => glitchIn(nx), ldIdx >= 0 ? 110 : 0); }
+if (reduceMotion) { nx.style.opacity = '1'; } else { setTimeout(() => glitchIn(nx), ldIdx >= 0 ? 80 : 0); }
 ldIdx = idx;
 }
 if (status) { status.textContent = stages[idx]; }
 }
-}, 0.4);
+}, 0.15);
 loadTl.add(() => { if (ldWords[ldIdx]) { if (reduceMotion) { ldWords[ldIdx].style.opacity = '0'; } else { glitchOut(ldWords[ldIdx]); } } }, '+=0.45');
 loadTl.to(qa('.ld-fade'), { opacity: 0, y: -24, duration: 0.5, ease: 'power2.in', stagger: 0.06 }, '<');
 const card = document.createElement('div');
