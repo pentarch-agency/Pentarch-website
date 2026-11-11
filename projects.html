@@ -1786,19 +1786,19 @@ ldWords.forEach((el) => { el.setAttribute('data-orig', el.textContent); });
 const glitchIn = (el) => {
 stopG(el);
 const orig = el.getAttribute('data-orig');
-const n = orig.length; let f = 0; const F = 4;
+const n = orig.length; let f = 0; const F = 6;
 el.style.opacity = '1';
 el._gt = setInterval(() => {
 f++;
 const p = f / F;
 const keep = 0;
-el.textContent = Array.from(orig).map((c, i) => (c === ' ' || c === '&' || Math.random() > (1 - p) * 0.3) ? c : GL[Math.floor(Math.random() * GL.length)]).join('');
+el.textContent = Array.from(orig).map((c, i) => (c === ' ' || c === '&' || Math.random() > (1 - p) * 0.45) ? c : GL[Math.floor(Math.random() * GL.length)]).join('');
 if (f >= F) { stopG(el); el.textContent = orig; calm(el); return; }
-const amp = (1 - p) * 12 + 2;
+const amp = (1 - p) * 22 + 3;
 const dx = rnd(-amp, amp);
-el.style.transform = 'translateX(' + dx.toFixed(1) + 'px) skewX(' + (Math.random() < 0.3 ? rnd(-6, 6) * (1 - p) : 0).toFixed(1) + 'deg)';
-el.style.textShadow = (-dx * 0.5).toFixed(1) + 'px 0 rgba(255,50,110,.6),' + (dx * 0.5).toFixed(1) + 'px 0 rgba(50,230,255,.6)'; el.style.filter = Math.random() < 0.35 ? 'hue-rotate(' + Math.floor(rnd(-70, 70)) + 'deg) contrast(1.4)' : '';
-if (Math.random() < 0.3 - p * 0.2) { const t = rnd(0, 60), b = rnd(0, 60); el.style.clipPath = 'inset(' + t.toFixed(0) + '% 0 ' + b.toFixed(0) + '% 0)'; } else { el.style.clipPath = ''; }
+el.style.transform = 'translateX(' + dx.toFixed(1) + 'px) skewX(' + (Math.random() < 0.4 ? rnd(-10, 10) * (1 - p) : 0).toFixed(1) + 'deg)';
+el.style.textShadow = (-dx * 0.8).toFixed(1) + 'px 0 rgba(255,50,110,.85),' + (dx * 0.8).toFixed(1) + 'px 0 rgba(50,230,255,.85)'; el.style.filter = Math.random() < 0.35 ? 'hue-rotate(' + Math.floor(rnd(-70, 70)) + 'deg) contrast(1.4)' : '';
+if (Math.random() < 0.55 - p * 0.4) { const t = rnd(0, 60), b = rnd(0, 60); el.style.clipPath = 'inset(' + t.toFixed(0) + '% 0 ' + b.toFixed(0) + '% 0)'; } else { el.style.clipPath = ''; }
 }, 36);
 };
 const glitchOut = (el) => {
@@ -1808,11 +1808,11 @@ let f = 0; const F = 2;
 el._gt = setInterval(() => {
 f++;
 if (f >= F) { stopG(el); el.style.opacity = '0'; el.textContent = orig; calm(el); return; }
-const dx = rnd(-12, 12);
+const dx = rnd(-20, 20);
 el.textContent = Array.from(orig).map((c) => (c === ' ' || c === '&' || Math.random() < 0.55) ? c : GL[Math.floor(Math.random() * GL.length)]).join('');
 el.style.transform = 'translateX(' + dx.toFixed(1) + 'px) skewX(' + rnd(-18, 18).toFixed(1) + 'deg)';
-el.style.textShadow = (-dx * 0.4).toFixed(1) + 'px 0 rgba(255,50,110,.6),' + (dx * 0.4).toFixed(1) + 'px 0 rgba(50,230,255,.6)';
-el.style.clipPath = '';
+el.style.textShadow = (-dx * 0.7).toFixed(1) + 'px 0 rgba(255,50,110,.85),' + (dx * 0.7).toFixed(1) + 'px 0 rgba(50,230,255,.85)';
+const t = rnd(0, 50); el.style.clipPath = 'inset(' + t.toFixed(0) + '% 0 ' + rnd(0, 50).toFixed(0) + '% 0)';
 el.style.opacity = String(1 - f / F);
 }, 36);
 };
@@ -1909,15 +1909,15 @@ h.firstChild.appendChild(c); h.style.visibility = 'visible';
 });
 seam.style.visibility = 'visible';
 ldEl.style.display = 'none'; card.style.display = 'none';
-}, 'lift+=0.7');
-loadTl.addLabel('split', 'lift+=0.75');
+}, 'lift+=0.5');
+loadTl.addLabel('split', 'lift+=0.5');
 loadTl.to(seam, { scaleX: 1, duration: 0.35, ease: 'power3.out' }, 'split');
 loadTl.fromTo(q('#top'), { scale: 1.06, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.9, ease: 'power3.out', clearProps: 'transform' }, 'split');
 loadTl.to(hT, { yPercent: -100, duration: 0.55, ease: 'power4.inOut' }, 'split+=0.08');
 loadTl.to(hB, { yPercent: 100, duration: 0.55, ease: 'power4.inOut' }, 'split+=0.08');
 loadTl.to(seam, { opacity: 0, duration: 0.3, ease: 'power1.out' }, 'split+=0.25');
-loadTl.add(intro.play.bind(intro), 'split+=0.2');
-loadTl.add(() => { [hT, hB, seam, card].forEach((d) => { try { d && d.remove(); } catch (e) {} }); unlock(); }, 'split+=0.7');
+loadTl.add(intro.play.bind(intro), 'split+=0.1');
+loadTl.add(() => { [hT, hB, seam, card].forEach((d) => { try { d && d.remove(); } catch (e) {} }); unlock(); }, 'split+=0.55');
 const fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
 Promise.race([fontsReady, new Promise((r) => setTimeout(r, 1000))]).then(() => loadTl.play());
 } else {
