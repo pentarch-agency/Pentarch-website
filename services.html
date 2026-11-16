@@ -342,22 +342,33 @@ Most projects pass through five suppliers and lose something at every handoff. H
 <div class="pv" data-fig="FIG. 01 — SECTION A–A'
 SCALE 1:50" data-rev="REV 03
 SHEET 1/3" style="flex:1; display:flex; align-items:center; justify-content:center; padding:28px"><span class="reg a" aria-hidden="true"></span><span class="reg b" aria-hidden="true"></span>
-<svg viewBox="0 0 400 300" aria-hidden="true" style="width:100%; height:auto; overflow:visible"><defs><pattern id="hx1" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#536684" stroke-width="1"/></pattern></defs><g aria-hidden="true"><rect x="20" y="200" width="360" height="62" fill="url(#hx1)" opacity=".5"></rect><g stroke="#98A9C4" stroke-width="1" opacity=".55" fill="none"><line x1="200" y1="30" x2="200" y2="272" stroke-dasharray="10 3 2 3"></line><line x1="20" y1="282" x2="380" y2="282"></line><line x1="20" y1="276" x2="20" y2="288"></line><line x1="380" y1="276" x2="380" y2="288"></line><path d="M26 279 L20 282 L26 285 M374 279 L380 282 L374 285"></path><circle cx="110" cy="60" r="3"></circle><circle cx="290" cy="60" r="3"></circle><circle cx="200" cy="130" r="3"></circle></g><rect x="176" y="277" width="48" height="10" fill="#1E263B"></rect><text x="200" y="285" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="1.5" fill="#98A9C4">360 MM</text><text x="116" y="52" font-family="JetBrains Mono, monospace" font-size="8" fill="#98A9C4" opacity=".8">A</text><text x="296" y="52" font-family="JetBrains Mono, monospace" font-size="8" fill="#98A9C4" opacity=".8">B</text></g>
-<g fill="none" stroke="#98A9C4" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
-<line class="wd" x1="20" y1="200" x2="380" y2="200"></line>
-<line class="wd" x1="110" y1="60" x2="110" y2="262"></line>
-<line class="wd" x1="290" y1="60" x2="290" y2="262"></line>
-<path class="wd" d="M20 190 Q65 90 110 60" stroke="#DCE3EF"></path>
-<path class="wd" d="M110 60 Q200 200 290 60" stroke="#DCE3EF"></path>
-<path class="wd" d="M290 60 Q335 90 380 190" stroke="#DCE3EF"></path>
-<line class="wd" x1="140" y1="99" x2="140" y2="200"></line>
-<line class="wd" x1="170" y1="122" x2="170" y2="200"></line>
-<line class="wd" x1="200" y1="130" x2="200" y2="200"></line>
-<line class="wd" x1="230" y1="122" x2="230" y2="200"></line>
-<line class="wd" x1="260" y1="99" x2="260" y2="200"></line>
-<path class="wd" d="M20 250 q15 -8 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0" stroke="#536684"></path>
-</g>
-</svg>
+<svg viewBox="0 0 400 300" aria-hidden="true" style="width:100%; height:auto; overflow:visible"><defs><pattern id="hx1" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#536684" stroke-width="1"/></pattern></defs><g aria-hidden="true"><rect x="20" y="220" width="360" height="50" fill="url(#hx1)" opacity=".45"></rect></g>
+<g fill="none" stroke="#98A9C4" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+<!-- gem top view: octagonal facet -->
+<polygon class="wd" points="200,28 260,52 284,112 260,172 200,196 140,172 116,112 140,52" stroke="#DCE3EF" stroke-width="1.6"/>
+<polygon class="wd" points="200,52 240,72 256,112 240,152 200,172 160,152 144,112 160,72"/>
+<polygon class="wd" points="200,80 220,92 228,112 220,132 200,144 180,132 172,112 180,92"/>
+<!-- radial facet lines -->
+<line class="wd" x1="200" y1="28" x2="200" y2="80"/><line class="wd" x1="260" y1="52" x2="220" y2="92"/>
+<line class="wd" x1="284" y1="112" x2="228" y2="112"/><line class="wd" x1="260" y1="172" x2="220" y2="132"/>
+<line class="wd" x1="200" y1="196" x2="200" y2="144"/><line class="wd" x1="140" y1="172" x2="180" y2="132"/>
+<line class="wd" x1="116" y1="112" x2="172" y2="112"/><line class="wd" x1="140" y1="52" x2="180" y2="92"/>
+<!-- center point -->
+<circle cx="200" cy="112" r="3" fill="#DCE3EF" stroke="none"/>
+<!-- dimension lines -->
+<line class="wd" x1="110" y1="210" x2="290" y2="210" stroke-dasharray="4 3"/>
+<line class="wd" x1="110" y1="206" x2="110" y2="214"/><line class="wd" x1="290" y1="206" x2="290" y2="214"/>
+<text x="200" y="230" text-anchor="middle" fill="#536684" font-family="'JetBrains Mono',monospace" font-size="10" letter-spacing=".12em" stroke="none">168 MM</text>
+<!-- side profile: gem cut cross section -->
+<path class="wd" d="M310,86 L370,86 L356,146 L340,180 L324,146 Z" stroke="#DCE3EF"/>
+<line class="wd" x1="310" y1="86" x2="370" y2="86"/>
+<line class="wd" x1="340" y1="86" x2="340" y2="180"/>
+<line class="wd" x1="310" y1="86" x2="340" y2="180"/><line class="wd" x1="370" y1="86" x2="340" y2="180"/>
+<!-- annotation -->
+<text x="340" y="78" text-anchor="middle" fill="#536684" font-family="'JetBrains Mono',monospace" font-size="9" letter-spacing=".1em" stroke="none">PROFILE</text>
+<!-- small label -->
+<text x="200" y="260" text-anchor="middle" fill="#536684" font-family="'JetBrains Mono',monospace" font-size="9" letter-spacing=".14em" stroke="none">X 0126 — Y 0240</text>
+</g></svg>
 </div>
 <div style="border-top:1px solid rgba(152,169,196,.22); padding:20px 26px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:10px 16px">
 <span class="gn" aria-hidden="true">01</span><div><p class="mono" style="margin:0 0 6px; font-size:11px; letter-spacing:.2em; color:#98A9C4">PLATE 01</p><h3 class="disp" style="margin:0; font-size:30px; line-height:1.1; font-weight:600">AurumOS</h3></div>
@@ -368,22 +379,33 @@ SHEET 1/3" style="flex:1; display:flex; align-items:center; justify-content:cent
 <div class="pv" data-fig="FIG. 02 — ELEVATION
 SCALE 1:20" data-rev="REV 02
 SHEET 2/3" style="flex:1; display:flex; align-items:center; justify-content:center; padding:28px"><span class="reg a" aria-hidden="true"></span><span class="reg b" aria-hidden="true"></span>
-<svg viewBox="0 0 400 300" aria-hidden="true" style="width:100%; height:auto; overflow:visible"><defs><pattern id="hx2" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#536684" stroke-width="1"/></pattern></defs><g aria-hidden="true"><rect x="20" y="200" width="360" height="62" fill="url(#hx2)" opacity=".5"></rect><g stroke="#98A9C4" stroke-width="1" opacity=".55" fill="none"><line x1="200" y1="30" x2="200" y2="272" stroke-dasharray="10 3 2 3"></line><line x1="20" y1="282" x2="380" y2="282"></line><line x1="20" y1="276" x2="20" y2="288"></line><line x1="380" y1="276" x2="380" y2="288"></line><path d="M26 279 L20 282 L26 285 M374 279 L380 282 L374 285"></path><circle cx="110" cy="60" r="3"></circle><circle cx="290" cy="60" r="3"></circle><circle cx="200" cy="130" r="3"></circle></g><rect x="176" y="277" width="48" height="10" fill="#1E263B"></rect><text x="200" y="285" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="1.5" fill="#98A9C4">340 MM</text><text x="116" y="52" font-family="JetBrains Mono, monospace" font-size="8" fill="#98A9C4" opacity=".8">A</text><text x="296" y="52" font-family="JetBrains Mono, monospace" font-size="8" fill="#98A9C4" opacity=".8">B</text></g>
-<g fill="none" stroke="#98A9C4" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
-<line class="wd" x1="40" y1="270" x2="360" y2="270"></line>
-<rect class="wd" x="140" y="220" width="120" height="50"></rect>
-<rect class="wd" x="156" y="165" width="88" height="55"></rect>
-<rect class="wd" x="172" y="115" width="56" height="50"></rect>
-<rect class="wd" x="186" y="75" width="28" height="40"></rect>
-<line class="wd" x1="200" y1="75" x2="200" y2="22" stroke="#DCE3EF"></line>
-<line class="wd" x1="140" y1="245" x2="260" y2="245"></line>
-<line class="wd" x1="156" y1="192" x2="244" y2="192"></line>
-<line class="wd" x1="172" y1="140" x2="228" y2="140"></line>
-<line class="wd" x1="170" y1="220" x2="170" y2="270"></line>
-<line class="wd" x1="200" y1="220" x2="200" y2="270"></line>
-<line class="wd" x1="230" y1="220" x2="230" y2="270"></line>
-</g>
-</svg>
+<svg viewBox="0 0 400 300" aria-hidden="true" style="width:100%; height:auto; overflow:visible"><defs><pattern id="hx2" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#536684" stroke-width="1"/></pattern></defs><g aria-hidden="true"><rect x="20" y="220" width="360" height="50" fill="url(#hx2)" opacity=".45"></rect></g>
+<g fill="none" stroke="#98A9C4" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+<!-- medical cross, precise -->
+<rect class="wd" x="160" y="40" width="80" height="160" rx="6" stroke="#DCE3EF" stroke-width="1.6"/>
+<rect class="wd" x="120" y="80" width="160" height="80" rx="6" stroke="#DCE3EF" stroke-width="1.6"/>
+<!-- inner cross detail -->
+<rect class="wd" x="175" y="58" width="50" height="124" rx="3"/>
+<rect class="wd" x="138" y="95" width="124" height="50" rx="3"/>
+<!-- center circle -->
+<circle class="wd" cx="200" cy="120" r="18" stroke="#DCE3EF"/>
+<circle cx="200" cy="120" r="4" fill="#DCE3EF" stroke="none"/>
+<!-- heartbeat line -->
+<polyline class="wd" points="30,210 80,210 95,210 105,180 115,240 125,195 135,215 145,210 200,210" stroke="#DCE3EF" stroke-width="1.6"/>
+<polyline class="wd" points="200,210 260,210 275,210 285,185 295,235 305,200 315,215 325,210 380,210" stroke="#98A9C4"/>
+<!-- pill capsule on the side -->
+<rect class="wd" x="320" y="60" width="50" height="100" rx="25" stroke="#DCE3EF"/>
+<line class="wd" x1="320" y1="110" x2="370" y2="110"/>
+<line class="wd" x1="345" y1="60" x2="345" y2="160" stroke-dasharray="4 3"/>
+<!-- dimension -->
+<text x="345" y="175" text-anchor="middle" fill="#536684" font-family="'JetBrains Mono',monospace" font-size="9" letter-spacing=".1em" stroke="none">50 MM</text>
+<!-- label -->
+<text x="200" y="255" text-anchor="middle" fill="#536684" font-family="'JetBrains Mono',monospace" font-size="9" letter-spacing=".14em" stroke="none">X 0240 — Y 0180</text>
+<!-- small annotation -->
+<text x="200" y="18" text-anchor="middle" fill="#536684" font-family="'JetBrains Mono',monospace" font-size="10" letter-spacing=".12em" stroke="none">340 MM</text>
+<line class="wd" x1="120" y1="24" x2="280" y2="24" stroke-dasharray="4 3"/>
+<line class="wd" x1="120" y1="20" x2="120" y2="28"/><line class="wd" x1="280" y1="20" x2="280" y2="28"/>
+</g></svg>
 </div>
 <div style="border-top:1px solid rgba(152,169,196,.22); padding:20px 26px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:10px 16px">
 <span class="gn" aria-hidden="true">02</span><div><p class="mono" style="margin:0 0 6px; font-size:11px; letter-spacing:.2em; color:#98A9C4">PLATE 02</p><h3 class="disp" style="margin:0; font-size:30px; line-height:1.1; font-weight:600">Medigo</h3></div>
