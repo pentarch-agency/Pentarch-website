@@ -22,6 +22,14 @@
 @keyframes dot-glow{0%{filter:drop-shadow(0 0 2px rgba(143,180,255,.3))}100%{filter:drop-shadow(0 0 8px rgba(143,180,255,.8))}}
 .plate:hover .pv svg .wd{stroke:#DCE3EF;transition:stroke .4s}
 .plate:hover .pv::before{animation-play-state:paused;opacity:1}
+
+/* ═══ HUD TICK DOTS ═══ */
+@keyframes hud-tick-glow{0%,100%{box-shadow:0 0 4px 1px rgba(143,180,255,.3)}50%{box-shadow:0 0 10px 3px rgba(143,180,255,.7)}}
+.hud .bar .tick{position:absolute;left:50%;width:6px;height:6px;border-radius:50%;background:rgba(152,169,196,.25);border:1px solid rgba(152,169,196,.3);transform:translate(-50%,0);transition:all .5s ease;z-index:2;pointer-events:none}
+.hud .bar .tick.active{background:rgba(143,180,255,.8);border-color:rgba(143,180,255,.6);animation:hud-tick-glow 2s ease-in-out infinite}
+.hud .bar .tick::before{content:'';position:absolute;left:10px;top:50%;width:4px;height:1px;background:rgba(152,169,196,.3);transform:translateY(-50%);transition:all .5s ease}
+.hud .bar .tick.active::before{background:rgba(143,180,255,.6);width:7px}
+
 </style>
 <link rel="preload" href="/vendor/gsap-3.15.1.min.js" as="script"><link rel="preload" href="/vendor/ScrollTrigger-3.15.1.min.js" as="script"><script defer src="/vendor/gsap-3.15.1.min.js"></script><script defer src="/vendor/ScrollTrigger-3.15.1.min.js"></script></head><body style="margin:0;background:#111522"><script>window.__PA_META={"home":{"title":"Pentarch | Creative agency for brand, product and growth","description":"Pentarch is a creative agency that builds strategy, brand, product, content and growth as one connected system. One small team, one plan, work that lasts.","url":"https://www.pentarch.agency/"},"studio":{"title":"About | The founder behind Pentarch | Pentarch","description":"About Pentarch: a creative agency founded by Jenil Dholakiya, covering strategy, brand, web and product, content and growth as one connected system.","url":"https://www.pentarch.agency/about"},"services":{"title":"Services | Strategy, brand, web, content and growth | Pentarch","description":"Five connected services: strategy, brand, web and product, content, and growth. Use one or all five. See what is included in every Pentarch project.","url":"https://www.pentarch.agency/services"},"projects":{"title":"Projects | Selected work built to last | Pentarch","description":"A selection of Pentarch work across strategy, brand, web and product, content and growth. Open any project to see the brief and what we did.","url":"https://www.pentarch.agency/projects"},"approach":{"title":"Approach | One team, clear decisions, a fixed plan | Pentarch","description":"How Pentarch works: one team, one plan, decisions before design, small finished steps and measurement after launch. Clear from day one.","url":"https://www.pentarch.agency/approach"},"contact":{"title":"Contact | Let's talk about your project | Pentarch","description":"Tell Pentarch what you are building and when you need it. A few lines is enough. A real person reads every brief and replies with next steps.","url":"https://www.pentarch.agency/contact"}}</script>
 <div id="pa-pt" class="on cov ins boot" aria-hidden="true"><i class="s" style="--i:0;--c:#536684"></i><i class="s" style="--i:1;--c:#3B4C72"></i><i class="s" style="--i:2;--c:#303D59"></i><i class="s" style="--i:3;--c:#1E263B"></i><i class="s" style="--i:4;--c:#111522"></i><div class="c"><span class="n" data-ptn>01 / 06</span><span class="t disp" data-ptt><b style="--l:0">P</b><b style="--l:1">e</b><b style="--l:2">n</b><b style="--l:3">t</b><b style="--l:4">a</b><b style="--l:5">r</b><b style="--l:6">c</b><b style="--l:7">h</b></span><svg class="p" viewBox="0 0 80 80" fill="none" aria-hidden="true"><polygon pathLength="1" points="40,6 72,29 60,67 20,67 8,29"/><circle r="2.6"><animateMotion dur="2.4s" repeatCount="indefinite" path="M40 6 L72 29 L60 67 L20 67 L8 29 Z"/></circle></svg></div></div>
@@ -86,7 +94,7 @@
 <!-- ===================== FIXED HUD + CROSSHAIR ===================== -->
 <div class="hud mono" aria-hidden="true">
 <span class="lab" data-hudlab>SHEET 01 / 06</span>
-<div class="bar"><div class="fill" data-hudfill></div></div>
+<div class="bar"><span class="tick" data-tick="0" style="top:0%"></span><span class="tick" data-tick="1" style="top:16.7%"></span><span class="tick" data-tick="2" style="top:33.3%"></span><span class="tick" data-tick="3" style="top:50%"></span><span class="tick" data-tick="4" style="top:66.7%"></span><span class="tick" data-tick="5" style="top:83.3%"></span><div class="fill" data-hudfill></div></div>
 </div>
 <!-- ===================== HERO ===================== -->
 <header id="top" data-sheet="01" style="position:relative; overflow:hidden; display:flex; flex-direction:column; min-height:min(100vh,1200px)">
