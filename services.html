@@ -622,7 +622,7 @@ SHEET 3/3" style="flex:1; display:flex; align-items:center; justify-content:cent
 <span class="mk"><span>Let's make something</span></span>
 <span class="mk"><span>that <span class="hollow">lasts.</span></span></span>
 </h2>
-<div data-up style="margin-top:52px; display:flex; flex-wrap:wrap; align-items:center; gap:24px 40px">
+<div data-up style="margin-top:52px; display:flex; flex-wrap:wrap; align-items:center; gap:24px 40px; overflow:hidden; padding:8px">
 <a href="#top" class="navcta solid mono" data-mag>
 <span class="fillc" aria-hidden="true"></span>
 <span class="ncl"><span class="nct">Start a project</span><span class="nct b" aria-hidden="true">Start a project</span></span>
@@ -1974,8 +1974,11 @@ onToggle: (self) => { if (self.isActive && lab) { lab.textContent = 'SHEET ' + s
 safe('magnetic', () => {qa('[data-mag]').forEach((btn) => {const xTo = gsap.quickTo(btn, 'x', { duration: 0.5, ease: 'power3' });
 const yTo = gsap.quickTo(btn, 'y', { duration: 0.5, ease: 'power3' });
 const mv = (e) => {const r = btn.getBoundingClientRect();
-xTo((e.clientX - (r.left + r.width / 2)) * 0.3);
-yTo((e.clientY - (r.top + r.height / 2)) * 0.3);};
+const dx = (e.clientX - (r.left + r.width / 2)) * 0.15;
+const dy = (e.clientY - (r.top + r.height / 2)) * 0.15;
+const maxD = 12;
+xTo(Math.max(-maxD, Math.min(maxD, dx)));
+yTo(Math.max(-maxD, Math.min(maxD, dy)));};
 const lv = () => { xTo(0); yTo(0); };
 btn.addEventListener('pointermove', mv);
 btn.addEventListener('pointerleave', lv);
