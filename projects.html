@@ -1917,8 +1917,10 @@ gsap.fromTo(cue, { scaleY: 0, transformOrigin: 'top' }, { scaleY: 1, duration: 1
 safe('cpmarks', () => {
   const ticks = qa('.hud .tick');
   const segs = qa('.hud .cp-seg');
+  const fill = q('.hud .fill');
   if (!ticks.length) return;
   let prev = -1;
+  const stops = [0, 0.167, 0.333, 0.5, 0.667, 0.833];
 
   const activate = (n) => {
     if (n === prev) return;
@@ -1939,6 +1941,10 @@ safe('cpmarks', () => {
     segs.forEach((s, i) => {
       if (i < n) { s.classList.add('on'); } else { s.classList.remove('on'); }
     });
+
+    if (fill) {
+      gsap.to(fill, { scaleY: stops[n] || 0, duration: 0.6, ease: 'power2.out', overwrite: true });
+    }
   };
 
   activate(0);
@@ -2059,7 +2065,7 @@ safe('grid', () => {
 safe('hud', () => {
 const fill = q('[data-hudfill]');
 const lab = q('[data-hudlab]');
-gsap.to(fill, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: root, start: 'top top', end: 'bottom bottom', scrub: true } });
+/* fill controlled by checkpoint system */
 qa('[data-sheet]').forEach((sec) => {
 ST.create({
 trigger: sec, start: 'top 55%', end: 'bottom 55%',
