@@ -1961,8 +1961,8 @@ const status = q('[data-ld="status"]');
 const bar = q('[data-ld="bar"]');
 const prog = { v: 0 };
 const stages = ['01 — Research', '02 — Design', '03 — Develop', '04 — Test', '05 — Launch', 'Ready'];
-const unlock = () => { try { document.documentElement.style.overflow = ''; document.documentElement.style.paddingRight = ''; } catch (e) {} setTimeout(() => { window.__paBusy = false; }, 250); setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 2400); };
-if (ldEl && !window.__paSkipLd) {
+const unlock = () => { try { document.documentElement.style.overflow = ''; document.documentElement.style.paddingRight = ''; } catch (e) {} try { sessionStorage.setItem("pa-loaded", "1"); } catch(e) {} setTimeout(() => { window.__paBusy = false; }, 250); setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 2400); };
+if (ldEl && !window.__paSkipLd && !(function(){try{return sessionStorage.getItem("pa-loaded")}catch(e){return false}}())) {
 window.__paBusy = true; setTimeout(() => { window.__paBusy = false; }, 12000);
 const loadTl = gsap.timeline({ paused: true });
 this._loadTl = loadTl;
