@@ -23,101 +23,52 @@
 .plate:hover .pv svg .wd{stroke:#DCE3EF;transition:stroke .4s}
 .plate:hover .pv::before{animation-play-state:paused;opacity:1}
 
-}
+/* ═══ CINEMATIC HERO ═══ */
+@keyframes cm-float{0%,100%{transform:translateY(0) translateZ(0)}50%{transform:translateY(-10px) translateZ(0)}}
+@keyframes cm-breathe{0%,100%{opacity:.08}50%{opacity:.2}}
+@keyframes cm-sweep{0%{top:-2px;opacity:.8}100%{top:100%;opacity:0}}
+@keyframes cm-flicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.4}94%{opacity:1}96%{opacity:.6}97%{opacity:1}}
+@keyframes cm-glow-pulse{0%,100%{box-shadow:0 0 60px 20px rgba(143,180,255,.06)}50%{box-shadow:0 0 100px 40px rgba(143,180,255,.12)}}
 
+/* atmospheric canvas behind everything */
+.cm-atmos{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.cm-atmos canvas{position:absolute;inset:0;width:100%;height:100%}
 
-/* ═══ HERO v2 — COMMAND DECK ═══ */
-@keyframes h2-pulse{0%,100%{opacity:.15}50%{opacity:.35}}
-@keyframes h2-sweep{0%{transform:translateY(-100vh)}100%{transform:translateY(100vh)}}
-@keyframes h2-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
-@keyframes h2-orbit{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-@keyframes h2-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-@keyframes h2-glow{0%,100%{opacity:.3}50%{opacity:.8}}
-@keyframes h2-dataup{0%{transform:translateY(20px);opacity:0}10%{opacity:.6}90%{opacity:.6}100%{transform:translateY(-100vh);opacity:0}}
+/* deep vignette for cinema feel */
+header#top .cm-vig{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 65% 50% at 50% 45%,transparent 20%,rgba(12,16,27,.75) 100%)}
 
-/* hero layout override — centered command deck */
-#top .h2-deck{position:relative;z-index:2;width:100%;max-width:1296px;margin:0 auto;padding:10px clamp(20px,5vw,72px) 36px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 80px);gap:0;text-align:center}
+/* scan line — single thin sweep */
+.cm-scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,rgba(143,180,255,.4) 40%,rgba(255,255,255,.6) 50%,rgba(143,180,255,.4) 60%,transparent 90%);z-index:3;pointer-events:none;opacity:0;will-change:top}
 
-/* canvases */
-.h2-bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.h2-bg canvas{position:absolute;inset:0;width:100%;height:100%}
-#h2grid{opacity:.18}
-#h2parts{opacity:.6}
+/* isometric stack glow aura */
+[data-hero-art]::before{content:'';position:absolute;top:50%;left:50%;width:70%;height:60%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(143,180,255,.08) 0%,transparent 70%);animation:cm-glow-pulse 5s ease-in-out infinite;pointer-events:none;z-index:-1}
 
-/* scan line */
-.h2-sweep{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(143,180,255,.6) 30%,rgba(255,255,255,.9) 50%,rgba(143,180,255,.6) 70%,transparent 95%);box-shadow:0 0 30px 8px rgba(143,180,255,.25),0 0 60px 2px rgba(143,180,255,.1);z-index:5;pointer-events:none;opacity:0;will-change:transform}
+/* slab edge glow on hover */
+.slab path[data-fill]{transition:filter .5s ease}
+.slab:hover path.hd[data-fill]:nth-child(3){fill:#3B4C72;filter:drop-shadow(0 0 12px rgba(143,180,255,.45))}
 
-/* corner HUD brackets */
-.h2-bkt{position:absolute;width:36px;height:36px;pointer-events:none;z-index:5}
-.h2-bkt svg{width:100%;height:100%}
-.h2-bkt.tl{top:12px;left:12px}
-.h2-bkt.tr{top:12px;right:12px}
-.h2-bkt.bl{bottom:12px;left:12px}
-.h2-bkt.br{bottom:12px;right:12px}
+/* headline cinematic glow */
+.hh-h .hollow{text-shadow:0 0 50px rgba(143,180,255,.25),0 0 100px rgba(143,180,255,.08)}
 
-/* eyebrow */
-.h2-eye{margin:0 0 10px;display:flex;align-items:center;justify-content:center;gap:14px;font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:rgba(143,180,255,.7)}
-.h2-eye .h2-dot{width:6px;height:6px;border-radius:50%;background:#8FB4FF;box-shadow:0 0 12px 3px rgba(143,180,255,.6);animation:h2-glow 2s ease-in-out infinite}
+/* eyebrow dot glow */
+.hh-eb .live{box-shadow:0 0 10px 3px rgba(143,180,255,.35);animation:cm-breathe 2.5s ease-in-out infinite}
 
-/* headline */
-.h2-title{margin:0;font-size:clamp(38px,6.2vw,88px);line-height:.92;font-weight:600;letter-spacing:-.04em;position:relative}
-.h2-title .h2-line{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
-.h2-title .h2-line span{display:block}
-.h2-title .h2-hollow{color:transparent;-webkit-text-stroke:1.8px var(--accent,#8FB4FF);text-shadow:0 0 60px rgba(143,180,255,.3),0 0 120px rgba(143,180,255,.1)}
+/* CTA neon edge */
+.navcta.solid{position:relative;overflow:hidden}
+.navcta.solid::before{content:'';position:absolute;inset:-1px;border-radius:inherit;border:1px solid rgba(143,180,255,.2);pointer-events:none;z-index:1}
 
-/* art wrapper — centered, constrained */
-.h2-art{position:relative;width:100%;max-width:340px;margin:8px auto 10px;animation:h2-float 6s ease-in-out infinite}
-.h2-art svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 0 20px rgba(143,180,255,.12))}
+/* hero art float animation */
+[data-hero-art]{animation:cm-float 6s ease-in-out infinite}
+[data-hero-art] svg{filter:drop-shadow(0 0 30px rgba(143,180,255,.08))}
 
-/* energy ring around art */
-.h2-ring{position:absolute;top:50%;left:50%;width:110%;height:110%;transform:translate(-50%,-50%);pointer-events:none;z-index:-1}
-.h2-ring svg{width:100%;height:100%;animation:h2-orbit 60s linear infinite}
-
-/* slab glow on hover */
-.slab path[data-fill]{transition:filter .4s ease,fill .4s ease}
-.slab:hover path.hd[data-fill]:nth-child(3){fill:#3B4C72 !important;filter:drop-shadow(0 0 14px rgba(143,180,255,.5))}
-
-/* description */
-.h2-desc{margin:0;max-width:480px;font-size:15px;line-height:1.6;color:#98A9C4}
-
-/* CTA row */
-.h2-ctas{margin-top:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:20px 36px}
-.h2-ctas .navcta.solid{position:relative;overflow:hidden}
-.h2-ctas .navcta.solid::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,rgba(143,180,255,.3),transparent,rgba(143,180,255,.2),transparent);animation:h2-orbit 4s linear infinite;pointer-events:none;z-index:0}
-
-/* HUD readouts */
-.h2-hud{position:absolute;pointer-events:none;z-index:4;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(143,180,255,.45);white-space:nowrap}
-.h2-hud.tl{top:50px;left:clamp(16px,4vw,60px)}
-.h2-hud.tr{top:50px;right:clamp(16px,4vw,60px);text-align:right}
-.h2-hud.bl{bottom:38px;left:clamp(16px,4vw,60px)}
-.h2-hud.br{bottom:38px;right:clamp(16px,4vw,60px);text-align:right}
-.h2-hud span{display:block;line-height:1.8}
-.h2-hud .h2-val{color:rgba(220,227,239,.5);font-size:11px}
-
-/* data stream */
-.h2-stream{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.h2-stream i{position:absolute;bottom:-20px;font-style:normal;font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(143,180,255,.12);white-space:nowrap;animation:h2-dataup linear infinite;will-change:transform}
-
-/* bottom bar */
-.h2-bot{position:absolute;bottom:0;left:0;right:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:12px clamp(20px,5vw,72px);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#98A9C4}
-.h2-bot .h2-scroll{display:flex;align-items:center;gap:14px}
-.h2-bot .h2-scroll .h2-sbar{position:relative;width:1px;height:40px;background:rgba(152,169,196,.2);overflow:hidden}
-.h2-bot .h2-scroll .h2-sbar span{position:absolute;inset:0;background:#DCE3EF;transform-origin:top}
-.h2-bot .h2-cursor{animation:h2-blink 1.2s step-end infinite;color:#8FB4FF}
-
-/* vignette */
-header#top .h2-vig{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 45%,transparent 30%,rgba(12,16,27,.7));pointer-events:none;z-index:1}
-
-@media(max-width:768px){
-.h2-title{font-size:clamp(38px,11vw,64px)}
-.h2-art{max-width:400px;margin:24px auto 20px}
-.h2-hud{display:none}
-.h2-bkt{width:24px;height:24px}
-}
+/* subtle flicker on the spark dot */
+.hspark{animation:cm-flicker 4s ease-in-out infinite}
 
 @media(prefers-reduced-motion:reduce){
-.h2-sweep,.h2-stream i,.h2-ring svg,.h2-art,.h2-dot{animation:none !important}
-#h2grid,#h2parts{display:none}
+[data-hero-art],.hspark{animation:none !important}
+[data-hero-art]::before{animation:none !important}
+.cm-atmos canvas{display:none}
+.cm-scan{display:none}
 }
 
 </style>
@@ -191,7 +142,9 @@ header#top .h2-vig{position:absolute;inset:0;background:radial-gradient(ellipse 
 <div data-glow aria-hidden="true" style="position:absolute; top:-340px; left:-300px; width:1000px; height:1000px; border-radius:50%; background:radial-gradient(circle, rgba(152,169,196,.36), rgba(152,169,196,0) 62%); pointer-events:none; z-index:0"></div>
 <div aria-hidden="true" style="position:absolute; right:-260px; bottom:-300px; width:800px; height:800px; border-radius:50%; background:radial-gradient(circle, rgba(83,102,132,.3), rgba(83,102,132,0) 65%); pointer-events:none; z-index:0"></div>
 <div class="pa-hsp" data-hsp aria-hidden="true"></div>
-<div class="pa-hdr" data-hdr><nav aria-label="Primary" style="width:100%; max-width:1296px; margin:0 auto; padding:28px clamp(20px,5vw,72px); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px 32px; position:relative; z-index:2">
+<div class="cm-atmos" aria-hidden="true"><canvas id="cm-canvas"></canvas></div>
+<div class="cm-vig" aria-hidden="true"></div>
+<div class="cm-scan" data-cm-scan aria-hidden="true"></div><div class="pa-hdr" data-hdr><nav aria-label="Primary" style="width:100%; max-width:1296px; margin:0 auto; padding:28px clamp(20px,5vw,72px); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px 32px; position:relative; z-index:2">
 <a href="#top" data-in="nav" aria-label="Pentarch home">
 <span class="disp shim" aria-hidden="true" style="display:inline-block; font-size:24px; letter-spacing:.22em; text-transform:uppercase; white-space:nowrap">Pentarch</span>
 </a>
@@ -208,131 +161,94 @@ header#top .h2-vig{position:absolute;inset:0;background:radial-gradient(ellipse 
 </div>
 <button class="navburger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open menu" data-burger><span class="bl"></span><span class="bl"></span></button>
 </nav></div>
-<!-- ═══ HERO v2 — COMMAND DECK ═══ -->
-<div class="h2-bg" aria-hidden="true">
-<canvas id="h2grid"></canvas>
-<canvas id="h2parts"></canvas>
-</div>
-<div class="h2-vig" aria-hidden="true"></div>
-<div class="h2-sweep" data-h2-sweep aria-hidden="true"></div>
-<div class="h2-stream" data-h2-stream aria-hidden="true"></div>
-
-<!-- HUD brackets -->
-<div class="h2-bkt tl" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none" stroke="rgba(143,180,255,.4)" stroke-width="1.5"><path d="M1 12V1h11"/><circle cx="1" cy="1" r="1.5" fill="rgba(143,180,255,.5)" stroke="none"/></svg></div>
-<div class="h2-bkt tr" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none" stroke="rgba(143,180,255,.4)" stroke-width="1.5"><path d="M35 12V1H24"/><circle cx="35" cy="1" r="1.5" fill="rgba(143,180,255,.5)" stroke="none"/></svg></div>
-<div class="h2-bkt bl" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none" stroke="rgba(143,180,255,.4)" stroke-width="1.5"><path d="M1 24v11h11"/><circle cx="1" cy="35" r="1.5" fill="rgba(143,180,255,.5)" stroke="none"/></svg></div>
-<div class="h2-bkt br" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none" stroke="rgba(143,180,255,.4)" stroke-width="1.5"><path d="M35 24v11H24"/><circle cx="35" cy="35" r="1.5" fill="rgba(143,180,255,.5)" stroke="none"/></svg></div>
-
-<!-- HUD readouts -->
-<div class="h2-hud tl" aria-hidden="true" data-h2-hud="tl">
-<span>SYS.STATUS</span>
-<span class="h2-val" data-h2-tick="status">ONLINE</span>
-<span style="margin-top:8px">LAYERS.ACTIVE</span>
-<span class="h2-val">05 / 05</span>
-</div>
-<div class="h2-hud tr" aria-hidden="true" data-h2-hud="tr">
-<span>PENTARCH.v2</span>
-<span class="h2-val" data-h2-tick="time">00:00:00</span>
-<span style="margin-top:8px">CHANNEL</span>
-<span class="h2-val">SECURE — 256bit</span>
-</div>
-<div class="h2-hud bl" aria-hidden="true">
-<span>LOCATION</span>
-<span class="h2-val">23.0225°N 72.5714°E</span>
-</div>
-<div class="h2-hud br" aria-hidden="true">
-<span>FRAME RATE</span>
-<span class="h2-val" data-h2-tick="fps">60.0 FPS</span>
-</div>
-
-<!-- Main hero content — centered -->
-<div class="h2-deck">
-<p class="mono h2-eye" data-in="fade">
-<span class="h2-dot" aria-hidden="true"></span>
+<div style="position:relative; z-index:1; width:100%; flex:1 0 auto; max-width:1296px; margin:0 auto; padding:24px clamp(20px,5vw,72px) 110px; display:flex; flex-wrap:wrap; align-items:center; gap:48px 24px; min-height:560px">
+<div style="flex:1 1 470px; min-width:0; position:relative; z-index:2">
+<p class="mono hh-eb" data-in="fade" style="margin:0 0 30px; display:flex; align-items:center; gap:12px; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:#98A9C4">
+<span class="live" aria-hidden="true" style="width:8px; height:8px; border-radius:50%; background:#DCE3EF"></span>
 Creative agency — idea to launch
 </p>
-<h1 class="disp h2-title">
-<span class="h2-line"><span data-in="line">Ideas that</span></span>
-<span class="h2-line"><span data-in="line">ship, then</span></span>
-<span class="h2-line"><span data-in="line" class="h2-hollow">grow.</span></span>
+<h1 class="disp hh-h" style="margin:0; font-size:clamp(54px,7.4vw,118px); line-height:.95; font-weight:600">
+<span class="mk"><span data-in="line">Ideas that</span></span>
+<span class="mk"><span data-in="line">ship, then</span></span>
+<span class="mk"><span data-in="line" class="hollow">grow.</span></span>
 </h1>
-
-<div class="h2-art" data-hero-art>
-<div class="h2-ring" aria-hidden="true">
-<svg viewBox="0 0 500 500" fill="none">
-<circle cx="250" cy="250" r="240" stroke="rgba(143,180,255,.08)" stroke-width=".5" stroke-dasharray="2 6"/>
-<circle cx="250" cy="250" r="220" stroke="rgba(143,180,255,.05)" stroke-width=".5" stroke-dasharray="1 8"/>
-<circle cx="250" cy="250" r="200" stroke="rgba(143,180,255,.03)" stroke-width=".5"/>
-<!-- tick marks -->
-<g stroke="rgba(143,180,255,.15)" stroke-width=".8">
-<line x1="250" y1="10" x2="250" y2="22"/>
-<line x1="250" y1="478" x2="250" y2="490"/>
-<line x1="10" y1="250" x2="22" y2="250"/>
-<line x1="478" y1="250" x2="490" y2="250"/>
-<line x1="420" y1="80" x2="412" y2="90"/>
-<line x1="80" y1="420" x2="90" y2="412"/>
-<line x1="420" y1="420" x2="412" y2="412"/>
-<line x1="80" y1="80" x2="90" y2="90"/>
-</g>
-</svg>
+<p class="hh-p" data-in="fade" style="margin:36px 0 0; max-width:500px; font-size:19px; line-height:1.6; color:#98A9C4">
+Strategy, brand, web, content and growth, handled by one small team. No handoffs, so the idea you approve is the idea that ships.
+</p>
+<div class="hh-cta" data-in="fade" style="margin-top:38px; display:flex; flex-wrap:wrap; align-items:center; gap:20px 32px">
+<a href="/contact" class="navcta solid mono" data-mag>
+<span class="fillc" aria-hidden="true"></span>
+<span class="ncl"><span class="nct">Start a project</span><span class="nct b" aria-hidden="true">Start a project</span></span>
+<span class="nca" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+</a>
+<a href="#work" class="lnk mono" style="font-size:13px; letter-spacing:.12em; text-transform:uppercase">See selected work</a>
 </div>
-<svg viewBox="120 10 760 670" role="img" aria-label="Five layered plates — Strategy, Brand, Web & Product, Content, Growth" style="will-change:transform;transform:translateZ(0)">
+</div>
+<div data-hero-art style="flex:1 1 560px; min-width:0; position:relative; z-index:1; will-change:transform; transform:translateZ(0)">
+<svg viewBox="0 0 860 690" role="img" aria-label="Five layered plates, exploded apart. Each layer is labelled as one of Pentarch's five disciplines." style="display:block; width:100%; max-width:680px; height:auto; overflow:visible; margin:0 auto; will-change:transform; transform:translateZ(0)">
 <g data-float>
 <g fill="none" stroke="#98A9C4" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+<!-- guides (visible once the stack pulls apart) -->
 <g stroke-dasharray="3 7" stroke-opacity=".75">
-<line class="hg" x1="510" y1="158" x2="510" y2="227.5"/>
-<line class="hg" x1="290" y1="158" x2="290" y2="227.5"/>
-<line class="hg" x1="535" y1="258" x2="535" y2="327.5"/>
-<line class="hg" x1="265" y1="258" x2="265" y2="327.5"/>
-<line class="hg" x1="560" y1="358" x2="560" y2="427.5"/>
-<line class="hg" x1="240" y1="358" x2="240" y2="427.5"/>
-<line class="hg" x1="585" y1="458" x2="585" y2="527.5"/>
-<line class="hg" x1="215" y1="458" x2="215" y2="527.5"/>
-<line class="hg" x1="400" y1="56" x2="400" y2="82"/>
+<line class="hg" x1="510" y1="158" x2="510" y2="227.5"></line>
+<line class="hg" x1="290" y1="158" x2="290" y2="227.5"></line>
+<line class="hg" x1="535" y1="258" x2="535" y2="327.5"></line>
+<line class="hg" x1="265" y1="258" x2="265" y2="327.5"></line>
+<line class="hg" x1="560" y1="358" x2="560" y2="427.5"></line>
+<line class="hg" x1="240" y1="358" x2="240" y2="427.5"></line>
+<line class="hg" x1="585" y1="458" x2="585" y2="527.5"></line>
+<line class="hg" x1="215" y1="458" x2="215" y2="527.5"></line>
+<line class="hg" x1="400" y1="56" x2="400" y2="82"></line>
 </g>
+<!-- slab 1 · Strategy -->
 <g class="slab" data-i="1">
-<path class="hd" data-g="1" data-fill fill="#1E263B" d="M190 540 L400 645 L400 663 L190 558 Z"/>
-<path class="hd" data-g="1" data-fill fill="#111522" d="M400 645 L610 540 L610 558 L400 663 Z"/>
-<path class="hd" data-g="1" data-fill fill="#303D59" d="M400 435 L610 540 L400 645 L190 540 Z"/>
-<path class="hd" data-g="1" d="M400 464.4 L551.2 540 L400 615.6 L248.8 540 Z" stroke="#536684"/>
+<path class="hd" data-g="1" data-fill fill="#1E263B" d="M190 540 L400 645 L400 663 L190 558 Z"></path>
+<path class="hd" data-g="1" data-fill fill="#111522" d="M400 645 L610 540 L610 558 L400 663 Z"></path>
+<path class="hd" data-g="1" data-fill fill="#303D59" d="M400 435 L610 540 L400 645 L190 540 Z"></path>
+<path class="hd" data-g="1" d="M400 464.4 L551.2 540 L400 615.6 L248.8 540 Z" stroke="#536684"></path>
 </g>
+<!-- slab 2 · Brand -->
 <g class="slab" data-i="2">
-<path class="hd" data-g="2" data-fill fill="#1E263B" d="M215 440 L400 532.5 L400 550.5 L215 458 Z"/>
-<path class="hd" data-g="2" data-fill fill="#111522" d="M400 532.5 L585 440 L585 458 L400 550.5 Z"/>
-<path class="hd" data-g="2" data-fill fill="#303D59" d="M400 347.5 L585 440 L400 532.5 L215 440 Z"/>
-<path class="hd" data-g="2" d="M400 373.4 L533.2 440 L400 506.6 L266.8 440 Z" stroke="#536684"/>
+<path class="hd" data-g="2" data-fill fill="#1E263B" d="M215 440 L400 532.5 L400 550.5 L215 458 Z"></path>
+<path class="hd" data-g="2" data-fill fill="#111522" d="M400 532.5 L585 440 L585 458 L400 550.5 Z"></path>
+<path class="hd" data-g="2" data-fill fill="#303D59" d="M400 347.5 L585 440 L400 532.5 L215 440 Z"></path>
+<path class="hd" data-g="2" d="M400 373.4 L533.2 440 L400 506.6 L266.8 440 Z" stroke="#536684"></path>
 </g>
+<!-- slab 3 · Web & Product -->
 <g class="slab" data-i="3">
-<path class="hd" data-g="3" data-fill fill="#1E263B" d="M240 340 L400 420 L400 438 L240 358 Z"/>
-<path class="hd" data-g="3" data-fill fill="#111522" d="M400 420 L560 340 L560 358 L400 438 Z"/>
-<path class="hd" data-g="3" data-fill fill="#303D59" d="M400 260 L560 340 L400 420 L240 340 Z"/>
-<path class="hd" data-g="3" d="M400 282.4 L515.2 340 L400 397.6 L284.8 340 Z" stroke="#536684"/>
+<path class="hd" data-g="3" data-fill fill="#1E263B" d="M240 340 L400 420 L400 438 L240 358 Z"></path>
+<path class="hd" data-g="3" data-fill fill="#111522" d="M400 420 L560 340 L560 358 L400 438 Z"></path>
+<path class="hd" data-g="3" data-fill fill="#303D59" d="M400 260 L560 340 L400 420 L240 340 Z"></path>
+<path class="hd" data-g="3" d="M400 282.4 L515.2 340 L400 397.6 L284.8 340 Z" stroke="#536684"></path>
 </g>
+<!-- slab 4 · Content -->
 <g class="slab" data-i="4">
-<path class="hd" data-g="4" data-fill fill="#1E263B" d="M265 240 L400 307.5 L400 325.5 L265 258 Z"/>
-<path class="hd" data-g="4" data-fill fill="#111522" d="M400 307.5 L535 240 L535 258 L400 325.5 Z"/>
-<path class="hd" data-g="4" data-fill fill="#303D59" d="M400 172.5 L535 240 L400 307.5 L265 240 Z"/>
-<path class="hd" data-g="4" d="M400 191.4 L497.2 240 L400 288.6 L302.8 240 Z" stroke="#536684"/>
+<path class="hd" data-g="4" data-fill fill="#1E263B" d="M265 240 L400 307.5 L400 325.5 L265 258 Z"></path>
+<path class="hd" data-g="4" data-fill fill="#111522" d="M400 307.5 L535 240 L535 258 L400 325.5 Z"></path>
+<path class="hd" data-g="4" data-fill fill="#303D59" d="M400 172.5 L535 240 L400 307.5 L265 240 Z"></path>
+<path class="hd" data-g="4" d="M400 191.4 L497.2 240 L400 288.6 L302.8 240 Z" stroke="#536684"></path>
 </g>
+<!-- slab 5 · Growth -->
 <g class="slab" data-i="5">
-<path class="hd" data-g="5" data-fill fill="#1E263B" d="M290 140 L400 195 L400 213 L290 158 Z"/>
-<path class="hd" data-g="5" data-fill fill="#111522" d="M400 195 L510 140 L510 158 L400 213 Z"/>
-<path class="hd" data-g="5" data-fill fill="#303D59" d="M400 85 L510 140 L400 195 L290 140 Z"/>
-<path class="hd" data-g="5" d="M400 100.4 L479.2 140 L400 179.6 L320.8 140 Z" stroke="#536684"/>
+<path class="hd" data-g="5" data-fill fill="#1E263B" d="M290 140 L400 195 L400 213 L290 158 Z"></path>
+<path class="hd" data-g="5" data-fill fill="#111522" d="M400 195 L510 140 L510 158 L400 213 Z"></path>
+<path class="hd" data-g="5" data-fill fill="#303D59" d="M400 85 L510 140 L400 195 L290 140 Z"></path>
+<path class="hd" data-g="5" d="M400 100.4 L479.2 140 L400 179.6 L320.8 140 Z" stroke="#536684"></path>
 </g>
-<line class="hd" data-g="6" x1="510" y1="149" x2="640" y2="149" stroke="#DCE3EF"/>
-<line class="hd" data-g="6" x1="535" y1="249" x2="640" y2="249" stroke="#DCE3EF"/>
-<line class="hd" data-g="6" x1="560" y1="349" x2="640" y2="349" stroke="#DCE3EF"/>
-<line class="hd" data-g="6" x1="585" y1="449" x2="640" y2="449" stroke="#DCE3EF"/>
-<line class="hd" data-g="6" x1="610" y1="549" x2="640" y2="549" stroke="#DCE3EF"/>
+<!-- callout leaders -->
+<line class="hd" data-g="6" x1="510" y1="149" x2="640" y2="149" stroke="#DCE3EF"></line>
+<line class="hd" data-g="6" x1="535" y1="249" x2="640" y2="249" stroke="#DCE3EF"></line>
+<line class="hd" data-g="6" x1="560" y1="349" x2="640" y2="349" stroke="#DCE3EF"></line>
+<line class="hd" data-g="6" x1="585" y1="449" x2="640" y2="449" stroke="#DCE3EF"></line>
+<line class="hd" data-g="6" x1="610" y1="549" x2="640" y2="549" stroke="#DCE3EF"></line>
 </g>
-<circle class="hspark" cx="400" cy="46" r="5" fill="#DCE3EF"/>
+<circle class="hspark" cx="400" cy="46" r="5" fill="#DCE3EF"></circle>
 <g fill="#DCE3EF">
-<circle class="hdot" cx="510" cy="149" r="4.5"/>
-<circle class="hdot" cx="535" cy="249" r="4.5"/>
-<circle class="hdot" cx="560" cy="349" r="4.5"/>
-<circle class="hdot" cx="585" cy="449" r="4.5"/>
-<circle class="hdot" cx="610" cy="549" r="4.5"/>
+<circle class="hdot" cx="510" cy="149" r="4.5"></circle>
+<circle class="hdot" cx="535" cy="249" r="4.5"></circle>
+<circle class="hdot" cx="560" cy="349" r="4.5"></circle>
+<circle class="hdot" cx="585" cy="449" r="4.5"></circle>
+<circle class="hdot" cx="610" cy="549" r="4.5"></circle>
 </g>
 <text class="hl svgt" x="652" y="154"><tspan fill="#98A9C4">05</tspan> GROWTH</text>
 <text class="hl svgt svgsub" x="652" y="174" style="font-size:12px; fill:#98A9C4">LAYER — REACH</text>
@@ -345,32 +261,19 @@ Creative agency — idea to launch
 <text class="hl svgt" x="652" y="554"><tspan fill="#98A9C4">01</tspan> STRATEGY</text>
 <text class="hl svgt svgsub" x="652" y="574" style="font-size:12px; fill:#98A9C4">LAYER — BASE</text>
 <text class="hl svgt" x="400" y="26" text-anchor="middle" style="font-size:13px; fill:#98A9C4">ONE STRUCTURE</text>
-<rect class="hhit" data-n="5" x="500" y="128" width="350" height="64" fill="rgba(0,0,0,0)"/>
-<rect class="hhit" data-n="4" x="525" y="228" width="325" height="64" fill="rgba(0,0,0,0)"/>
-<rect class="hhit" data-n="3" x="550" y="328" width="300" height="64" fill="rgba(0,0,0,0)"/>
-<rect class="hhit" data-n="2" x="575" y="428" width="275" height="64" fill="rgba(0,0,0,0)"/>
-<rect class="hhit" data-n="1" x="600" y="528" width="250" height="64" fill="rgba(0,0,0,0)"/>
+<!-- invisible hover areas over each label row -->
+<rect class="hhit" data-n="5" x="500" y="128" width="350" height="64" fill="rgba(0,0,0,0)"></rect>
+<rect class="hhit" data-n="4" x="525" y="228" width="325" height="64" fill="rgba(0,0,0,0)"></rect>
+<rect class="hhit" data-n="3" x="550" y="328" width="300" height="64" fill="rgba(0,0,0,0)"></rect>
+<rect class="hhit" data-n="2" x="575" y="428" width="275" height="64" fill="rgba(0,0,0,0)"></rect>
+<rect class="hhit" data-n="1" x="600" y="528" width="250" height="64" fill="rgba(0,0,0,0)"></rect>
 </g>
 </svg>
 </div>
-
-<p class="h2-desc" data-in="fade">
-Strategy, brand, web, content and growth, handled by one small team. No handoffs, so the idea you approve is the idea that ships.
-</p>
-<div class="h2-ctas" data-in="fade">
-<a href="/contact" class="navcta solid mono" data-mag>
-<span class="fillc" aria-hidden="true"></span>
-<span class="ncl"><span class="nct">Start a project</span><span class="nct b" aria-hidden="true">Start a project</span></span>
-<span class="nca" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
-</a>
-<a href="#work" class="lnk mono" style="font-size:13px; letter-spacing:.12em; text-transform:uppercase">See selected work</a>
+<div data-in="fade" aria-hidden="true" class="mono" style="position:absolute; left:clamp(20px,5vw,72px); right:clamp(20px,5vw,72px); bottom:34px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px 24px; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#98A9C4">
+<span style="display:flex; align-items:center; gap:14px"><span style="position:relative; width:1px; height:44px; background:rgba(152,169,196,.25); overflow:hidden"><span data-cue style="position:absolute; inset:0; background:#DCE3EF"></span></span>Scroll</span>
+<span>Sheet 01 — Isometric · Five layers</span>
 </div>
-</div>
-
-<!-- bottom bar -->
-<div class="h2-bot" aria-hidden="true">
-<span class="h2-scroll"><span class="h2-sbar"><span data-cue></span></span>Scroll</span>
-<span>Sheet 01 — Command Deck <span class="h2-cursor">_</span></span>
 </div>
 </header>
 <!-- ===================== MARQUEE ===================== -->
@@ -2030,77 +1933,9 @@ gsap.fromTo(cue, { scaleY: 0, transformOrigin: 'top' }, { scaleY: 1, duration: 1
 });
 }, '>');
 
-/* ═══ HERO v2 — COMMAND DECK EFFECTS ═══ */
-safe('h2grid', () => {
-  const c = document.getElementById('h2grid');
-  if (!c) return;
-  const ctx = c.getContext('2d');
-  let w, h, dpr;
-  const resize = () => {
-    dpr = Math.min(devicePixelRatio || 1, 2);
-    const r = c.parentElement.getBoundingClientRect();
-    w = r.width; h = r.height;
-    c.width = w * dpr; c.height = h * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  };
-  resize();
-  window.addEventListener('resize', resize);
-  off.push(() => window.removeEventListener('resize', resize));
-
-  let phase = 0;
-  const draw = () => {
-    ctx.clearRect(0, 0, w, h);
-    phase += 0.002;
-    const cx = w / 2, cy = h * 0.42;
-    const rows = 28, cols = 32;
-
-    // perspective grid — lines converge to center
-    ctx.strokeStyle = 'rgba(143,180,255,.12)';
-    ctx.lineWidth = 0.5;
-    for (let i = 0; i <= cols; i++) {
-      const t = i / cols;
-      const topX = t * w;
-      const botX = cx + (topX - cx) * 2.4;
-      const pulse = Math.sin(phase * 3 + i * 0.3) * 0.4 + 0.6;
-      ctx.globalAlpha = pulse * 0.5;
-      ctx.beginPath();
-      ctx.moveTo(topX, 0);
-      ctx.lineTo(botX, h);
-      ctx.stroke();
-    }
-    for (let i = 0; i <= rows; i++) {
-      const t = i / rows;
-      const y = t * h;
-      const squeeze = Math.pow(t, 0.7);
-      const lx = cx - (cx * 1.2) / (1 + squeeze * 1.5);
-      const rx = cx + (cx * 1.2) / (1 + squeeze * 1.5);
-      const pulse = Math.sin(phase * 2 + i * 0.4) * 0.3 + 0.7;
-      ctx.globalAlpha = pulse * 0.4;
-      ctx.beginPath();
-      ctx.moveTo(lx, y);
-      ctx.lineTo(rx, y);
-      ctx.stroke();
-    }
-
-    // intersection glows
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = 'rgba(143,180,255,.06)';
-    for (let i = 0; i < 40; i++) {
-      const x = (Math.sin(phase + i * 1.7) * 0.5 + 0.5) * w;
-      const y = (Math.cos(phase * 0.7 + i * 2.3) * 0.5 + 0.5) * h;
-      const r = Math.sin(phase * 3 + i) * 1.5 + 2;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  };
-  gsap.ticker.add(draw);
-  off.push(() => gsap.ticker.remove(draw));
-});
-
-/* particle field — mouse reactive */
-safe('h2parts', () => {
-  const c = document.getElementById('h2parts');
+/* ═══ CINEMATIC HERO EFFECTS ═══ */
+safe('cmatmos', () => {
+  const c = document.getElementById('cm-canvas');
   if (!c) return;
   const ctx = c.getContext('2d');
   let w, h, dpr;
@@ -2125,45 +1960,65 @@ safe('h2parts', () => {
   hero.addEventListener('pointermove', onMove, { passive: true });
   off.push(() => hero.removeEventListener('pointermove', onMove));
 
-  const N = 80;
+  /* particles — floating motes of light */
+  const N = 90;
   const pts = Array.from({ length: N }, () => ({
     x: Math.random(), y: Math.random(),
-    vx: (Math.random() - 0.5) * 0.0003,
-    vy: (Math.random() - 0.5) * 0.0003 - 0.00015,
-    r: Math.random() * 1.5 + 0.5,
-    a: Math.random() * 0.4 + 0.1
+    vx: (Math.random() - 0.5) * 0.0002,
+    vy: -Math.random() * 0.0003 - 0.00005,
+    r: Math.random() * 1.8 + 0.3,
+    a: Math.random() * 0.5 + 0.05,
+    phase: Math.random() * Math.PI * 2
   }));
 
+  let time = 0;
   const draw = () => {
     ctx.clearRect(0, 0, w, h);
+    time += 0.01;
+
+    /* soft radial glow at center-right (where the stack is) */
+    const gx = w * 0.62, gy = h * 0.45;
+    const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, h * 0.5);
+    grad.addColorStop(0, 'rgba(143,180,255,.04)');
+    grad.addColorStop(0.5, 'rgba(143,180,255,.015)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+
+    /* particles */
     for (const p of pts) {
-      // drift + mouse repulsion
+      /* mouse repulsion */
       const dx = p.x - mx, dy = p.y - my;
       const dist = Math.sqrt(dx * dx + dy * dy) + 0.001;
-      const force = Math.max(0, 0.08 - dist) * 0.02;
+      const force = Math.max(0, 0.1 - dist) * 0.008;
       p.vx += (dx / dist) * force;
       p.vy += (dy / dist) * force;
-      p.x += p.vx; p.y += p.vy;
-      p.vx *= 0.998; p.vy *= 0.998;
-      if (p.x < 0) p.x = 1; if (p.x > 1) p.x = 0;
-      if (p.y < 0) { p.y = 1; p.x = Math.random(); }
-      if (p.y > 1) p.y = 0;
-      ctx.globalAlpha = p.a;
+
+      p.x += p.vx + Math.sin(time + p.phase) * 0.00008;
+      p.y += p.vy;
+      p.vx *= 0.997; p.vy *= 0.997;
+
+      if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
+      if (p.x < -0.02) p.x = 1.02;
+      if (p.x > 1.02) p.x = -0.02;
+
+      const twinkle = (Math.sin(time * 2 + p.phase) * 0.5 + 0.5);
+      ctx.globalAlpha = p.a * (0.4 + twinkle * 0.6);
       ctx.fillStyle = '#8FB4FF';
       ctx.beginPath();
       ctx.arc(p.x * w, p.y * h, p.r, 0, Math.PI * 2);
       ctx.fill();
     }
-    // connection lines
-    ctx.strokeStyle = 'rgba(143,180,255,.06)';
+
+    /* connection lines between close particles */
+    ctx.strokeStyle = 'rgba(143,180,255,.04)';
     ctx.lineWidth = 0.5;
-    ctx.globalAlpha = 1;
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
         const a = pts[i], b = pts[j];
         const d = Math.hypot((a.x - b.x) * w, (a.y - b.y) * h);
-        if (d < 100) {
-          ctx.globalAlpha = (1 - d / 100) * 0.15;
+        if (d < 90) {
+          ctx.globalAlpha = (1 - d / 90) * 0.12;
           ctx.beginPath();
           ctx.moveTo(a.x * w, a.y * h);
           ctx.lineTo(b.x * w, b.y * h);
@@ -2177,97 +2032,18 @@ safe('h2parts', () => {
   off.push(() => gsap.ticker.remove(draw));
 });
 
-/* scan line sweep */
-safe('h2sweep', () => {
-  const el = q('[data-h2-sweep]');
+/* cinematic scan line */
+safe('cmscan', () => {
+  const el = q('[data-cm-scan]');
   if (!el) return;
   const sweep = () => {
-    gsap.set(el, { y: -10, opacity: 0 });
-    gsap.to(el, { y: window.innerHeight, opacity: 0.6, duration: 2, ease: 'none',
-      onComplete: () => { gsap.to(el, { opacity: 0, duration: .3 }); gsap.delayedCall(5 + Math.random() * 8, sweep); }
+    gsap.set(el, { top: -2, opacity: 0 });
+    gsap.to(el, { top: '100%', opacity: 0.5, duration: 3, ease: 'power1.in',
+      onComplete: () => { gsap.set(el, { opacity: 0 }); gsap.delayedCall(6 + Math.random() * 10, sweep); }
     });
   };
-  gsap.delayedCall(3, sweep);
+  gsap.delayedCall(4, sweep);
 });
-
-/* data stream */
-safe('h2stream', () => {
-  const wrap = q('[data-h2-stream]');
-  if (!wrap) return;
-  const chars = '01ABCDEF{}<>:;%#→←↑↓◆○●∞≡∂∫Σ';
-  const mk = () => {
-    const el = document.createElement('i');
-    el.textContent = Array.from({ length: 3 + Math.random() * 6 | 0 }, () => chars[Math.random() * chars.length | 0]).join('');
-    el.style.left = (Math.random() * 100) + '%';
-    el.style.animationDuration = (15 + Math.random() * 25) + 's';
-    el.style.animationDelay = (Math.random() * 10) + 's';
-    wrap.appendChild(el);
-    setTimeout(() => el.remove(), 42000);
-  };
-  for (let i = 0; i < 12; i++) mk();
-  const iv = setInterval(() => { if (wrap.children.length < 18) mk(); }, 2800);
-  off.push(() => clearInterval(iv));
-});
-
-/* HUD tickers */
-safe('h2tickers', () => {
-  const fps = q('[data-h2-tick="fps"]');
-  const time = q('[data-h2-tick="time"]');
-  const status = q('[data-h2-tick="status"]');
-  let lastTime = performance.now(), frames = 0, fpsVal = 60;
-  const fpsUpdate = () => {
-    frames++;
-    const now = performance.now();
-    if (now - lastTime >= 500) {
-      fpsVal = (frames / ((now - lastTime) / 1000)).toFixed(1);
-      if (fps) fps.textContent = fpsVal + ' FPS';
-      frames = 0; lastTime = now;
-    }
-  };
-  gsap.ticker.add(fpsUpdate);
-  off.push(() => gsap.ticker.remove(fpsUpdate));
-
-  if (time) {
-    const updateTime = () => {
-      const d = new Date();
-      time.textContent = [d.getHours(), d.getMinutes(), d.getSeconds()].map(n => String(n).padStart(2, '0')).join(':');
-    };
-    updateTime();
-    const iv = setInterval(updateTime, 1000);
-    off.push(() => clearInterval(iv));
-  }
-
-  if (status) {
-    const msgs = ['ONLINE', 'NOMINAL', 'ACTIVE', 'SCANNING', 'READY'];
-    let si = 0;
-    const iv = setInterval(() => { si = (si + 1) % msgs.length; status.textContent = msgs[si]; }, 4000);
-    off.push(() => clearInterval(iv));
-  }
-});
-
-/* hero art parallax (centered version) */
-safe('heroart', () => {
-  const art = q('[data-hero-art]');
-  const hero = q('#top');
-  if (!art || !hero) return;
-  gsap.set(art, { force3D: true });
-  const ax = gsap.quickTo(art, 'x', { duration: 0.9, ease: 'power3.out' });
-  const ay = gsap.quickTo(art, 'y', { duration: 0.9, ease: 'power3.out' });
-  let hr = hero.getBoundingClientRect(), dirty = false;
-  const rz = () => { dirty = true; };
-  window.addEventListener('resize', rz); window.addEventListener('scroll', rz, { passive: true });
-  off.push(() => { window.removeEventListener('resize', rz); window.removeEventListener('scroll', rz); });
-  const mv = (e) => {
-    if (dirty) { hr = hero.getBoundingClientRect(); dirty = false; }
-    ax(((e.clientX - hr.left) / hr.width - 0.5) * -20);
-    ay(((e.clientY - hr.top) / hr.height - 0.5) * -14);
-  };
-  hero.addEventListener('pointermove', mv, { passive: true });
-  off.push(() => hero.removeEventListener('pointermove', mv));
-});
-
-
-
 
 
 /* ---------- loader timeline ---------- */
@@ -2448,7 +2224,24 @@ qa('.hhit').forEach((r) => bind(r, parseInt(r.getAttribute('data-n'), 10)));
 slabs.forEach((s) => bind(s, parseInt(s.getAttribute('data-i'), 10)));
 });
 /* ---------- hero art: pointer parallax + scroll drift ---------- */
-
+safe('heroart', () => {
+const art = q('[data-hero-art]');
+const hero = q('#top');
+gsap.set(art, { force3D: true });
+const ax = gsap.quickTo(art, 'x', { duration: 0.7, ease: 'power3.out' });
+const ay = gsap.quickTo(art, 'y', { duration: 0.7, ease: 'power3.out' });
+let hr = hero.getBoundingClientRect(); let hrDirty = false;
+const rz = () => { hrDirty = true; };
+window.addEventListener('resize', rz); window.addEventListener('scroll', rz, { passive: true });
+off.push(() => { window.removeEventListener('resize', rz); window.removeEventListener('scroll', rz); });
+const mv = (e) => {
+if (hrDirty) { hr = hero.getBoundingClientRect(); hrDirty = false; }
+ax(((e.clientX - hr.left) / hr.width - 0.5) * -26);
+ay(((e.clientY - hr.top) / hr.height - 0.5) * -18);
+};
+hero.addEventListener('pointermove', mv, { passive: true });
+off.push(() => hero.removeEventListener('pointermove', mv));
+});
 /* ---------- marquee rows (speed reacts to scroll velocity) ---------- */
 safe('marquee', () => {
 const rows = qa('[data-mq]');
