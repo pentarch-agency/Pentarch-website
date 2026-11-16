@@ -1846,11 +1846,11 @@ const t = 0.35 + i * 0.3;
 intro.to(els, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut', stagger: 0.05 }, t);
 intro.to(qa('.hd[data-g="' + g + '"][data-fill]'), { fillOpacity: 1, duration: 0.4, ease: 'none' }, t + 0.55);});
 intro.to(slabs, { y: 0, duration: 1.3, ease: 'power4.inOut', stagger: { each: 0.09, from: 'start' } }, 1.8);
-intro.to(hg, { opacity: 1, duration: 0.7, stagger: 0.05 }, 2.8)
-.to(spark, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(3)' }, 2.9)
-.to(qa('.hd[data-g="6"]'), { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut', stagger: 0.06 }, 2.9)
-.to(hdots, { scale: 1, duration: 0.5, ease: 'back.out(3)', stagger: 0.08 }, 3.1)
-.to(hl, { opacity: 1, x: 0, duration: 0.5, stagger: 0.06 }, 3.2);
+intro.to(hg, { opacity: 1, duration: 0.7, stagger: 0.05 }, 3.6)
+.to(spark, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(3)' }, 3.7)
+.to(qa('.hd[data-g="6"]'), { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut', stagger: 0.06 }, 3.7)
+.to(hdots, { scale: 1, duration: 0.5, ease: 'back.out(3)', stagger: 0.08 }, 4.1)
+.to(hl, { opacity: 1, x: 0, duration: 0.5, stagger: 0.06 }, 4.2);
 intro.add(() => {safe('idle', () => {gsap.to(q('[data-hero-art] svg'), { y: -9, yoyo: true, repeat: -1, duration: 3.4, ease: 'sine.inOut', force3D: true });
 const cue = q('[data-cue]');
 if (cue) {gsap.fromTo(cue, { scaleY: 0, transformOrigin: 'top' }, { scaleY: 1, duration: 1.1, ease: 'power2.inOut', repeat: -1, repeatDelay: 0.3, yoyo: true });}});}, '>');
