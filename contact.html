@@ -23,12 +23,37 @@
 .plate:hover .pv svg .wd{stroke:#DCE3EF;transition:stroke .4s}
 .plate:hover .pv::before{animation-play-state:paused;opacity:1}
 
-/* ═══ HUD TICK DOTS ═══ */
-@keyframes hud-tick-glow{0%,100%{box-shadow:0 0 4px 1px rgba(143,180,255,.3)}50%{box-shadow:0 0 10px 3px rgba(143,180,255,.7)}}
-.hud .bar .tick{position:absolute;left:50%;width:6px;height:6px;border-radius:50%;background:rgba(152,169,196,.25);border:1px solid rgba(152,169,196,.3);transform:translate(-50%,0);transition:all .5s ease;z-index:2;pointer-events:none}
-.hud .bar .tick.active{background:rgba(143,180,255,.8);border-color:rgba(143,180,255,.6);animation:hud-tick-glow 2s ease-in-out infinite}
-.hud .bar .tick::before{content:'';position:absolute;left:10px;top:50%;width:4px;height:1px;background:rgba(152,169,196,.3);transform:translateY(-50%);transition:all .5s ease}
-.hud .bar .tick.active::before{background:rgba(143,180,255,.6);width:7px}
+/* ═══ HUD CHECKPOINTS ═══ */
+@keyframes cp-glow{0%,100%{box-shadow:0 0 4px 1px rgba(143,180,255,.2)}50%{box-shadow:0 0 12px 4px rgba(143,180,255,.55)}}
+@keyframes cp-ring{0%{transform:translate(-50%,-50%) scale(.5);opacity:1}100%{transform:translate(-50%,-50%) scale(3);opacity:0}}
+@keyframes cp-flash{0%{opacity:1;transform:translate(-50%,-50%) scaleX(1)}100%{opacity:0;transform:translate(-50%,-50%) scaleX(4)}}
+
+/* base dot */
+.hud .bar .tick{position:absolute;left:50%;width:5px;height:5px;border-radius:50%;background:rgba(152,169,196,.18);border:1px solid rgba(152,169,196,.22);transform:translate(-50%,0);z-index:2;pointer-events:none;transition:background .6s,border-color .6s,transform .5s cubic-bezier(.34,1.56,.64,1)}
+
+/* horizontal tick line */
+.hud .bar .tick::before{content:'';position:absolute;left:9px;top:50%;width:3px;height:1px;background:rgba(152,169,196,.18);transform:translateY(-50%);transition:all .6s ease}
+
+/* pulse ring (pseudo) */
+.hud .bar .tick::after{content:'';position:absolute;top:50%;left:50%;width:5px;height:5px;border-radius:50%;border:1px solid rgba(143,180,255,0);transform:translate(-50%,-50%) scale(1);pointer-events:none}
+
+/* passed checkpoints — steady glow */
+.hud .bar .tick.passed{background:rgba(143,180,255,.55);border-color:rgba(143,180,255,.4);transform:translate(-50%,0) scale(1.15)}
+.hud .bar .tick.passed::before{background:rgba(143,180,255,.4);width:5px}
+
+/* current checkpoint — bright + pulsing */
+.hud .bar .tick.current{background:rgba(143,180,255,.9);border-color:rgba(143,180,255,.7);transform:translate(-50%,0) scale(1.6);animation:cp-glow 2s ease-in-out infinite}
+.hud .bar .tick.current::before{background:rgba(143,180,255,.7);width:10px}
+
+/* activation burst ring */
+.hud .bar .tick.burst::after{border-color:rgba(143,180,255,.8);animation:cp-ring .7s ease-out forwards}
+
+/* flash line on activation */
+.cp-flash{position:absolute;left:50%;top:0;width:1px;height:0;background:linear-gradient(to bottom,rgba(143,180,255,.6),rgba(143,180,255,0));transform:translateX(-50%);pointer-events:none;z-index:1;transition:height .4s ease}
+
+/* segment glow between passed ticks */
+.cp-seg{position:absolute;left:50%;width:2px;background:rgba(143,180,255,.25);transform:translateX(-50%);pointer-events:none;z-index:1;transition:opacity .5s ease;opacity:0;border-radius:1px}
+.cp-seg.on{opacity:1;background:linear-gradient(to bottom,rgba(143,180,255,.35),rgba(143,180,255,.15))}
 
 </style>
 <link rel="preload" href="/vendor/gsap-3.15.1.min.js" as="script"><link rel="preload" href="/vendor/ScrollTrigger-3.15.1.min.js" as="script"><script defer src="/vendor/gsap-3.15.1.min.js"></script><script defer src="/vendor/ScrollTrigger-3.15.1.min.js"></script></head><body style="margin:0;background:#111522"><script>window.__PA_META={"home":{"title":"Pentarch | Creative agency for brand, product and growth","description":"Pentarch is a creative agency that builds strategy, brand, product, content and growth as one connected system. One small team, one plan, work that lasts.","url":"https://www.pentarch.agency/"},"studio":{"title":"About | The founder behind Pentarch | Pentarch","description":"About Pentarch: a creative agency founded by Jenil Dholakiya, covering strategy, brand, web and product, content and growth as one connected system.","url":"https://www.pentarch.agency/about"},"services":{"title":"Services | Strategy, brand, web, content and growth | Pentarch","description":"Five connected services: strategy, brand, web and product, content, and growth. Use one or all five. See what is included in every Pentarch project.","url":"https://www.pentarch.agency/services"},"projects":{"title":"Projects | Selected work built to last | Pentarch","description":"A selection of Pentarch work across strategy, brand, web and product, content and growth. Open any project to see the brief and what we did.","url":"https://www.pentarch.agency/projects"},"approach":{"title":"Approach | One team, clear decisions, a fixed plan | Pentarch","description":"How Pentarch works: one team, one plan, decisions before design, small finished steps and measurement after launch. Clear from day one.","url":"https://www.pentarch.agency/approach"},"contact":{"title":"Contact | Let's talk about your project | Pentarch","description":"Tell Pentarch what you are building and when you need it. A few lines is enough. A real person reads every brief and replies with next steps.","url":"https://www.pentarch.agency/contact"}}</script>
@@ -94,7 +119,7 @@
 <!-- ===================== FIXED HUD + CROSSHAIR ===================== -->
 <div class="hud mono" aria-hidden="true">
 <span class="lab" data-hudlab>SHEET 01 / 06</span>
-<div class="bar"><span class="tick" data-tick="0" style="top:0%"></span><span class="tick" data-tick="1" style="top:16.7%"></span><span class="tick" data-tick="2" style="top:33.3%"></span><span class="tick" data-tick="3" style="top:50%"></span><span class="tick" data-tick="4" style="top:66.7%"></span><span class="tick" data-tick="5" style="top:83.3%"></span><div class="fill" data-hudfill></div></div>
+<div class="bar"><span class="cp-seg" data-seg="0" style="top:0%;height:16.7%"></span><span class="cp-seg" data-seg="1" style="top:16.7%;height:16.6%"></span><span class="cp-seg" data-seg="2" style="top:33.3%;height:16.7%"></span><span class="cp-seg" data-seg="3" style="top:50%;height:16.7%"></span><span class="cp-seg" data-seg="4" style="top:66.7%;height:16.6%"></span><span class="tick" data-tick="0" style="top:0%"></span><span class="tick" data-tick="1" style="top:16.7%"></span><span class="tick" data-tick="2" style="top:33.3%"></span><span class="tick" data-tick="3" style="top:50%"></span><span class="tick" data-tick="4" style="top:66.7%"></span><span class="tick" data-tick="5" style="top:83.3%"></span><div class="fill" data-hudfill></div></div>
 </div>
 <!-- ===================== HERO ===================== -->
 <header id="top" data-sheet="01" style="position:relative; overflow:hidden; display:flex; flex-direction:column; min-height:min(100vh,1200px)">
@@ -1888,6 +1913,48 @@ gsap.fromTo(cue, { scaleY: 0, transformOrigin: 'top' }, { scaleY: 1, duration: 1
 }
 });
 }, '>');
+/* ═══ HUD CHECKPOINTS JS ═══ */
+safe('cpmarks', () => {
+  const ticks = qa('.hud .tick');
+  const segs = qa('.hud .cp-seg');
+  if (!ticks.length) return;
+  let prev = -1;
+
+  const activate = (n) => {
+    if (n === prev) return;
+    prev = n;
+
+    ticks.forEach((t, i) => {
+      t.classList.remove('current', 'passed', 'burst');
+      if (i < n) {
+        t.classList.add('passed');
+      } else if (i === n) {
+        t.classList.add('current');
+        void t.offsetWidth;
+        t.classList.add('burst');
+        setTimeout(() => t.classList.remove('burst'), 800);
+      }
+    });
+
+    segs.forEach((s, i) => {
+      if (i < n) { s.classList.add('on'); } else { s.classList.remove('on'); }
+    });
+  };
+
+  activate(0);
+
+  const sections = qa('[data-sheet]');
+  sections.forEach((sec, i) => {
+    ST.create({
+      trigger: sec,
+      start: 'top 50%',
+      end: 'bottom 50%',
+      onEnter: () => activate(i),
+      onEnterBack: () => activate(i)
+    });
+  });
+});
+
 /* ---------- loader timeline ---------- */
 const counter = q('[data-ld="count"]');
 const status = q('[data-ld="status"]');
