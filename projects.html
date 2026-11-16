@@ -22,55 +22,6 @@
 @keyframes dot-glow{0%{filter:drop-shadow(0 0 2px rgba(143,180,255,.3))}100%{filter:drop-shadow(0 0 8px rgba(143,180,255,.8))}}
 .plate:hover .pv svg .wd{stroke:#DCE3EF;transition:stroke .4s}
 .plate:hover .pv::before{animation-play-state:paused;opacity:1}
-
-/* ═══ CINEMATIC HERO ═══ */
-@keyframes cm-float{0%,100%{transform:translateY(0) translateZ(0)}50%{transform:translateY(-10px) translateZ(0)}}
-@keyframes cm-breathe{0%,100%{opacity:.08}50%{opacity:.2}}
-@keyframes cm-sweep{0%{top:-2px;opacity:.8}100%{top:100%;opacity:0}}
-@keyframes cm-flicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.4}94%{opacity:1}96%{opacity:.6}97%{opacity:1}}
-@keyframes cm-glow-pulse{0%,100%{box-shadow:0 0 60px 20px rgba(143,180,255,.06)}50%{box-shadow:0 0 100px 40px rgba(143,180,255,.12)}}
-
-/* atmospheric canvas behind everything */
-.cm-atmos{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.cm-atmos canvas{position:absolute;inset:0;width:100%;height:100%}
-
-/* deep vignette for cinema feel */
-header#top .cm-vig{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 65% 50% at 50% 45%,transparent 20%,rgba(12,16,27,.75) 100%)}
-
-/* scan line — single thin sweep */
-.cm-scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,rgba(143,180,255,.4) 40%,rgba(255,255,255,.6) 50%,rgba(143,180,255,.4) 60%,transparent 90%);z-index:3;pointer-events:none;opacity:0;will-change:top}
-
-/* isometric stack glow aura */
-[data-hero-art]::before{content:'';position:absolute;top:50%;left:50%;width:70%;height:60%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(143,180,255,.08) 0%,transparent 70%);animation:cm-glow-pulse 5s ease-in-out infinite;pointer-events:none;z-index:-1}
-
-/* slab edge glow on hover */
-.slab path[data-fill]{transition:filter .5s ease}
-.slab:hover path.hd[data-fill]:nth-child(3){fill:#3B4C72;filter:drop-shadow(0 0 12px rgba(143,180,255,.45))}
-
-/* headline cinematic glow */
-.hh-h .hollow{text-shadow:0 0 50px rgba(143,180,255,.25),0 0 100px rgba(143,180,255,.08)}
-
-/* eyebrow dot glow */
-.hh-eb .live{box-shadow:0 0 10px 3px rgba(143,180,255,.35);animation:cm-breathe 2.5s ease-in-out infinite}
-
-/* CTA neon edge */
-.navcta.solid{position:relative;overflow:hidden}
-.navcta.solid::before{content:'';position:absolute;inset:-1px;border-radius:inherit;border:1px solid rgba(143,180,255,.2);pointer-events:none;z-index:1}
-
-/* hero art float animation */
-[data-hero-art]{animation:cm-float 6s ease-in-out infinite}
-[data-hero-art] svg{filter:drop-shadow(0 0 30px rgba(143,180,255,.08))}
-
-/* subtle flicker on the spark dot */
-.hspark{animation:cm-flicker 4s ease-in-out infinite}
-
-@media(prefers-reduced-motion:reduce){
-[data-hero-art],.hspark{animation:none !important}
-[data-hero-art]::before{animation:none !important}
-.cm-atmos canvas{display:none}
-.cm-scan{display:none}
-}
-
 </style>
 <link rel="preload" href="/vendor/gsap-3.15.1.min.js" as="script"><link rel="preload" href="/vendor/ScrollTrigger-3.15.1.min.js" as="script"><script defer src="/vendor/gsap-3.15.1.min.js"></script><script defer src="/vendor/ScrollTrigger-3.15.1.min.js"></script></head><body style="margin:0;background:#111522"><script>window.__PA_META={"home":{"title":"Pentarch | Creative agency for brand, product and growth","description":"Pentarch is a creative agency that builds strategy, brand, product, content and growth as one connected system. One small team, one plan, work that lasts.","url":"https://www.pentarch.agency/"},"studio":{"title":"About | The founder behind Pentarch | Pentarch","description":"About Pentarch: a creative agency founded by Jenil Dholakiya, covering strategy, brand, web and product, content and growth as one connected system.","url":"https://www.pentarch.agency/about"},"services":{"title":"Services | Strategy, brand, web, content and growth | Pentarch","description":"Five connected services: strategy, brand, web and product, content, and growth. Use one or all five. See what is included in every Pentarch project.","url":"https://www.pentarch.agency/services"},"projects":{"title":"Projects | Selected work built to last | Pentarch","description":"A selection of Pentarch work across strategy, brand, web and product, content and growth. Open any project to see the brief and what we did.","url":"https://www.pentarch.agency/projects"},"approach":{"title":"Approach | One team, clear decisions, a fixed plan | Pentarch","description":"How Pentarch works: one team, one plan, decisions before design, small finished steps and measurement after launch. Clear from day one.","url":"https://www.pentarch.agency/approach"},"contact":{"title":"Contact | Let's talk about your project | Pentarch","description":"Tell Pentarch what you are building and when you need it. A few lines is enough. A real person reads every brief and replies with next steps.","url":"https://www.pentarch.agency/contact"}}</script>
 <div id="pa-pt" class="on cov ins boot" aria-hidden="true"><i class="s" style="--i:0;--c:#536684"></i><i class="s" style="--i:1;--c:#3B4C72"></i><i class="s" style="--i:2;--c:#303D59"></i><i class="s" style="--i:3;--c:#1E263B"></i><i class="s" style="--i:4;--c:#111522"></i><div class="c"><span class="n" data-ptn>01 / 06</span><span class="t disp" data-ptt><b style="--l:0">P</b><b style="--l:1">e</b><b style="--l:2">n</b><b style="--l:3">t</b><b style="--l:4">a</b><b style="--l:5">r</b><b style="--l:6">c</b><b style="--l:7">h</b></span><svg class="p" viewBox="0 0 80 80" fill="none" aria-hidden="true"><polygon pathLength="1" points="40,6 72,29 60,67 20,67 8,29"/><circle r="2.6"><animateMotion dur="2.4s" repeatCount="indefinite" path="M40 6 L72 29 L60 67 L20 67 L8 29 Z"/></circle></svg></div></div>
@@ -141,10 +92,7 @@ header#top .cm-vig{position:absolute;inset:0;z-index:0;pointer-events:none;backg
 <header id="top" data-sheet="01" style="position:relative; overflow:hidden; display:flex; flex-direction:column; min-height:min(100vh,1200px)">
 <div data-glow aria-hidden="true" style="position:absolute; top:-340px; left:-300px; width:1000px; height:1000px; border-radius:50%; background:radial-gradient(circle, rgba(152,169,196,.36), rgba(152,169,196,0) 62%); pointer-events:none; z-index:0"></div>
 <div aria-hidden="true" style="position:absolute; right:-260px; bottom:-300px; width:800px; height:800px; border-radius:50%; background:radial-gradient(circle, rgba(83,102,132,.3), rgba(83,102,132,0) 65%); pointer-events:none; z-index:0"></div>
-<div class="pa-hsp" data-hsp aria-hidden="true"></div>
-<div class="cm-atmos" aria-hidden="true"><canvas id="cm-canvas"></canvas></div>
-<div class="cm-vig" aria-hidden="true"></div>
-<div class="cm-scan" data-cm-scan aria-hidden="true"></div><div class="pa-hdr" data-hdr><nav aria-label="Primary" style="width:100%; max-width:1296px; margin:0 auto; padding:28px clamp(20px,5vw,72px); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px 32px; position:relative; z-index:2">
+<div class="pa-hsp" data-hsp aria-hidden="true"></div><div class="pa-hdr" data-hdr><nav aria-label="Primary" style="width:100%; max-width:1296px; margin:0 auto; padding:28px clamp(20px,5vw,72px); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px 32px; position:relative; z-index:2">
 <a href="#top" data-in="nav" aria-label="Pentarch home">
 <span class="disp shim" aria-hidden="true" style="display:inline-block; font-size:24px; letter-spacing:.22em; text-transform:uppercase; white-space:nowrap">Pentarch</span>
 </a>
@@ -1932,120 +1880,6 @@ gsap.fromTo(cue, { scaleY: 0, transformOrigin: 'top' }, { scaleY: 1, duration: 1
 }
 });
 }, '>');
-
-/* ═══ CINEMATIC HERO EFFECTS ═══ */
-safe('cmatmos', () => {
-  const c = document.getElementById('cm-canvas');
-  if (!c) return;
-  const ctx = c.getContext('2d');
-  let w, h, dpr;
-  let mx = 0.5, my = 0.5;
-  const resize = () => {
-    dpr = Math.min(devicePixelRatio || 1, 2);
-    const r = c.parentElement.getBoundingClientRect();
-    w = r.width; h = r.height;
-    c.width = w * dpr; c.height = h * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  };
-  resize();
-  window.addEventListener('resize', resize);
-  off.push(() => window.removeEventListener('resize', resize));
-
-  const hero = q('#top');
-  const onMove = (e) => {
-    const r = hero.getBoundingClientRect();
-    mx = (e.clientX - r.left) / r.width;
-    my = (e.clientY - r.top) / r.height;
-  };
-  hero.addEventListener('pointermove', onMove, { passive: true });
-  off.push(() => hero.removeEventListener('pointermove', onMove));
-
-  /* particles — floating motes of light */
-  const N = 90;
-  const pts = Array.from({ length: N }, () => ({
-    x: Math.random(), y: Math.random(),
-    vx: (Math.random() - 0.5) * 0.0002,
-    vy: -Math.random() * 0.0003 - 0.00005,
-    r: Math.random() * 1.8 + 0.3,
-    a: Math.random() * 0.5 + 0.05,
-    phase: Math.random() * Math.PI * 2
-  }));
-
-  let time = 0;
-  const draw = () => {
-    ctx.clearRect(0, 0, w, h);
-    time += 0.01;
-
-    /* soft radial glow at center-right (where the stack is) */
-    const gx = w * 0.62, gy = h * 0.45;
-    const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, h * 0.5);
-    grad.addColorStop(0, 'rgba(143,180,255,.04)');
-    grad.addColorStop(0.5, 'rgba(143,180,255,.015)');
-    grad.addColorStop(1, 'transparent');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, w, h);
-
-    /* particles */
-    for (const p of pts) {
-      /* mouse repulsion */
-      const dx = p.x - mx, dy = p.y - my;
-      const dist = Math.sqrt(dx * dx + dy * dy) + 0.001;
-      const force = Math.max(0, 0.1 - dist) * 0.008;
-      p.vx += (dx / dist) * force;
-      p.vy += (dy / dist) * force;
-
-      p.x += p.vx + Math.sin(time + p.phase) * 0.00008;
-      p.y += p.vy;
-      p.vx *= 0.997; p.vy *= 0.997;
-
-      if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
-      if (p.x < -0.02) p.x = 1.02;
-      if (p.x > 1.02) p.x = -0.02;
-
-      const twinkle = (Math.sin(time * 2 + p.phase) * 0.5 + 0.5);
-      ctx.globalAlpha = p.a * (0.4 + twinkle * 0.6);
-      ctx.fillStyle = '#8FB4FF';
-      ctx.beginPath();
-      ctx.arc(p.x * w, p.y * h, p.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    /* connection lines between close particles */
-    ctx.strokeStyle = 'rgba(143,180,255,.04)';
-    ctx.lineWidth = 0.5;
-    for (let i = 0; i < N; i++) {
-      for (let j = i + 1; j < N; j++) {
-        const a = pts[i], b = pts[j];
-        const d = Math.hypot((a.x - b.x) * w, (a.y - b.y) * h);
-        if (d < 90) {
-          ctx.globalAlpha = (1 - d / 90) * 0.12;
-          ctx.beginPath();
-          ctx.moveTo(a.x * w, a.y * h);
-          ctx.lineTo(b.x * w, b.y * h);
-          ctx.stroke();
-        }
-      }
-    }
-    ctx.globalAlpha = 1;
-  };
-  gsap.ticker.add(draw);
-  off.push(() => gsap.ticker.remove(draw));
-});
-
-/* cinematic scan line */
-safe('cmscan', () => {
-  const el = q('[data-cm-scan]');
-  if (!el) return;
-  const sweep = () => {
-    gsap.set(el, { top: -2, opacity: 0 });
-    gsap.to(el, { top: '100%', opacity: 0.5, duration: 3, ease: 'power1.in',
-      onComplete: () => { gsap.set(el, { opacity: 0 }); gsap.delayedCall(6 + Math.random() * 10, sweep); }
-    });
-  };
-  gsap.delayedCall(4, sweep);
-});
-
-
 /* ---------- loader timeline ---------- */
 const counter = q('[data-ld="count"]');
 const status = q('[data-ld="status"]');
