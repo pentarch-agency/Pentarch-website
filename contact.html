@@ -70,6 +70,13 @@
 
 
 [data-tc]{visibility:hidden}[data-titlecard]{pointer-events:none}[data-ld="root"] [data-tc]{visibility:visible}
+
+@keyframes tc-kill{to{visibility:hidden;opacity:0;pointer-events:none}}
+[data-titlecard],[data-titlecard] *{animation:tc-kill .01s 7s forwards}
+body>div[style*="z-index:201"]{animation:tc-kill .01s 7s forwards}
+body>div[style*="z-index:203"]{animation:tc-kill .01s 7s forwards}
+body>div[style*="z-index:204"]{animation:tc-kill .01s 7s forwards}
+body>div[style*="z-index:205"]{animation:tc-kill .01s 7s forwards}
 </style>
 <link rel="preload" href="/vendor/gsap-3.15.1.min.js" as="script"><link rel="preload" href="/vendor/ScrollTrigger-3.15.1.min.js" as="script"><script defer src="/vendor/gsap-3.15.1.min.js"></script><script defer src="/vendor/ScrollTrigger-3.15.1.min.js"></script></head><body style="margin:0;background:#111522"><script>window.__PA_META={"home":{"title":"Pentarch | Creative agency for brand, product and growth","description":"Pentarch is a creative agency that builds strategy, brand, product, content and growth as one connected system. One small team, one plan, work that lasts.","url":"https://www.pentarch.agency/"},"studio":{"title":"About | The founder behind Pentarch | Pentarch","description":"About Pentarch: a creative agency founded by Jenil Dholakiya, covering strategy, brand, web and product, content and growth as one connected system.","url":"https://www.pentarch.agency/about"},"services":{"title":"Services | Strategy, brand, web, content and growth | Pentarch","description":"Five connected services: strategy, brand, web and product, content, and growth. Use one or all five. See what is included in every Pentarch project.","url":"https://www.pentarch.agency/services"},"projects":{"title":"Projects | Selected work built to last | Pentarch","description":"A selection of Pentarch work across strategy, brand, web and product, content and growth. Open any project to see the brief and what we did.","url":"https://www.pentarch.agency/projects"},"approach":{"title":"Approach | One team, clear decisions, a fixed plan | Pentarch","description":"How Pentarch works: one team, one plan, decisions before design, small finished steps and measurement after launch. Clear from day one.","url":"https://www.pentarch.agency/approach"},"contact":{"title":"Contact | Let's talk about your project | Pentarch","description":"Tell Pentarch what you are building and when you need it. A few lines is enough. A real person reads every brief and replies with next steps.","url":"https://www.pentarch.agency/contact"}}</script>
 <div id="pa-pt" class="on cov ins boot" aria-hidden="true"><i class="s" style="--i:0;--c:#536684"></i><i class="s" style="--i:1;--c:#3B4C72"></i><i class="s" style="--i:2;--c:#303D59"></i><i class="s" style="--i:3;--c:#1E263B"></i><i class="s" style="--i:4;--c:#111522"></i><div class="c"><span class="n" data-ptn>01 / 06</span><span class="t disp" data-ptt><b style="--l:0">P</b><b style="--l:1">e</b><b style="--l:2">n</b><b style="--l:3">t</b><b style="--l:4">a</b><b style="--l:5">r</b><b style="--l:6">c</b><b style="--l:7">h</b></span><svg class="p" viewBox="0 0 80 80" fill="none" aria-hidden="true"><polygon pathLength="1" points="40,6 72,29 60,67 20,67 8,29"/><circle r="2.6"><animateMotion dur="2.4s" repeatCount="indefinite" path="M40 6 L72 29 L60 67 L20 67 L8 29 Z"/></circle></svg></div></div>
@@ -1935,7 +1942,7 @@ loadTl.to(tcS, { opacity: 1, duration: 0.6, ease: 'power1.out' }, 'lift+=0.65');
 const bgc = (() => { try { return getComputedStyle(ldEl).backgroundColor || '#0C101B'; } catch (e) { return '#0C101B'; } })();
 const bgc2 = (bgc === 'rgba(0, 0, 0, 0)' || !bgc) ? '#0C101B' : bgc;
 const VH = Math.round(ldEl.getBoundingClientRect().height || window.innerHeight); const HH = Math.round(VH / 2);
-const mkHalf = (top) => {const h = document.createElement('div');
+const mkHalf = (top) => {const h = document.createElement('div');h.setAttribute('data-titlecard','1');
 h.setAttribute('aria-hidden', 'true');
 h.style.cssText = 'position:fixed;left:0;right:0;height:' + HH + 'px;overflow:hidden;will-change:transform;z-index:203;pointer-events:none;visibility:hidden;background:' + bgc2 + ';' + (top ? 'top:0' : 'bottom:0');
 const inner = document.createElement('div');
@@ -1943,7 +1950,7 @@ inner.style.cssText = 'position:absolute;left:0;right:0;height:' + (HH * 2) + 'p
 h.appendChild(inner); document.body.appendChild(h); return h;};
 const hT = mkHalf(true); const hB = mkHalf(false);
 const seam = document.createElement('div');
-seam.setAttribute('aria-hidden', 'true');
+seam.setAttribute('aria-hidden', 'true');seam.setAttribute('data-titlecard','1');
 seam.style.cssText = 'position:fixed;left:0;right:0;top:' + HH + 'px;height:2px;margin-top:-1px;z-index:204;pointer-events:none;visibility:hidden;background:linear-gradient(90deg,transparent,#8FB4FF 20%,#fff 50%,#8FB4FF 80%,transparent);box-shadow:0 0 24px 5px rgba(143,180,255,.7)';
 document.body.appendChild(seam);
 gsap.set(seam, { scaleX: Math.min(260, window.innerWidth * 0.46) / Math.max(1, window.innerWidth) });
