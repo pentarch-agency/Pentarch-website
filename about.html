@@ -64,7 +64,7 @@
 .plate.in-view .pv::before,.plate.in-view .pv::after,.plate.in-view svg text,.plate.in-view .pv svg circle[fill="#DCE3EF"]{animation-play-state:running}
 .plate{contain:layout style paint;content-visibility:auto}
 /* perf: composited */
-.slab,.hd,.hl,.hdot,.hspark,.hg,[data-in],[data-mq],[data-float],[data-hero-art],.plate,.pv,.gn{will-change:transform,opacity}
+.slab,.hd,.hl,.hdot,.hspark,.hg,[data-hero-art]{will-change:transform,opacity}
 .mq,.marquee *{will-change:transform}
 
 
@@ -111,6 +111,10 @@ body>div[style*="z-index:205"]:not([data-ld]){animation:tc-kill .01s 5s forwards
 .sv-card.on .vid-mt2{animation:vidMt2 10s ease-in-out infinite alternate}
 .sv-card.on .vid-sun{animation:vidSunGlow 6s ease-in-out infinite}
 .sv-card.on .vid-play{animation:vidPlayFade 3s ease-out 1.8s forwards}
+
+/* ═══ CONTENT VISIBILITY FOR PERF ═══ */
+[data-sheet="03"],[data-sheet="04"],[data-sheet="05"],[data-sheet="06"]{content-visibility:auto;contain-intrinsic-size:auto 800px}
+.sv-stack{content-visibility:auto;contain-intrinsic-size:auto 3000px}
 </style>
 <link rel="preload" href="/vendor/gsap-3.15.1.min.js" as="script"><link rel="preload" href="/vendor/ScrollTrigger-3.15.1.min.js" as="script"><script defer src="/vendor/gsap-3.15.1.min.js"></script><script defer src="/vendor/ScrollTrigger-3.15.1.min.js"></script></head><body style="margin:0;background:#111522"><script>window.__PA_META={"home":{"title":"Pentarch | Creative agency for brand, product and growth","description":"Pentarch is a creative agency that builds strategy, brand, product, content and growth as one connected system. One small team, one plan, work that lasts.","url":"https://www.pentarch.agency/"},"studio":{"title":"About | The founder behind Pentarch | Pentarch","description":"About Pentarch: a creative agency founded by Jenil Dholakiya, covering strategy, brand, web and product, content and growth as one connected system.","url":"https://www.pentarch.agency/about"},"services":{"title":"Services | Strategy, brand, web, content and growth | Pentarch","description":"Five connected services: strategy, brand, web and product, content, and growth. Use one or all five. See what is included in every Pentarch project.","url":"https://www.pentarch.agency/services"},"projects":{"title":"Projects | Selected work built to last | Pentarch","description":"A selection of Pentarch work across strategy, brand, web and product, content and growth. Open any project to see the brief and what we did.","url":"https://www.pentarch.agency/projects"},"approach":{"title":"Approach | One team, clear decisions, a fixed plan | Pentarch","description":"How Pentarch works: one team, one plan, decisions before design, small finished steps and measurement after launch. Clear from day one.","url":"https://www.pentarch.agency/approach"},"contact":{"title":"Contact | Let's talk about your project | Pentarch","description":"Tell Pentarch what you are building and when you need it. A few lines is enough. A real person reads every brief and replies with next steps.","url":"https://www.pentarch.agency/contact"}}</script>
 <div id="pa-pt" class="on cov ins boot" aria-hidden="true"><i class="s" style="--i:0;--c:#536684"></i><i class="s" style="--i:1;--c:#3B4C72"></i><i class="s" style="--i:2;--c:#303D59"></i><i class="s" style="--i:3;--c:#1E263B"></i><i class="s" style="--i:4;--c:#111522"></i><div class="c"><span class="n" data-ptn>01 / 06</span><span class="t disp" data-ptt><b style="--l:0">P</b><b style="--l:1">e</b><b style="--l:2">n</b><b style="--l:3">t</b><b style="--l:4">a</b><b style="--l:5">r</b><b style="--l:6">c</b><b style="--l:7">h</b></span><svg class="p" viewBox="0 0 80 80" fill="none" aria-hidden="true"><polygon pathLength="1" points="40,6 72,29 60,67 20,67 8,29"/><circle r="2.6"><animateMotion dur="2.4s" repeatCount="indefinite" path="M40 6 L72 29 L60 67 L20 67 L8 29 Z"/></circle></svg></div></div>
@@ -2042,7 +2046,7 @@ el.style.setProperty('--y', (e.clientY - r.top) + 'px');};
 el.addEventListener('pointerenter', setOrigin);
 el.addEventListener('pointerleave', setOrigin);
 off.push(() => { el.removeEventListener('pointerenter', setOrigin); el.removeEventListener('pointerleave', setOrigin); });});});
-}, 30);
+}, 200);
 safe('stackhover', () => {const names = qa('.hl');
 const leaders = qa('.hd[data-g="6"]');
 const dots = qa('.hdot');
@@ -2247,7 +2251,7 @@ const wd = setInterval(() => {try {ST.getAll().forEach((st) => {const a = st.ani
 if (!a || !st.trigger || v.scrub || v.pin || v.containerAnimation || a.progress() > 0 || a.isActive()) { return; }
 const r = st.trigger.getBoundingClientRect();
 if (r.top < window.innerHeight && r.bottom > 0) { a.play(); }});} catch (e) {}}, 700);
-off.push(() => clearInterval(wd));}, 50);
+off.push(() => clearInterval(wd));}, 500);
 }, root);}
 paCta() {const sec = this.$q('[data-hx]');
 if (!sec) { return; }
