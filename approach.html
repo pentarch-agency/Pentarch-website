@@ -270,7 +270,7 @@ Strategy, brand, web, content and growth, handled by one small team. No handoffs
 </div>
 </header>
 <!-- ===================== MARQUEE ===================== -->
-<section data-marquee aria-label="Disciplines" style="border-top:1px solid rgba(152,169,196,.22); border-bottom:1px solid rgba(152,169,196,.22); overflow:hidden; padding:36px 0; background:rgba(30,38,59,.55)">
+<section data-marquee aria-label="Disciplines" style="min-height:180px;border-top:1px solid rgba(152,169,196,.22); border-bottom:1px solid rgba(152,169,196,.22); overflow:hidden; padding:36px 0; background:rgba(30,38,59,.55)">
 <div data-mqwrap style="overflow:hidden">
 <div class="mq disp" data-mq="-1" aria-hidden="true" style="font-size:clamp(54px,7vw,104px); line-height:1.05">
 <div class="half"><span class="outline">Strategy</span><span style="color:#98A9C4">+</span><span class="outline">Brand</span><span style="color:#98A9C4">+</span><span class="outline">Web &amp; Product</span><span style="color:#98A9C4">+</span><span class="outline">Content</span><span style="color:#98A9C4">+</span><span class="outline">Growth</span><span style="color:#98A9C4">+</span></div>
@@ -1784,10 +1784,10 @@ const q = (s, c) => (c || root).querySelector(s);
 const qa = (s, c) => Array.from((c || root).querySelectorAll(s));
 const safe = (name, fn) => { try { fn(); } catch (e) { console.warn('[pentarch] ' + name, e); } };
 const accent = () => (getComputedStyle(root).getPropertyValue('--accent') || '#DCE3EF').trim();
-const prep = (els) => els.forEach((el) => {let L = 0;
+const prep = (els) => {requestAnimationFrame(() => {els.forEach((el) => {let L = 0;
 try { L = el.getTotalLength(); } catch (e) { L = 0; }
 el.__L = L || 1;
-gsap.set(el, { strokeDasharray: el.__L, strokeDashoffset: el.__L });});
+gsap.set(el, { strokeDasharray: el.__L, strokeDashoffset: el.__L });});});};
 const pad = (n, w) => String(n).padStart(w, '0');
 try { const de = document.documentElement; const pr = document.createElement('div'); pr.style.cssText = 'position:absolute;top:-99px;width:60px;height:60px;overflow:scroll;visibility:hidden'; document.body.appendChild(pr); const sbw = pr.offsetWidth - pr.clientWidth; pr.remove(); if (sbw > 0) de.style.paddingRight = sbw + 'px'; de.style.overflow = 'hidden'; } catch (e) {}
 this._paCtx = gsap.context(() => {const navIn = qa('[data-in="nav"]');
@@ -1971,6 +1971,7 @@ safe('hud', () => {const fill = q('[data-hudfill]');
 const lab = q('[data-hudlab]');
 qa('[data-sheet]').forEach((sec) => {ST.create({trigger: sec, start: 'top 55%', end: 'bottom 55%',
 onToggle: (self) => { if (self.isActive && lab) { lab.textContent = 'SHEET ' + sec.getAttribute('data-sheet') + ' / 06'; } }});});});
+setTimeout(() => {/* interactions */
 safe('magnetic', () => {qa('[data-mag]').forEach((btn) => {const xTo = gsap.quickTo(btn, 'x', { duration: 0.6, ease: 'power2' });
 const yTo = gsap.quickTo(btn, 'y', { duration: 0.6, ease: 'power2' });
 let active = false;
@@ -1990,6 +1991,7 @@ el.style.setProperty('--y', (e.clientY - r.top) + 'px');};
 el.addEventListener('pointerenter', setOrigin);
 el.addEventListener('pointerleave', setOrigin);
 off.push(() => { el.removeEventListener('pointerenter', setOrigin); el.removeEventListener('pointerleave', setOrigin); });});});
+}, 30);
 safe('stackhover', () => {const names = qa('.hl');
 const leaders = qa('.hd[data-g="6"]');
 const dots = qa('.hdot');
@@ -2043,6 +2045,7 @@ hoverEl.addEventListener('pointerenter', slow);
 hoverEl.addEventListener('pointerleave', fast);
 off.push(() => { hoverEl.removeEventListener('pointerenter', slow); hoverEl.removeEventListener('pointerleave', fast); });
 gsap.from(qa('[data-mqwrap]'), { opacity: 0, y: 60, duration: 1, ease: 'power3.out', stagger: 0.15, scrollTrigger: { trigger: sec, start: 'top 90%' } });});
+setTimeout(() => {/* below-fold */
 safe('manifesto', () => {const sec = q('[data-manifesto]');
 gsap.fromTo(qa('.w'), { opacity: 0.14 }, { opacity: 1, ease: 'none', stagger: 0.12, scrollTrigger: { trigger: sec, start: 'top 68%', end: 'center 45%', scrub: true } });
 qa('[data-readlight]').forEach((el) => {gsap.fromTo(el, { backgroundPositionY: '100%' }, { backgroundPositionY: '0%', ease: 'none', scrollTrigger: { trigger: el, start: 'top 88%', end: 'bottom 42%', scrub: 0.6 } });});
@@ -2178,7 +2181,8 @@ const wd = setInterval(() => {try {ST.getAll().forEach((st) => {const a = st.ani
 if (!a || !st.trigger || v.scrub || v.pin || v.containerAnimation || a.progress() > 0 || a.isActive()) { return; }
 const r = st.trigger.getBoundingClientRect();
 if (r.top < window.innerHeight && r.bottom > 0) { a.play(); }});} catch (e) {}}, 700);
-off.push(() => clearInterval(wd));}, root);}
+off.push(() => clearInterval(wd));}, 50);
+}, root);}
 paCta() {const sec = this.$q('[data-hx]');
 if (!sec) { return; }
 if (this._ctaOff) { this._ctaOff(); }
