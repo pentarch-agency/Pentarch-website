@@ -1805,7 +1805,7 @@ if (PATHS && !fromPop) { try { history.pushState({ r: key }, '', URLS[key]); } c
 if (reduce || !ov) { swap(key); return; }
 busy = true;
 const lite = !!(window.matchMedia && window.matchMedia('(max-width: 900px), (pointer: coarse)').matches);
-const T = lite ? { cov: 300, swap: 380, gap: 90, clear: 480 } : { swap: 1550, gap: 260, clear: 1500 };
+const T = lite ? { cov: 350, swap: 450, gap: 120, clear: 550 } : { swap: 1550, gap: 260, clear: 1500 };
 setT(PAGES[key][0], PAGES[key][1]);
 ov.className = lite ? 'on lite' : 'on'; void ov.offsetWidth;
 doc.documentElement.classList.add('pa-tr');
