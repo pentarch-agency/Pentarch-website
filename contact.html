@@ -1915,6 +1915,7 @@ const _tcTimer = setInterval(() => { if (!window.__paBusy) { _tcClean(); clearIn
 setTimeout(() => { clearInterval(_tcTimer); _tcClean(); }, 10000);
 document.addEventListener('visibilitychange', function _tcVis() { if (document.visibilityState === 'visible' && !window.__paBusy) { _tcClean(); document.removeEventListener('visibilitychange', _tcVis); } });
 
+window.__paSkipLd = (location.pathname !== '/' && !location.pathname.endsWith('/index.html') && location.pathname !== '/index.html');
 if (ldEl && !window.__paSkipLd) {window.__paBusy = true; setTimeout(() => { window.__paBusy = false; }, 12000);
 const loadTl = gsap.timeline({ paused: true });
 this._loadTl = loadTl;
