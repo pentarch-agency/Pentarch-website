@@ -880,8 +880,7 @@ dsc.style.top = ((ty - dr.top) / k).toFixed(0) + 'px';
 dsc.style.width = Math.max(240, (pr.right - padL - leftV) / k).toFixed(0) + 'px';
 pickT.push(setTimeout(() => { dsc.classList.add('on'); }, 350));}, d0 + (wasDown ? 80 : 1200)));};
 const pickClick = (e) => {const el = e.currentTarget;
-if (phoneQ.matches) { return; }
-if (!(phoneQ.matches || el.classList.contains('rdy') || el.classList.contains('lift'))) { return; }
+if (!(phoneQ.matches || mobileQ.matches || el.classList.contains('rdy') || el.classList.contains('lift'))) { return; }
 if (sel === cds.indexOf(el)) { closePick(); return; }
 if (sel >= 0) { closePick(); pickT.push(setTimeout(() => openPick(el), 600)); return; }
 openPick(el);};
