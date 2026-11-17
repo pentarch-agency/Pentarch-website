@@ -1902,7 +1902,7 @@ const unlock = () => { try { document.documentElement.style.overflow = ''; docum
 if (ldEl && !window.__paSkipLd) {window.__paBusy = true; setTimeout(() => { window.__paBusy = false; }, 12000);
 const loadTl = gsap.timeline({ paused: true });
 this._loadTl = loadTl;
-loadTl.to(prog, {v: 100, duration: 2.5, ease: 'none',
+loadTl.to(prog, {v: 100, duration: 3.5, ease: 'none',
 onUpdate: () => {const v = prog.v;
 if (counter) { counter.textContent = pad(Math.round(v), 3); }
 if (bar) { gsap.set(bar, { scaleX: v / 100 }); }
