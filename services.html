@@ -71,12 +71,12 @@
 
 [data-tc]{visibility:hidden}[data-titlecard]{pointer-events:none}[data-ld="root"] [data-tc]{visibility:visible}
 
-@keyframes tc-kill{to{visibility:hidden;opacity:0;pointer-events:none}}
-[data-titlecard],[data-titlecard] *{animation:tc-kill .01s 5s forwards}
-body>div[style*="z-index:201"]{animation:tc-kill .01s 5s forwards}
-body>div[style*="z-index:203"]{animation:tc-kill .01s 5s forwards}
-body>div[style*="z-index:204"]{animation:tc-kill .01s 5s forwards}
-body>div[style*="z-index:205"]{animation:tc-kill .01s 5s forwards}
+@keyframes tc-kill{to{display:none !important;visibility:hidden !important;opacity:0 !important;pointer-events:none !important}}
+[data-titlecard],[data-titlecard] *{animation:tc-kill .01s 5s forwards !important}
+body>div[style*="z-index:201"]:not([data-ld]){animation:tc-kill .01s 5s forwards !important}
+body>div[style*="z-index:203"]:not([data-ld]){animation:tc-kill .01s 5s forwards !important}
+body>div[style*="z-index:204"]:not([data-ld]){animation:tc-kill .01s 5s forwards !important}
+body>div[style*="z-index:205"]:not([data-ld]){animation:tc-kill .01s 5s forwards !important}
 </style>
 <link rel="preload" href="/vendor/gsap-3.15.1.min.js" as="script"><link rel="preload" href="/vendor/ScrollTrigger-3.15.1.min.js" as="script"><script defer src="/vendor/gsap-3.15.1.min.js"></script><script defer src="/vendor/ScrollTrigger-3.15.1.min.js"></script></head><body style="margin:0;background:#111522"><script>window.__PA_META={"home":{"title":"Pentarch | Creative agency for brand, product and growth","description":"Pentarch is a creative agency that builds strategy, brand, product, content and growth as one connected system. One small team, one plan, work that lasts.","url":"https://www.pentarch.agency/"},"studio":{"title":"About | The founder behind Pentarch | Pentarch","description":"About Pentarch: a creative agency founded by Jenil Dholakiya, covering strategy, brand, web and product, content and growth as one connected system.","url":"https://www.pentarch.agency/about"},"services":{"title":"Services | Strategy, brand, web, content and growth | Pentarch","description":"Five connected services: strategy, brand, web and product, content, and growth. Use one or all five. See what is included in every Pentarch project.","url":"https://www.pentarch.agency/services"},"projects":{"title":"Projects | Selected work built to last | Pentarch","description":"A selection of Pentarch work across strategy, brand, web and product, content and growth. Open any project to see the brief and what we did.","url":"https://www.pentarch.agency/projects"},"approach":{"title":"Approach | One team, clear decisions, a fixed plan | Pentarch","description":"How Pentarch works: one team, one plan, decisions before design, small finished steps and measurement after launch. Clear from day one.","url":"https://www.pentarch.agency/approach"},"contact":{"title":"Contact | Let's talk about your project | Pentarch","description":"Tell Pentarch what you are building and when you need it. A few lines is enough. A real person reads every brief and replies with next steps.","url":"https://www.pentarch.agency/contact"}}</script>
 <div id="pa-pt" class="on cov ins boot" aria-hidden="true"><i class="s" style="--i:0;--c:#536684"></i><i class="s" style="--i:1;--c:#3B4C72"></i><i class="s" style="--i:2;--c:#303D59"></i><i class="s" style="--i:3;--c:#1E263B"></i><i class="s" style="--i:4;--c:#111522"></i><div class="c"><span class="n" data-ptn>01 / 06</span><span class="t disp" data-ptt><b style="--l:0">P</b><b style="--l:1">e</b><b style="--l:2">n</b><b style="--l:3">t</b><b style="--l:4">a</b><b style="--l:5">r</b><b style="--l:6">c</b><b style="--l:7">h</b></span><svg class="p" viewBox="0 0 80 80" fill="none" aria-hidden="true"><polygon pathLength="1" points="40,6 72,29 60,67 20,67 8,29"/><circle r="2.6"><animateMotion dur="2.4s" repeatCount="indefinite" path="M40 6 L72 29 L60 67 L20 67 L8 29 Z"/></circle></svg></div></div>
@@ -1909,7 +1909,11 @@ const bar = q('[data-ld="bar"]');
 const prog = { v: 0 };
 const stages = ['01 — Research', '02 — Design', '03 — Develop', '04 — Test', '05 — Launch', 'Ready'];
 const unlock = () => { try { document.documentElement.style.overflow = ''; document.documentElement.style.paddingRight = ''; } catch (e) {} try { document.querySelectorAll('[data-tc]').forEach(el => { const p = el.closest('[style*="z-index:20"]'); if (p && !p.closest('[data-ld]')) p.remove(); }); } catch(e) {} setTimeout(() => { window.__paBusy = false; }, 250); setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 2400); };
-setTimeout(() => { try { document.querySelectorAll('[data-tc]').forEach(el => { let p = el.parentElement; while (p && p !== document.body) { if (p.style && p.style.zIndex && parseInt(p.style.zIndex) >= 200 && !p.hasAttribute('data-ld')) { p.remove(); return; } p = p.parentElement; } }); } catch(e) {} }, 8000); /* titleCardCleanup */
+/* titleCardCleanup — nuclear: visibilitychange + interval */
+const _tcClean = () => { try { document.querySelectorAll('[data-titlecard]').forEach(el => el.remove()); document.querySelectorAll('body > div[style*="z-index:20"]').forEach(el => { if (!el.hasAttribute('data-ld') && !el.id) el.remove(); }); } catch(e) {} };
+const _tcTimer = setInterval(() => { if (!window.__paBusy) { _tcClean(); clearInterval(_tcTimer); } }, 1000);
+setTimeout(() => { clearInterval(_tcTimer); _tcClean(); }, 10000);
+document.addEventListener('visibilitychange', function _tcVis() { if (document.visibilityState === 'visible' && !window.__paBusy) { _tcClean(); document.removeEventListener('visibilitychange', _tcVis); } });
 
 if (ldEl && !window.__paSkipLd) {window.__paBusy = true; setTimeout(() => { window.__paBusy = false; }, 12000);
 const loadTl = gsap.timeline({ paused: true });
