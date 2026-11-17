@@ -1899,7 +1899,9 @@ const status = q('[data-ld="status"]');
 const bar = q('[data-ld="bar"]');
 const prog = { v: 0 };
 const stages = ['01 — Research', '02 — Design', '03 — Develop', '04 — Test', '05 — Launch', 'Ready'];
-const unlock = () => { try { document.documentElement.style.overflow = ''; document.documentElement.style.paddingRight = ''; } catch (e) {} setTimeout(() => { window.__paBusy = false; }, 250); setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 2400); };
+const unlock = () => { try { document.documentElement.style.overflow = ''; document.documentElement.style.paddingRight = ''; } catch (e) {} try { document.querySelectorAll('[data-tc]').forEach(el => { const p = el.closest('[style*="z-index:20"]'); if (p && !p.closest('[data-ld]')) p.remove(); }); } catch(e) {} setTimeout(() => { window.__paBusy = false; }, 250); setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 2400); };
+setTimeout(() => { try { document.querySelectorAll('[data-tc]').forEach(el => { let p = el.parentElement; while (p && p !== document.body) { if (p.style && p.style.zIndex && parseInt(p.style.zIndex) >= 200 && !p.hasAttribute('data-ld')) { p.remove(); return; } p = p.parentElement; } }); } catch(e) {} }, 8000); /* titleCardCleanup */
+
 if (ldEl && !window.__paSkipLd) {window.__paBusy = true; setTimeout(() => { window.__paBusy = false; }, 12000);
 const loadTl = gsap.timeline({ paused: true });
 this._loadTl = loadTl;
