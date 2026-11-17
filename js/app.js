@@ -1806,13 +1806,13 @@ if (PATHS && !fromPop) { try { history.pushState({ r: key }, '', URLS[key]); } c
 if (reduce || !ov) { swap(key); return; }
 busy = true;
 const lite = !!(window.matchMedia && window.matchMedia('(max-width: 900px), (pointer: coarse)').matches);
-const T = lite ? { cov: 380, swap: 500, gap: 150, clear: 600 } : { swap: 1550, gap: 260, clear: 1500 };
+if (lite) { busy = false; swap(key); return; }
+const T = { swap: 1550, gap: 260, clear: 1500 };
 setT(PAGES[key][0], PAGES[key][1]);
-ov.className = lite ? 'on lite' : 'on'; void ov.offsetWidth;
+ov.className = 'on'; void ov.offsetWidth;
 doc.documentElement.classList.add('pa-tr');
 ov.classList.add('cov');
-if (lite) { this._rt0 = setTimeout(() => { const f = box(cur); if (f) { f.style.visibility = 'hidden'; } }, T.cov); }
-this._rt1 = setTimeout(() => {swap(key, lite);
+this._rt1 = setTimeout(() => {swap(key, false);
 this._rt2 = setTimeout(() => {requestAnimationFrame(() => requestAnimationFrame(() => {ov.classList.add('out');
 this._rt3 = setTimeout(() => { ov.className = ''; busy = false; doc.documentElement.classList.remove('pa-tr'); }, T.clear);}));}, T.gap);}, T.swap);};
 const onClick = (e) => {const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
