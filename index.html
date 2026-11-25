@@ -174,7 +174,17 @@ h2{font-size:clamp(37px,4.7vw,78px);line-height:1.02}
 .cue{position:fixed;z-index:20;right:max(var(--gut),env(safe-area-inset-right,0px));bottom:calc(30px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:12px;font-size:13px;color:var(--dim);transition:opacity .5s}
 .cue i{display:block;width:1px;height:42px;background:linear-gradient(var(--fg),transparent);transform-origin:top;animation:cue 2.2s ease-in-out infinite}
 @keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
-.ring{position:fixed;z-index:40;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:1px solid rgba(255,201,120,.7);border-radius:50%;pointer-events:none;opacity:0}
+/* the pointer: a small star (--p0), a picture the system draws, so it is never late and it is there from the first moment. Over a link it has a ring of its
+   own (--p1); once the script's orbit is there to open round a link instead (.cur), it is a fine point there (--p3). On the gold buttons it is dark (--p2).
+   The orbit that follows the star, and the ring a press sends out: see "the pointer" in the script */
+:root{--p0:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3CradialGradient id='d'%3E%3Cstop offset='.2' stop-color='%2304050b' stop-opacity='.42'/%3E%3Cstop offset='1' stop-color='%2304050b' stop-opacity='0'/%3E%3C/radialGradient%3E%3Ccircle cx='16' cy='16' r='13' fill='url(%23d)'/%3E%3CradialGradient id='a'%3E%3Cstop offset='.12' stop-color='%23ffc978' stop-opacity='.58'/%3E%3Cstop offset='.5' stop-color='%23ffb46e' stop-opacity='.15'/%3E%3Cstop offset='1' stop-color='%23ffb46e' stop-opacity='0'/%3E%3C/radialGradient%3E%3Ccircle cx='16' cy='16' r='15' fill='url(%23a)'/%3E%3Cpath d='M16 .8 18.2 16 16 31.2 13.8 16Z M.8 16 16 13.8 31.2 16 16 18.2Z' fill='%2304050b' fill-opacity='.28'/%3E%3CradialGradient id='b'%3E%3Cstop offset='0' stop-color='%23fff6e4'/%3E%3Cstop offset='.35' stop-color='%23ffdca6' stop-opacity='.7'/%3E%3Cstop offset='1' stop-color='%23ffc978' stop-opacity='0'/%3E%3C/radialGradient%3E%3Cpath d='M16 1.5 17.25 16 16 30.5 14.75 16Z M1.5 16 16 14.75 30.5 16 16 17.25Z' fill='url(%23b)'/%3E%3Ccircle cx='16' cy='16' r='4.2' fill='%2304050b' fill-opacity='.42'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23fff6e4'/%3E%3C/svg%3E") 16 16;--p1:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3CradialGradient id='d'%3E%3Cstop offset='.2' stop-color='%2304050b' stop-opacity='.42'/%3E%3Cstop offset='1' stop-color='%2304050b' stop-opacity='0'/%3E%3C/radialGradient%3E%3Ccircle cx='16' cy='16' r='13' fill='url(%23d)'/%3E%3CradialGradient id='a'%3E%3Cstop offset='.12' stop-color='%23ffc978' stop-opacity='.58'/%3E%3Cstop offset='.5' stop-color='%23ffb46e' stop-opacity='.15'/%3E%3Cstop offset='1' stop-color='%23ffb46e' stop-opacity='0'/%3E%3C/radialGradient%3E%3Ccircle cx='16' cy='16' r='15' fill='url(%23a)'/%3E%3Ccircle cx='16' cy='16' r='10.5' fill='none' stroke='%2304050b' stroke-opacity='.4' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='10.5' fill='none' stroke='%23ffc978' stroke-width='1.2'/%3E%3Cpath d='M16 .8 18.2 16 16 31.2 13.8 16Z M.8 16 16 13.8 31.2 16 16 18.2Z' fill='%2304050b' fill-opacity='.28'/%3E%3CradialGradient id='b'%3E%3Cstop offset='0' stop-color='%23fff6e4'/%3E%3Cstop offset='.35' stop-color='%23ffdca6' stop-opacity='.7'/%3E%3Cstop offset='1' stop-color='%23ffc978' stop-opacity='0'/%3E%3C/radialGradient%3E%3Cpath d='M16 1.5 17.25 16 16 30.5 14.75 16Z M1.5 16 16 14.75 30.5 16 16 17.25Z' fill='url(%23b)'/%3E%3Ccircle cx='16' cy='16' r='4.2' fill='%2304050b' fill-opacity='.42'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23fff6e4'/%3E%3C/svg%3E") 16 16;--p2:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='5.3' fill='%23fff3dc' fill-opacity='.9'/%3E%3Ccircle cx='16' cy='16' r='3.9' fill='%231a1204'/%3E%3C/svg%3E") 16 16;--p3:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3CradialGradient id='a'%3E%3Cstop offset='.25' stop-color='%23ffc978' stop-opacity='.42'/%3E%3Cstop offset='1' stop-color='%23ffb46e' stop-opacity='0'/%3E%3C/radialGradient%3E%3Ccircle cx='16' cy='16' r='8.5' fill='url(%23a)'/%3E%3Ccircle cx='16' cy='16' r='3.7' fill='%2304050b' fill-opacity='.45'/%3E%3Ccircle cx='16' cy='16' r='2.6' fill='%23fff6e4'/%3E%3C/svg%3E") 16 16}
+html{cursor:var(--p0),auto}
+a,button{cursor:var(--p1),pointer}
+.cur a,.cur button{cursor:var(--p3),pointer}
+a.btn,.links .go:hover{cursor:var(--p2),pointer}
+.orb,.ping{position:fixed;z-index:120;left:0;top:0;pointer-events:none}
+.orb{will-change:transform}
+.ping{width:14px;height:14px;margin:-7px 0 0 -7px;border:1px solid rgba(255,228,186,.9);border-radius:50%;opacity:0}
 
 @media (max-width:820px),(max-aspect-ratio:1/1){
   .links button:not(.go){display:none}
@@ -386,7 +396,6 @@ body.nog .five span{color:var(--fg)}body.nog .five i{background:var(--gold);bord
 <div class="grade" aria-hidden="true"></div>
 <div id="veil" aria-hidden="true"></div>
 <div class="bar bt" aria-hidden="true"></div><div class="bar bb" aria-hidden="true"></div>
-<div class="ring" aria-hidden="true"></div>
 
 <header class="nav">
   <a class="brand" href="#" data-go="0"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="14" cy="14" r="3" fill="currentColor" stroke="none"/><ellipse cx="14" cy="14" rx="12.5" ry="5" transform="rotate(-28 14 14)"/><circle class="moon" cx="24.6" cy="9" r="1.6" fill="currentColor" stroke="none"/></svg>Pentarch</a>
@@ -1938,14 +1947,60 @@ if(G&&STG){
   if(RM){veil.style.display='none';ready=true;syncUI();if(LD)LD.done();}
   else{let begun=false;const begin=()=>{if(begun)return;begun=true;G.timeline({delay:.15}).to(veil,{autoAlpha:0,duration:1.4,ease:'power2.out'},0).to(P,{fade:1,duration:1.6,ease:'power1.out'},0).to(P,{grow:1,duration:3.4,ease:'power2.out'},.1).to(P,{push:0,duration:3.6,ease:'power3.out'},0).add(()=>{ready=true;syncUI();},1.5);};
     if(LD)LD.done(begin,window.__o3&&window.__o3.core);else if(document.fonts&&document.fonts.ready){document.fonts.ready.then(begin,begin);setTimeout(begin,1500);}else begin();}
-  /* pointer ring */
-  if(!RM&&matchMedia('(pointer:fine)').matches){const ring=$('.ring'),qx=G.quickTo(ring,'x',{duration:.35,ease:'power3'}),qy=G.quickTo(ring,'y',{duration:.35,ease:'power3'});
-    addEventListener('pointermove',e=>{qx(e.clientX);qy(e.clientY);G.to(ring,{opacity:1,duration:.3,overwrite:'auto'});},{passive:true});
-    $$('a,button').forEach(el=>{el.addEventListener('pointerenter',()=>G.to(ring,{scale:1.9,borderColor:'rgba(255,201,120,1)',duration:.3}));el.addEventListener('pointerleave',()=>G.to(ring,{scale:1,borderColor:'rgba(255,201,120,.7)',duration:.3}));});}
   window.__o={scenes,get T(){return T;},master,rig,P,st};
 }else{
   $('#veil').style.display='none';if(window.__ld)window.__ld.done();let last=performance.now(),t0=last;const loop=now=>{requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;P.grow=1;P.fade=1;P.push=0;if(picTick)picTick(false,2);if(frame3d)frame3d((now-t0)/1000,dt);};requestAnimationFrame(loop);
 }
+/* ═════════ the pointer ═════════
+   The pointer itself is a small star. It is a picture the system draws (--p0 in the styles), so it is on time whatever the page is busy with, and it is
+   there from the first moment, the loading screen included.
+   What is drawn here goes round it: the mark from the corner of the page come to life, an orbit seen at an angle with a moon on it. It follows the star
+   on a damped arm, the way the film follows the scroll. Over a link the orbit turns to face you and opens into a lens round the star; over one of the
+   gold buttons it draws in and leaves the button to show itself; a press tightens it and sends one ring out from where you pressed. Leave the pointer
+   alone for a few seconds and the moon goes out: what stays is the star in a faint orbit, quite still, so nothing moves over the picture while you
+   scroll or read.
+   Not for a finger (there is no pointer to follow), and not for a viewer who has asked for less motion: there the star is all there is, and over a link
+   it has a ring of its own (--p1). */
+(()=>{if(RM||HH||!matchMedia('(pointer:fine)').matches)return;
+  const cv=document.createElement('canvas'),x=cv.getContext&&cv.getContext('2d');if(!x||!x.ellipse)return;
+  const pg=document.createElement('i'),root=document.documentElement,K=22,REST=2600,TILT=-.4887,cT=Math.cos(TILT),sT=Math.sin(TILT);   /* K: how quickly the orbit closes on the star. REST: how long (ms) the pointer may lie still before the moon goes out. TILT: the orbit's slant, as in the mark (28 degrees) */
+  cv.className='orb';pg.className='ping';cv.setAttribute('aria-hidden','true');pg.setAttribute('aria-hidden','true');document.body.appendChild(cv);document.body.appendChild(pg);
+  let dpr=0,W=0,px=0,py=0,X=0,Y=0,vx=0,vy=0,al=0,aw=0,hv=0,pr=0,sd=0,ph=0,on=false,seen=false,down=false,run=false,link=null,solid=false,last=0,moved=0,n=0;   /* px,py: the star. X,Y (vx,vy): the orbit. al: how much of the orbit is there. aw: how awake it is (the moon and its trail). hv: how far it has opened over a link. pr: how hard it is pressed. sd: how far it has drawn in over a gold button. ph: where the moon is */
+  const size=()=>{dpr=window.devicePixelRatio||1;const k=Math.ceil(88*dpr);cv.width=cv.height=k;W=k/dpr;cv.style.width=cv.style.height=W+'px';};   /* a canvas pixel for every pixel of the screen, whatever the zoom */
+  const set=el=>{const l=el&&el.closest?el.closest('a,button'):null;if(l===link)return false;link=l;solid=!!l&&l.matches('.btn,.go');return true;};   /* what the pointer is on: a link or a button (solid: one of the gold ones), or nothing; true when that is news */
+  const draw=()=>{if((window.devicePixelRatio||1)!==dpr)size();
+    const tx=Math.round((X-W/2)*dpr)/dpr,ty=Math.round((Y-W/2)*dpr)/dpr,cx=X-tx,cy=Y-ty,A=al*(1-sd);   /* the canvas is moved by whole screen pixels and what is left over is drawn inside it: the hairlines stay sharp */
+    cv.style.transform='translate3d('+tx+'px,'+ty+'px,0)';x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,W,W);if(A<.004)return;
+    const a=(19+8*hv)*(1-.15*pr)*(1-.45*sd),b=a*(.4+.6*hv),m=(p,q)=>p+(q-p)*hv,ring=()=>{x.beginPath();x.ellipse(cx,cy,a,b,TILT,0,TAU);};
+    x.globalAlpha=A;x.lineWidth=3.4;x.strokeStyle='rgba(3,4,10,.3)';ring();x.stroke();if(hv<.98){x.fillStyle='rgba(3,4,10,'+(.34*(1-hv)).toFixed(3)+')';x.fill();}   /* a dark ground under the mark and a dark edge under its line: nothing on the dark of space, and what sets it apart over the galaxy and over the star's disc (a lens has none inside: the link is read through it) */
+    if(hv>.02){const g=x.createRadialGradient(cx,cy,a*.25,cx,cy,a);g.addColorStop(0,'rgba(255,201,120,0)');g.addColorStop(1,'rgba(255,201,120,'+(.13*hv).toFixed(3)+')');x.fillStyle=g;ring();x.fill();}   /* the lens: a little light gathered at its rim */
+    x.lineWidth=1.2;x.strokeStyle='rgba('+Math.round(m(238,255))+','+Math.round(m(240,201))+','+Math.round(m(251,120))+','+m(.4,.92).toFixed(3)+')';ring();x.stroke();   /* the orbit: a faint line; gold all the way round when it is a lens */
+    if(aw<.004)return;
+    const T=aw*(1-.75*hv);for(let i=0;i<14;i++){const u=1-i/14;x.beginPath();x.ellipse(cx,cy,a,b,TILT,ph-(i+1)*.243-.012,ph-i*.243);x.strokeStyle='rgba(255,201,120,'+(.95*u*u*T).toFixed(3)+')';x.stroke();}   /* the stretch of it the moon has just travelled, fading behind it */
+    const c=Math.cos(ph),s=Math.sin(ph),mx=cx+a*c*cT-b*s*sT,my=cy+a*c*sT+b*s*cT,dz=s*Math.sqrt(Math.max(0,1-b*b/(a*a)));   /* dz: on a slanted orbit the moon is nearer on the lower half and farther on the upper: a little larger and brighter, a little smaller and dimmer */
+    const g=x.createRadialGradient(mx,my,0,mx,my,7);g.addColorStop(0,'rgba(255,214,150,.5)');g.addColorStop(1,'rgba(255,190,110,0)');x.globalAlpha=A*aw;x.fillStyle=g;x.beginPath();x.arc(mx,my,7,0,TAU);x.fill();
+    x.globalAlpha=A*aw*(.82+.18*dz);x.fillStyle='#fff3dc';x.beginPath();x.arc(mx,my,1.9*(1+.2*dz),0,TAU);x.fill();};
+  const frame=now=>{if(!run)return;const dt=Math.min(.05,Math.max(0,(now-last)/1000));last=now;
+    if(on&&++n%9===0)set(document.elementFromPoint(px,py));   /* a few times a second, look again at what lies under the pointer: the scenes change under a pointer that is not moving */
+    const e=Math.exp(-K*dt);let d=X-px,k=(vx+K*d)*dt;X=px+(d+k)*e;vx=(vx-k*K)*e;d=Y-py;k=(vy+K*d)*dt;Y=py+(d+k)*e;vy=(vy-k*K)*e;
+    const to=(v,g,r)=>{v+=(g-v)*(1-Math.exp(-dt*r));return Math.abs(v-g)<.002?g:v;},hot=!!link&&!solid,wake=on&&(hot||down||now-moved<REST);
+    al=to(al,on?1:0,on?10:8);aw=to(aw,wake?1:0,wake?10:on?2.4:8);hv=to(hv,hot?1:0,11);pr=to(pr,down?1:0,down?30:12);sd=to(sd,link&&solid?1:0,12);ph=(ph+dt*(1.75+1.3*hv))%TAU;   /* (the moon: once round in three and a half seconds, a little quicker round a lens) */
+    draw();
+    if(!wake&&!aw&&!hv&&!pr&&al===(on?1:0)&&Math.abs(X-px)+Math.abs(Y-py)<.05){run=false;return;}   /* at rest, or gone: nothing more to draw until something happens */
+    requestAnimationFrame(frame);};
+  const kick=()=>{if(!run){run=true;last=performance.now();requestAnimationFrame(frame);}};
+  addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;const u=e.clientX,v=e.clientY,mv=!!(e.movementX||e.movementY||(seen&&(u!==px||v!==py)));seen=true;   /* mv: the pointer has really moved. A browser also tells a page where the pointer lies when nobody has touched it (when the page opens, for one): that carries no movement and names no new place, and it is not a move */
+    if(!on){if(!mv){px=u;py=v;return;}on=true;X=u;Y=v;vx=vy=0;}   /* the orbit appears with the first real move, where the pointer is */
+    px=u;py=v;if(mv)moved=performance.now();if(set(e.target)||mv)kick();},{passive:true});
+  addEventListener('pointerover',e=>{if(on&&e.pointerType!=='touch'&&set(e.target))kick();},{passive:true});   /* a link that arrives under a pointer at rest, or leaves it (the scene changed), is news too */
+  addEventListener('pointerdown',e=>{if(e.pointerType==='touch'||e.button)return;down=true;moved=performance.now();kick();
+    if(pg.animate){pg.style.transform='translate3d('+e.clientX+'px,'+e.clientY+'px,0)';pg.animate([{width:'14px',height:'14px',margin:'-7px 0 0 -7px',opacity:.85},{width:'88px',height:'88px',margin:'-44px 0 0 -44px',opacity:0}],{duration:620,easing:'cubic-bezier(.2,.7,.3,1)'});}},{passive:true});   /* the ring a press sends out from where it was pressed: it grows, a hairline all the way, and is gone */
+  const up=()=>{down=false;};addEventListener('pointerup',up,{passive:true});addEventListener('pointercancel',up,{passive:true});
+  const off=()=>{on=seen=down=false;set(null);kick();};root.addEventListener('pointerleave',e=>{if(e.pointerType!=='touch')off();},{passive:true});   /* out of the window (or of the frame the page is shown in): the orbit goes */
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)off();});
+  addEventListener('resize',()=>{if(al)kick();},{passive:true});   /* (a new zoom: the orbit at rest is drawn once more, sharp) */
+  size();root.classList.add('cur');
+})();
 window.__ready=true;
 };
 /* Run it a part at a time. What a part hands back: a number n (part n is built and its programs compiled: the page was held up meanwhile), or
